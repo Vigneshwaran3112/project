@@ -50,7 +50,7 @@ class UserSalaryAPIViewset(viewsets.ModelViewSet):
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceSerializer
-    permission_class = (IsAuthenticated, )
+    # permission_class = (IsAuthenticated, )
 
 
 class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):

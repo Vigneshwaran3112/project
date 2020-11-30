@@ -71,9 +71,9 @@ class UserAttendance(BaseModel):
     stop = models.TimeField(null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     time_spend = models.TimeField(null=True, blank=True)
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     ot_time_spend = models.TimeField(null=True, blank=True)
-    ot_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def save(self, *args, **kwargs):
         if self.stop:
@@ -85,4 +85,4 @@ class UserAttendance(BaseModel):
                 self.ot_salary = (self.time_spend - user_salary.work_minutes) * self.ot_per_minute
             else:
                 self.salary = user_salary.work_minutes * self.time_spend
-        super(UserSalary, self).save(*args, **kwargs)
+        super(UserAttendance, self).save(*args, **kwargs)
