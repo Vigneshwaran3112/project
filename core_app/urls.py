@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('', include(router.urls)),
 
+    # path('testing/', views.Testing.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/', views.UserOutAttendanceUpdateAPIView.as_view()),
 ]

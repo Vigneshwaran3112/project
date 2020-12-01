@@ -29,10 +29,11 @@ class Store(BaseModel):
     city = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
     latitude = models.DecimalField(max_digits=10, decimal_places=6)
     longitude = models.DecimalField(max_digits=10, decimal_places=6)
 
-    def __str__(self):
+    def __str__(self): 
         return f'{self.name} - {self.city}'
 
 
@@ -86,3 +87,71 @@ class UserAttendance(BaseModel):
             else:
                 self.salary = user_salary.work_minutes * self.time_spend
         super(UserAttendance, self).save(*args, **kwargs)
+
+
+class GST(BaseModel):
+    name = models.CharField(max_length=100)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    percentage = models.BooleanField(default=False)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.name, self.value)
+
+
+class Unit(BaseModel):
+    name = models.CharField(max_length=100)
+    symbol = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class StoreProductCategory(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class StoreProductType(BaseModel): 
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProductRecipeItem(BaseModel):
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    item_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class StoreProduct(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    product_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    product_type = models.ForeignKey(StoreProductType, on_delete=models.CASCADE)
+    category = models.ForeignKey(StoreProductCategory, on_delete=models.CASCADE, null=True, blank=True)
+    recipe_item = models.ForeignKey(ProductRecipeItem, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)    
+    sort_order = models.PositiveIntegerField()
+    product_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=None)
+    packing_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=None)
+    image = models.ImageField(null=True, blank=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name

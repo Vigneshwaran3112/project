@@ -28,3 +28,38 @@ class BaseUserAdmin(admin.ModelAdmin):
 
     def roles(self, obj):
         return "\n".join([r.name for r in obj.role.all()])
+
+
+@admin.register(UserAttendance)
+class UserAttendanceAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'start', 'stop', 'date', 'time_spend', 'salary', 'ot_time_spend', 'ot_salary')
+
+
+@admin.register(GST)
+class GSTAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'value', 'percentage', 'code')
+
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'symbol', 'code', )
+
+
+@admin.register(StoreProductCategory)
+class StoreProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'store', 'name', 'description', 'code', )
+
+
+@admin.register(StoreProductType)
+class StoreProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'description', 'code', )
+
+
+@admin.register(ProductRecipeItem)
+class ProductRecipeItemAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'unit', 'item_quantity', 'name', 'description', )
+
+
+@admin.register(StoreProduct)
+class StoreProductAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'store', 'product_unit', 'product_type', 'category', 'recipe_item', 'name', 'code', 'sort_order', 'product_quantity', 'description', 'price', 'packing_price', 'image', 'description', )

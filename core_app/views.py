@@ -9,7 +9,16 @@ from .models import *
 from .serializers import *
 
 
+from datetime import datetime, timedelta
+
 class AuthLoginAPIView(generics.CreateAPIView):
+    """
+    Returns a list of all **active** accounts in the system.
+
+    For more details on how accounts are activated please.
+
+    post: http://example.com/activating-accounts
+    """
     serializer_class = UserTokenSerializer
     permission_class = (AllowAny, )
 
@@ -62,3 +71,18 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
         user_attendance.stop = datetime.datetime.now()
         user_attendance.save()
         return Response(self.serializer_class(user_attendance).data)
+
+
+# class Testing(generics.ListAPIView):
+#     # serializer_class = UserAttendanceSerializer
+
+#     def list(self, request):
+#         now = datetime.now()
+#         print(now)
+#         old = now - timedelta(hours = 1, minutes= 56)
+#         print('old:', old)
+#         d=(now - old).seconds/60
+#         print(d)
+#         return Response({
+#             'kabil': now - old,
+#         })
