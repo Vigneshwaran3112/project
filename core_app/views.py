@@ -11,13 +11,6 @@ from .serializers import *
 
 
 class AuthLoginAPIView(generics.CreateAPIView):
-    """
-    Returns a list of all **active** accounts in the system.
-
-    For more details on how accounts are activated please.
-
-    post: http://example.com/activating-accounts
-    """
     serializer_class = UserTokenSerializer
     permission_class = (AllowAny, )
 
@@ -130,6 +123,7 @@ class StoreProductViewset(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         destroy = StoreProduct.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'store product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
 
 # class Testing(generics.ListAPIView):
 #     # serializer_class = UserAttendanceSerializer
