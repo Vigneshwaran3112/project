@@ -127,3 +127,100 @@ class UserAttendanceSerializer(serializers.ModelSerializer):
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary
         }
+
+
+class GSTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GST
+        exclude = ['delete', 'status']
+    
+    def to_representation(self, instance):
+        return{
+            'name': instance.name,
+            'value': instance.value,
+            'percentage': instance.percentage,
+            'code': instance.code
+        }
+
+
+class UnitSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Unit
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'name': instance.name,
+            'symbol': instance.symbol,
+            'code': instance.code
+        }
+
+
+class StoreProductCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StoreProductCategory
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'store': instance.store.name,
+            'name': instance.name,
+            'description': instance.description,
+            'code': instance.code
+        }
+
+
+class StoreProductTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StoreProductType
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'name': instance.name,
+            'description': instance.description,
+            'code': instance.code
+        }
+
+
+class ProductRecipeItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductRecipeItem
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'name': instance.name,
+            'unit': instance.unit.symbol,
+            'item_quantity': instance.item_quantity,
+            'description': instance.description,
+        }
+
+
+class StoreProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StoreProduct
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'store': instance.store.name,
+            'product_unit': instance.product_unit.name,
+            'product_type': instance.product_type.name,
+            'category': instance.category.name,
+            'recipe_item': instance.recipe_item.name,
+            'name': instance.name,
+            'code': instance.code,
+            'sort_order': instance.sort_order,
+            'product_quantity': instance.product_quantity,
+            'description': instance.description,
+            'price': instance.price,
+            'packing_price': instance.packing_price,
+            # 'image': instance.image
+        }

@@ -4,12 +4,11 @@ from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.viewsets import ViewSet
 
 from .models import *
 from .serializers import *
 
-
-from datetime import datetime, timedelta
 
 class AuthLoginAPIView(generics.CreateAPIView):
     """
@@ -64,7 +63,7 @@ class UserInAttendanceCreateAPIView(generics.CreateAPIView):
 
 class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserAttendanceSerializer
-    permission_class = (IsAuthenticated, )
+    permission_class = (IsAuthenticated,)
 
     def update(self, request):
         user_attendance = UserAttendance.objects.filter(user=request.user).latest('created')
@@ -72,6 +71,65 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
         user_attendance.save()
         return Response(self.serializer_class(user_attendance).data)
 
+
+class GSTAPIViewset(viewsets.ModelViewSet):
+    queryset = GST.objects.filter(delete=False)
+    serializer_class = GSTSerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = GST.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'GST deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class UnitAPIViewset(viewsets.ModelViewSet):
+    queryset = Unit.objects.filter(delete=False)
+    serializer_class = UnitSerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class StoreProductCategoryViewset(viewsets.ModelViewSet):
+    queryset = StoreProductCategory.objects.filter(delete=False)
+    serializer_class = StoreProductCategorySerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'product category deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class StoreProductTypeViewset(viewsets.ModelViewSet):
+    queryset = StoreProductType.objects.filter(delete=False)
+    serializer_class = StoreProductTypeSerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'product type deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductRecipeItemViewset(viewsets.ModelViewSet):
+    queryset = ProductRecipeItem.objects.filter(delete=False)
+    serializer_class = ProductRecipeItemSerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ProductRecipeItem.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'recipe item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class StoreProductViewset(viewsets.ModelViewSet):
+    queryset = StoreProduct.objects.filter(delete=False)
+    serializer_class = StoreProductSerializer
+    permission_classes = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = StoreProduct.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'store product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 # class Testing(generics.ListAPIView):
 #     # serializer_class = UserAttendanceSerializer

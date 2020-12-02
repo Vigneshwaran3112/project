@@ -60,6 +60,8 @@ class ProductRecipeItemAdmin(admin.ModelAdmin):
     list_display = ('pk', 'unit', 'item_quantity', 'name', 'description', )
 
 
-@admin.register(StoreProduct)
-class StoreProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'store', 'product_unit', 'product_type', 'category', 'recipe_item', 'name', 'code', 'sort_order', 'product_quantity', 'description', 'price', 'packing_price', 'image', 'description', )
+# @admin.register(StoreProduct)
+# class StoreProductAdmin(admin.ModelAdmin):
+#     list_display = ('pk', 'store', 'product_unit', 'product_type', 'category', 'name', 'code', 'sort_order', 'product_quantity', 'description', 'price', 'packing_price', 'image')
+
+admin.site.register(StoreProduct)
