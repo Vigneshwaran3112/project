@@ -24,6 +24,7 @@ class BaseRole(BaseModel):
 
 class Store(BaseModel):
     name = models.CharField(max_length=200)
+    branch = models.CharField(max_length=200)
     address1 = models.TextField()
     address2 = models.TextField()
     city = models.CharField(max_length=100)
@@ -37,11 +38,12 @@ class Store(BaseModel):
         return f'{self.name} - {self.city}'
 
 
-class BaseUser(AbstractUser):
+class BaseUser(AbstractUser, BaseModel):
     phone = models.CharField(max_length=20, unique=True, db_index=True)
     date_of_joining = models.DateTimeField(blank=True, null=True)
     role = models.ManyToManyField(BaseRole, blank=True)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users', blank=True, null=True)
+    is_employee = models.BooleanField(blank=True)
 
     def __str__(self):
         return f'{self.username} - {self.phone}'
@@ -109,7 +111,7 @@ class Unit(BaseModel):
 
 
 class StoreProductCategory(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_product_category')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     code = models.CharField(max_length=100, unique=True)
@@ -128,7 +130,7 @@ class StoreProductType(BaseModel):
 
 
 class ProductRecipeItem(BaseModel):
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_recipe_item')
     item_quantity = models.DecimalField(max_digits=10, decimal_places=2)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -138,10 +140,10 @@ class ProductRecipeItem(BaseModel):
 
 
 class StoreProduct(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    product_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    product_type = models.ForeignKey(StoreProductType, on_delete=models.CASCADE)
-    category = models.ForeignKey(StoreProductCategory, on_delete=models.CASCADE, null=True, blank=True)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_product')
+    product_unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
+    product_type = models.ForeignKey(StoreProductType, on_delete=models.CASCADE, related_name='type_product')
+    category = models.ForeignKey(StoreProductCategory, on_delete=models.CASCADE, null=True, blank=True, related_name='category_product')
     recipe_item = models.ManyToManyField(ProductRecipeItem)
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=100, unique=True)    
@@ -154,3 +156,89 @@ class StoreProduct(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class ComplaintStatus(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ComplaintType(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Complaint(BaseModel):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE, related_name='complaint_type_complaint')
+    complainted_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='complaint_user')
+    status = models.ForeignKey(ComplaintStatus, on_delete=models.CASCADE, related_name='complaint_status_complaint')
+
+
+class OrderStatus(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Customer(BaseModel):
+    name = models.CharField(max_length=100)
+    phone1 = models.CharField(max_length=20, db_index=True)
+    phone2 = models.CharField(max_length=20, null=True, blank=True)
+    address1 = models.TextField(blank=True)
+    address2 = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class BulkOrder(BaseModel):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_bulk_order')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_bulk_order')
+    order_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, related_name='order_status_bulk_order')
+    order_unique_id = models.CharField(max_length=100, db_index=True)
+    delivery_date = models.DateTimeField()
+    order_notes = models.TextField(blank=True)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2)
+    completed = models.BooleanField(default=False)
+
+
+class BulkOrderItem(BaseModel):
+    order = models.ForeignKey(BulkOrder, on_delete=models.CASCADE, db_index=True, related_name='bulk_order_additional_product')
+    item = models.CharField(max_length=100, null=True, blank=True)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    gst_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_item_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+
+class WrongBill(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_wrong_bill')
+    bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    wrong_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    correct_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    date = models.DateTimeField()
+    description = models.TextField(blank=True)
+    
+
+class FreeBill(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_free_bill')
+    bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    date = models.DateTimeField()
+    description = models.TextField(blank=True)

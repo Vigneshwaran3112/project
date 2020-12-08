@@ -1,13 +1,19 @@
 import datetime
+from re import error
+
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 
 from rest_framework import generics, viewsets, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from .models import *
 from .serializers import *
+from .exceptions import CustomError
 
 
 class AuthLoginAPIView(generics.CreateAPIView):
@@ -24,11 +30,50 @@ class AuthLoginAPIView(generics.CreateAPIView):
         return Response(response)
 
 
+class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        else:
+            raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
+
+
+class AdminUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        else:
+            raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
+
+
+class EmployeeUserMixin():
+
+    def test_func(self):
+        if self.request.user.is_employee:
+            return 1
+        else:
+            return 0
+
+
+class UserAPIView(viewsets.ModelViewSet):
+    queryset = BaseUser.objects.filter(status=True, delete=False)
+    serializer_class = UserSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = BaseUser.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    permission_class = (IsAuthenticated, )
+    # permission_class = (IsAuthenticated, )
 
     def get_object(self):
+        EmployeeUserMixin
+        if EmployeeUserMixin:
+            raise CustomError
         return self.request.user
 
 
@@ -125,16 +170,30 @@ class StoreProductViewset(viewsets.ModelViewSet):
         return Response({'message':'store product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# class Testing(generics.ListAPIView):
-#     # serializer_class = UserAttendanceSerializer
+class WrongBillAPIView(ViewSet,ModelViewSet):
+    queryset = WrongBill.objects.filter(delete=False)
+    serializer_class = WrongBillSerializer
 
-#     def list(self, request):
-#         now = datetime.now()
-#         print(now)
-#         old = now - timedelta(hours = 1, minutes= 56)
-#         print('old:', old)
-#         d=(now - old).seconds/60
-#         print(d)
-#         return Response({
-#             'kabil': now - old,
-#         })
+    def perform_create(self, serializer):
+        serializer.save(store=serializer.validated_data['billed_by'].store)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = WrongBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class FreeBillAPIView(ViewSet,ModelViewSet):
+    queryset = FreeBill.objects.filter(delete=False)
+    serializer_class = FreeBillSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(store=serializer.validated_data['billed_by'].store)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = FreeBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    
+
+class ComplaintListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Complaint.objects.exclude(delete=True)
+    serializer_class = Complaintserializer
