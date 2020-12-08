@@ -54,7 +54,7 @@ class EmployeeUserMixin():
         if self.request.user.is_employee:
             return 1
         else:
-            return 0
+            pass
 
 
 class UserAPIView(viewsets.ModelViewSet):
@@ -68,11 +68,11 @@ class UserAPIView(viewsets.ModelViewSet):
 
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    # permission_class = (IsAuthenticated, )
+    # permission_class = Is, )
 
     def get_object(self):
         EmployeeUserMixin
-        if EmployeeUserMixin:
+        if EmployeeUserMixin==1:
             raise CustomError
         return self.request.user
 
@@ -196,4 +196,14 @@ class FreeBillAPIView(ViewSet,ModelViewSet):
 
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True)
-    serializer_class = Complaintserializer
+    serializer_class = ComplaintSerializer
+
+
+class BulkOrderItemListAPIView(generics.ListAPIView):
+    queryset = BulkOrderItem.objects.exclude(delete=True)
+    serializer_class = BulkOrderItemSerializer
+
+
+class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
+    queryset = BulkOrder.objects.exclude(delete=True)
+    serializer_class = BulkOrderSerializer

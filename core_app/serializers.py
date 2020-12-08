@@ -291,7 +291,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
         }
 
 
-class Complaintserializer(serializers.ModelSerializer):
+class ComplaintSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Complaint
@@ -307,6 +307,38 @@ class Complaintserializer(serializers.ModelSerializer):
         }
 
 
+class BulkOrderItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BulkOrderItem
+        exclude = ['delete']
+
+    def to_representation(self, instance):
+        return{
+            'item': instance.item,
+            'quantity': instance.quantity,
+            'price': instance.price,
+            'gst_price': instance.gst_price,
+            'total': instance.total,
+            'total_item_price': instance.total_item_price
+        }
+
+
+class BulkOrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BulkOrder
+        exclude = ['delete']
+
+    def to_representation(self, instance):
+        return{
+            'item': instance.item,
+            'quantity': instance.quantity,
+            'price': instance.price,
+            'gst_price': instance.gst_price,
+            'total': instance.total,
+            'total_item_price': instance.total_item_price
+        }
 
 # class UserSerializer(serializers.ModelSerializer):
     # password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
