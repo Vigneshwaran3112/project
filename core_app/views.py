@@ -207,3 +207,13 @@ class BulkOrderItemListAPIView(generics.ListAPIView):
 class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
     queryset = BulkOrder.objects.exclude(delete=True)
     serializer_class = BulkOrderSerializer
+
+
+class OrderStatusListAPIView(generics.ListAPIView):
+    queryset = OrderStatus.objects.exclude(delete=True)
+    serializer_class = OrderStatusSerializer
+
+
+class CustomerListAPIView(generics.ListAPIView):
+    queryset = OrderStatus.objects.exclude(delete=True)
+    serializer_class = CustomerSerializer

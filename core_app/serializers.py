@@ -148,6 +148,7 @@ class UserAttendanceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return {
+            'id': instance.pk,
             'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
@@ -167,6 +168,7 @@ class GSTSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'name': instance.name,
             'value': instance.value,
             'percentage': instance.percentage,
@@ -182,6 +184,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'name': instance.name,
             'symbol': instance.symbol,
             'code': instance.code
@@ -196,6 +199,7 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'store': instance.store.name,
             'name': instance.name,
             'description': instance.description,
@@ -211,6 +215,7 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
             'code': instance.code
@@ -225,6 +230,7 @@ class ProductRecipeItemSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'name': instance.name,
             'unit': instance.unit.symbol,
             'item_quantity': instance.item_quantity,
@@ -240,6 +246,7 @@ class StoreProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'store': instance.store.name,
             'product_unit': instance.product_unit.name,
             'product_type': instance.product_type.name,
@@ -264,6 +271,7 @@ class WrongBillSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'store': instance.store.name,
             'bill_no': instance.bill_no,
             'wrong_amount': instance.wrong_amount,
@@ -282,6 +290,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'store': instance.store.name,
             'bill_no': instance.bill_no,
             'amount': instance.amount,
@@ -299,6 +308,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'title': instance.title,
             'complaint_notes': instance.description,
             'type': instance.type.name,
@@ -315,6 +325,7 @@ class BulkOrderItemSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'item': instance.item,
             'quantity': instance.quantity,
             'price': instance.price,
@@ -332,6 +343,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
             'item': instance.item,
             'quantity': instance.quantity,
             'price': instance.price,
@@ -339,6 +351,31 @@ class BulkOrderSerializer(serializers.ModelSerializer):
             'total': instance.total,
             'total_item_price': instance.total_item_price
         }
+
+
+class OrderStatusSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description,
+            'code': instance.code,
+        }
+
+
+class CustomerSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'phone1': instance.phone1,
+            'phone2': instance.phone2,
+            'address1': instance.address1,
+            'address2': instance.address2,
+        }
+
 
 # class UserSerializer(serializers.ModelSerializer):
     # password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')

@@ -30,5 +30,7 @@ urlpatterns = [
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/', views.UserOutAttendanceUpdateAPIView.as_view()),
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
+    path('order_status/', views.OrderStatusListAPIView.as_view()),
+    path('customer/', views.CustomerListAPIView.as_view()),
 
 ]
