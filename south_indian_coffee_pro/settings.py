@@ -6,7 +6,7 @@ SECRET_KEY = '@q^^01m#^v3u1*xpl-00m5h=0$n5c_@d)*_7%mp*v&@#(%rn$$'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,6 +81,10 @@ USE_L10N = False
 USE_TZ = False
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', )
