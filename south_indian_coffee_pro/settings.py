@@ -34,7 +34,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'south_indian_coffee_pro.urls'
 
-REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
+REST_FRAMEWORK = { 
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication', ],
+    'NON_FIELD_ERRORS_KEY': 'message'
+    }
 
 TEMPLATES = [
     {
@@ -87,4 +91,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', )
+CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', 'http://localhost:8080',)

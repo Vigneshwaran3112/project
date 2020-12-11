@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
@@ -213,6 +215,16 @@ class BulkOrder(BaseModel):
     order_notes = models.TextField(blank=True)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2)
     completed = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        today = datetime.date.today()
+        # Format --> mmddyy00000
+        try:
+            order_number = BulkOrder.objects.latest('created').pk + 1
+        except BulkOrder.DoesNotExist:
+            order_number = 1
+        self.order_unique_id = f'{today.month:02d}{today.day:02d}{int(str(today.year)[:2]):02d}{order_number:05d}'
+        super(BulkOrder, self).save(*args, **kwargs)
 
 
 class BulkOrderItem(BaseModel):

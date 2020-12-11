@@ -13,6 +13,7 @@ from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from .models import *
 from .serializers import *
+from .permissions import *
 from .exceptions import CustomError
 
 
@@ -30,36 +31,37 @@ class AuthLoginAPIView(generics.CreateAPIView):
         return Response(response)
 
 
-class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+# class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        else:
-            raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
-
-
-class AdminUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        else:
-            raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
+#     def test_func(self):
+#         if self.request.user.is_superuser:
+#             return True
+#         else:
+#             raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
 
 
-class EmployeeUserMixin():
+# class AdminUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
-    def test_func(self):
-        if self.request.user.is_employee:
-            return 1
-        else:
-            pass
+#     def test_func(self):
+#         if self.request.user.is_staff:
+#             return True
+#         else:
+#             raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
+
+
+# class EmployeeUserMixin():
+
+#     def test_func(self):
+#         if self.request.user.is_employee:
+#             return 1
+#         else:
+#             pass
 
 
 class UserAPIView(viewsets.ModelViewSet):
     queryset = BaseUser.objects.filter(status=True, delete=False)
     serializer_class = UserSerializer
+    permission_class = (AllowAny,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BaseUser.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -68,12 +70,10 @@ class UserAPIView(viewsets.ModelViewSet):
 
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    # permission_class = Is, )
+    permission_classes = (IsSuperAdmin, )
 
     def get_object(self):
-        EmployeeUserMixin
-        if EmployeeUserMixin==1:
-            raise CustomError
+        print(self.request.user)
         return self.request.user
 
 

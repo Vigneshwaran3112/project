@@ -4,7 +4,7 @@ from django.core import exceptions
 from django.db import transaction
 from django.db.models.fields import NullBooleanField
 
-from rest_framework import serializers
+from rest_framework import fields, serializers
 
 from .models import *
 
@@ -27,11 +27,72 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
+    password2 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
+    is_admin = serializers.BooleanField(required=False)
+    is_employee = serializers.BooleanField(required=False)
 
     class Meta:
         model = BaseUser
-        exclude = ['delete', 'last_login', 'date_joined', 'is_active', 'groups', 'status']
+        exclude = ['delete', 'last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'status', 'is_active']
 
+    def validate(self, data):
+        if data['password1'] == data['password2']:
+            try:
+                user = BaseUser(username=data['username'], email=data['email'])
+                validate_password(password=data['password1'], user=user)
+                return data
+            except exceptions.ValidationError as e:
+                raise serializers.ValidationError({'password1': list(e.messages)})
+        else:
+            raise serializers.ValidationError({'password1': "Password didn't match!"})
+        
+    @transaction.atomic
+    def create(self, validated_data):
+        if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
+            raise serializers.ValidationError({'phone': "Entered phone already exist."})
+        user = BaseUser.objects.create_user(
+            username = validated_data['username'],
+            email = validated_data['email'],
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            date_of_joining = validated_data['date_of_joining'],
+            store = validated_data['store'],
+            is_superuser = validated_data['is_superuser'],
+            phone = validated_data['phone'],
+            is_staff = validated_data['is_admin'],
+            password = validated_data['password1'],
+            is_employee = validated_data['is_employee']
+        )
+        if validated_data['is_employee']==True:
+            if validated_data['role']:
+                for e in validated_data['role']:
+                    user.role.add(e)
+            else:
+                raise serializers.ValidationError({'message': "select a role for the employee"})
+        return user
+
+
+    # def update(self, instance, validated_data):
+    #     user = BaseUser.objects.get(pk=instance.pk)
+    #     user.username = validated_data.get('username', instance.username)
+    #     user.email = validated_data.get('email', instance.email)
+    #     user.first_name = validated_data.get('first_name', instance.first_name)
+    #     user.last_name = validated_data.get('last_name', instance.last_name)
+    #     user.phone = validated_data.get('phone', instance.phone) 
+    #     user.save()
+    #     instance.store = validated_data.get('store', instance.store)
+    #     instance.is_staff = validated_data.get('is_staff', instance.is_staff)
+    #     instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
+    #     instance.date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining)
+    #     if validated_data['is_employee']==True:
+    #         if validated_data['role']:
+    #             instance.role.set(validated_data['role'])
+    #         else:
+    #             raise serializers.ValidationError({'message': "select a role for the employee"})
+
+        return instance
+        
     def to_representation(self, instance):
         return {
             'id': instance.pk,
@@ -318,15 +379,15 @@ class ComplaintSerializer(serializers.ModelSerializer):
 
 
 class BulkOrderItemSerializer(serializers.ModelSerializer):
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = BulkOrderItem
-        exclude = ['delete']
+        fields = '__all__'
 
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'item': instance.item,
             'quantity': instance.quantity,
             'price': instance.price,
             'gst_price': instance.gst_price,
@@ -335,21 +396,79 @@ class BulkOrderItemSerializer(serializers.ModelSerializer):
         }
 
 
-class BulkOrderSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = BulkOrder
-        exclude = ['delete']
+        model = Customer
+        fields = '__all__'
 
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'item': instance.item,
-            'quantity': instance.quantity,
-            'price': instance.price,
-            'gst_price': instance.gst_price,
-            'total': instance.total,
-            'total_item_price': instance.total_item_price
+            'name': instance.name,
+            'phone1': instance.phone1,
+            'phone2': instance.phone2,
+            'address1': instance.address1,
+            'address2': instance.address2,
+        }
+
+
+class BulkOrderSerializer(serializers.ModelSerializer):
+    items = BulkOrderItemSerializer(many=True)
+    customer = CustomerSerializer()
+
+    class Meta:
+        model = BulkOrder
+        exclude = ['order_unique_id']
+
+    @transaction.atomic
+    def create(self, validated_data):
+        items = validated_data.pop('items')
+        customer_data = validated_data.pop('customer')
+
+        create_customer = Customer.objects.create(
+                name = customer_data['name'],
+                phone1 = customer_data['phone1'],
+                phone2 = customer_data['phone2'],
+                address1 = customer_data['address1'],
+                address2 = customer_data['address2'],
+            )
+
+        bulk_order = BulkOrder.objects.create(
+                customer = create_customer,
+                store = validated_data['store'],
+                order_status = validated_data['order_status'],
+                delivery_date = validated_data['delivery_date'],
+                order_notes = validated_data['order_notes'],
+                grand_total = validated_data['grand_total'],
+                completed = validated_data['completed'],
+            )
+
+        for item in items:
+            order_item = BulkOrderItem.objects.create(
+                order = bulk_order,
+                item = item['item'],
+                    quantity = item['quantity'],
+                    price = item['price'],
+                    gst_price = item['gst_price'],
+                    total = item['total'],
+                    total_item_price = item['total_item_price'],
+                )
+        return bulk_order
+
+    def to_representation(self, instance):
+        item_data = BulkOrderItemSerializer(BulkOrderItem.objects.filter(order=instance), many=True).data
+        return{
+            'id': instance.pk,
+            'customer': instance.customer.name,
+            'store': instance.store.name,
+            'order_status': instance.order_status.name,
+            'order_unique_id': instance.order_unique_id,
+            'delivery_date': instance.delivery_date,
+            'order_notes': instance.order_notes,
+            'grand_total': instance.grand_total,
+            'completed': instance.completed,
+            'item': item_data
         }
 
 
@@ -363,83 +482,4 @@ class OrderStatusSerializer(serializers.Serializer):
             'code': instance.code,
         }
 
-
-class CustomerSerializer(serializers.Serializer):
-
-    def to_representation(self, instance):
-        return{
-            'id': instance.pk,
-            'name': instance.name,
-            'phone1': instance.phone1,
-            'phone2': instance.phone2,
-            'address1': instance.address1,
-            'address2': instance.address2,
-        }
-
-
-# class UserSerializer(serializers.ModelSerializer):
-    # password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
-    # password2 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
-    # is_admin = serializers.BooleanField(required=False)
-    # is_employee = serializers.BooleanField(required=False)
-
-    # class Meta:
-    #     model = BaseUser
-    #     exclude = ['delete', 'last_login', 'date_joined']
-
-    # def validate(self, data):
-    #     if data['password1'] == data['password2']:
-    #         try:
-    #             user = BaseUser(username=data['username'], email=data['email'])
-    #             validate_password(password=data['password1'], user=user)
-    #             return data
-    #         except exceptions.ValidationError as e:
-    #             raise serializers.ValidationError({'password1': list(e.messages)})
-    #     else:
-    #         raise serializers.ValidationError({'password1': "Password didn't match!"})
-        
-    # @transaction.atomic
-    # def create(self, validated_data):
-    #     if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
-    #         raise serializers.ValidationError({'phone': "Entered phone already exist."})
-    #     user = BaseUser.objects.create_user(
-    #         username = validated_data['username'],
-    #         email = validated_data['email'],
-    #         first_name = validated_data['first_name'],
-    #         last_name = validated_data['last_name'],
-    #         date_of_joining = validated_data['date_of_joining'],
-    #         store = validated_data['store'],
-    #         is_staff = validated_data['is_admin'],
-    #         is_superuser = validated_data['is_superuser'],
-    #         phone = validated_data['phone'],
-    #         password = validated_data['password1']
-    #     )
-    #     if validated_data['is_employee']==True:
-    #         if validated_data['role']:
-    #             for e in validated_data['role']:
-    #                 user.role.add(e)
-    #         else:
-    #             raise serializers.ValidationError({'message': "select a role for the employee"})
-    #     return user
-
-
-    # def update(self, instance, validated_data):
-    #     user = BaseUser.objects.get(pk=instance.pk)
-    #     user.username = validated_data.get('username', instance.username)
-    #     user.email = validated_data.get('email', instance.email)
-    #     user.first_name = validated_data.get('first_name', instance.first_name)
-    #     user.last_name = validated_data.get('last_name', instance.last_name)
-    #     user.phone = validated_data.get('phone', instance.phone) 
-    #     user.save()
-    #     instance.store = validated_data.get('store', instance.store)
-    #     instance.is_staff = validated_data.get('is_staff', instance.is_staff)
-    #     instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
-    #     instance.date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining)
-    #     if validated_data['is_employee']==True:
-    #         if validated_data['role']:
-    #             instance.role.set(validated_data['role'])
-    #         else:
-    #             raise serializers.ValidationError({'message': "select a role for the employee"})
-
-    #     return instance
     

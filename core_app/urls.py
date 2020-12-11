@@ -32,5 +32,6 @@ urlpatterns = [
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
     path('order_status/', views.OrderStatusListAPIView.as_view()),
     path('customer/', views.CustomerListAPIView.as_view()),
+    path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
 
 ]
