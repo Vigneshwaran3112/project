@@ -6,9 +6,7 @@ from .models import BaseUser
 class IsEmployee(IsAuthenticated):
 
     def has_permission(self, request, view):
-        employee_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_employee=True).exists()
-        print(employee_user)
-        return bool(employee_user and request.user)
+        return bool(request.user.is_employee and request.user)
 
 
 class IsIncharge(IsAuthenticated):
@@ -21,12 +19,12 @@ class IsIncharge(IsAuthenticated):
 class IsAdmin(IsAuthenticated):
 
     def has_permission(self, request, view):
-        admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_staff=True).exists()
-        return bool(admin_user and request.user)
+        # admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_staff=True).exists()
+        return bool(request.user.is_staff and request.user)
 
 
 class IsSuperAdmin(IsAuthenticated):
 
     def has_permission(self, request, view):
-        super_admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_superuser=True, is_staff=True).exists()
-        return bool(super_admin_user and request.user)
+        # super_admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_superuser=True, is_staff=True).exists()
+        return bool(request.user.is_staff and request.user.is_superuser and request.user)

@@ -73,7 +73,7 @@ class UserSalary(BaseModel):
 class UserAttendance(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_attendances')
     start = models.DateTimeField()
-    stop = models.TimeField(null=True, blank=True)
+    stop = models.DateTimeField(null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     time_spend = models.TimeField(null=True, blank=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -82,12 +82,11 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
+            user_salary = self.user.user_salaries.get()
             self.time_spend = (self.start - self.stop).seconds / 60
-            user_salary = self.user.user_salaries
-            self.salary = self.time_spend * user_salary.per_minute
             if self.time_spend > user_salary.work_minutes:
                 self.salary = user_salary.work_minutes * self.time_spend
-                self.ot_salary = (self.time_spend - user_salary.work_minutes) * self.ot_per_minute
+                self.ot_salary = (self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute
             else:
                 self.salary = user_salary.work_minutes * self.time_spend
         super(UserAttendance, self).save(*args, **kwargs)

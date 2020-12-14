@@ -70,7 +70,7 @@ class UserAPIView(viewsets.ModelViewSet):
 
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    permission_classes = (IsSuperAdmin, )
+    permission_classes = (IsIncharge, )
 
     def get_object(self):
         print(self.request.user)
@@ -100,14 +100,16 @@ class UserInAttendanceCreateAPIView(generics.CreateAPIView):
 
 
 class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
+    queryset = UserAttendance.objects.filter(delete=False)
     serializer_class = UserAttendanceSerializer
-    permission_class = (IsAuthenticated,)
+    # permission_class = (IsAuthenticated,)
 
-    def update(self, request):
-        user_attendance = UserAttendance.objects.filter(user=request.user).latest('created')
-        user_attendance.stop = datetime.datetime.now()
-        user_attendance.save()
-        return Response(self.serializer_class(user_attendance).data)
+    # def partial_update(self, request, *args, **kwargs):
+    #     user_attendance = UserAttendance.objects.filter(user=request.user).latest('created')
+    #     user_attendance.stop = datetime.datetime.now()
+    #     print(request.user, 'hai')
+    #     user_attendance.save()
+    #     return Response(self.serializer_class(user_attendance).data)
 
 
 class GSTAPIViewset(viewsets.ModelViewSet):

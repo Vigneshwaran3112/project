@@ -51,6 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
             raise serializers.ValidationError({'phone': "Entered phone already exist."})
+        
         user = BaseUser.objects.create_user(
             username = validated_data['username'],
             email = validated_data['email'],
@@ -205,12 +206,12 @@ class UserAttendanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendance
-        fields = ('user', 'start')
+        fields = ('user', 'stop')
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'user': BaseUserSerializer(instance.user).data,
+            # 'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
