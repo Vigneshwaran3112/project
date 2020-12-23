@@ -91,4 +91,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', 'http://localhost:8080',)
+CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', 'http://localhost:8080', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002')
