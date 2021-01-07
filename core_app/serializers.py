@@ -202,7 +202,27 @@ class UserSalarySerializer(serializers.ModelSerializer):
         }
 
 
-class UserAttendanceSerializer(serializers.ModelSerializer):
+class UserAttendanceInSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserAttendance
+        fields = ('user', 'start')
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            # 'user': BaseUserSerializer(instance.user).data,
+            'start': instance.start,
+            'stop': instance.stop,
+            'date': instance.date,
+            'time_spend': instance.time_spend,
+            'salary': instance.salary,
+            'ot_time_spend': instance.ot_time_spend,
+            'ot_salary': instance.ot_salary
+        }
+
+
+class UserAttendanceOutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendance
@@ -211,7 +231,7 @@ class UserAttendanceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            # 'user': BaseUserSerializer(instance.user).data,
+            'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,

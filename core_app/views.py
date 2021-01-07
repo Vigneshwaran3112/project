@@ -95,13 +95,13 @@ class UserSalaryAPIViewset(viewsets.ModelViewSet):
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
-    serializer_class = UserAttendanceSerializer
+    serializer_class = UserAttendanceInSerializer
     # permission_class = (IsAuthenticated, )
 
 
 class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     queryset = UserAttendance.objects.filter(delete=False)
-    serializer_class = UserAttendanceSerializer
+    serializer_class = UserAttendanceOutSerializer
     # permission_class = (IsAuthenticated,)
 
     # def partial_update(self, request, *args, **kwargs):

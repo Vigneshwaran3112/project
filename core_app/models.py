@@ -1,4 +1,4 @@
-import datetime
+import datetime, decimal
 
 from django.db import models
 
@@ -53,16 +53,16 @@ class BaseUser(AbstractUser, BaseModel):
 
 class UserSalary(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries')
-    per_hour = models.PositiveIntegerField()
-    per_minute = models.PositiveIntegerField()
-    work_hours = models.PositiveIntegerField()
-    work_minutes = models.PositiveIntegerField()
-    ot_per_hour = models.PositiveIntegerField()
-    ot_per_minute = models.PositiveIntegerField()
+    per_hour = models.DecimalField(max_digits=10, decimal_places=2)
+    per_minute = models.DecimalField(max_digits=10, decimal_places=2)
+    work_hours = models.DecimalField(max_digits=10, decimal_places=2)
+    work_minutes = models.DecimalField(max_digits=10, decimal_places=2)
+    ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
+    ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        self.per_minute = self.per_hour * 60
-        self.ot_per_minute = self.ot_per_hour * 60
+        self.per_minute = self.per_hour / 60
+        self.ot_per_minute = self.ot_per_hour / 60
         self.work_minutes = self.work_hours * 60
         super(UserSalary, self).save(*args, **kwargs)
 
@@ -75,20 +75,22 @@ class UserAttendance(BaseModel):
     start = models.DateTimeField()
     stop = models.DateTimeField(null=True, blank=True)
     date = models.DateField(auto_now_add=True)
-    time_spend = models.TimeField(null=True, blank=True)
-    salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    ot_time_spend = models.TimeField(null=True, blank=True)
-    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.stop:
             user_salary = self.user.user_salaries.get()
-            self.time_spend = (self.start - self.stop).seconds / 60
+            self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
-                self.salary = user_salary.work_minutes * self.time_spend
-                self.ot_salary = (self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute
+                self.salary = round(user_salary.per_minute * self.time_spend)
+                self.ot_time_spend = self.time_spend - user_salary.work_minutes
+                print(self.time_spend - user_salary.work_minutes)
+                self.ot_salary = round((self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute)
             else:
-                self.salary = user_salary.work_minutes * self.time_spend
+                self.salary = round(user_salary.per_minute * self.time_spend)
         super(UserAttendance, self).save(*args, **kwargs)
 
 
