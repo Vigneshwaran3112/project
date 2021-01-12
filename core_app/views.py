@@ -165,7 +165,7 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
 class StoreProductViewset(viewsets.ModelViewSet):
     queryset = StoreProduct.objects.filter(delete=False)
     serializer_class = StoreProductSerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = StoreProduct.objects.filter(pk=kwargs['pk']).update(delete=True)

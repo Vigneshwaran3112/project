@@ -139,12 +139,15 @@ class StoreSerializer(serializers.ModelSerializer):
         return {
             'id': instance.id,
             'name': instance.name,
+            'branch': instance.branch,
             'address1': instance.address1,
             'address2': instance.address2,
             'city': instance.city,
             'district': instance.district,
             'state': instance.state,
             'latitude': instance.latitude,
+            'pincode': instance.pincode,
+            'status': instance.status,
             'longitude': instance.longitude,
             'updated': instance.updated,
             'created': instance.created

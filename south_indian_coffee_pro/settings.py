@@ -37,7 +37,9 @@ ROOT_URLCONF = 'south_indian_coffee_pro.urls'
 REST_FRAMEWORK = { 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication', ],
-    'NON_FIELD_ERRORS_KEY': 'message'
+    'NON_FIELD_ERRORS_KEY': 'message',
+    'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer', ],
+    
     }
 
 TEMPLATES = [
