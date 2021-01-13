@@ -88,6 +88,28 @@ class StoreAPIViewset(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
     permission_class = (IsAdminUser, )
 
+    def destroy(self, request, *args, **kwargs):
+        destroy = Store.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'Store deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class StoreAvailabilityToggle(generics.UpdateAPIView):
+    queryset = Store.objects.filter(delete=False)
+    serializer_class = StoreSerializer
+    permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'store status changed'}, status=status.HTTP_202_ACCEPTED)
+
+
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = Store.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'Store deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class UserSalaryAPIViewset(viewsets.ModelViewSet):
     queryset = UserSalary.objects.filter(status=True, delete=False)
     serializer_class = UserSalarySerializer
