@@ -150,7 +150,8 @@ class StoreSerializer(serializers.ModelSerializer):
             'status': instance.status,
             'longitude': instance.longitude,
             'updated': instance.updated,
-            'created': instance.created
+            'created': instance.created,
+            'status': instance.status
         }
 
 
