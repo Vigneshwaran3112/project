@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'core_app'
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -62,19 +62,23 @@ WSGI_APPLICATION = 'south_indian_coffee_pro.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'south_indian_coffee_test',
+        'USER': 'dbmasteruser',
+        'PASSWORD': 'S0S-GfhoBlIrIm.#-L97.z-R7I9J-8I%',
+        'HOST': 'ls-db8b34df60a76c46c35bf55d1ffa56efbe9596b2.cjzymyxx2u8h.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432'
     }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
-    # {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
-    # {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
-    # {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
-AUTH_USER_MODEL = 'core_app.BaseUser'
+AUTH_USER_MODEL = 'core.BaseUser'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -93,4 +97,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:8080', 'http://localhost:8080', 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002')
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3002',
+    'http://sich.vgts.tech'
+)
