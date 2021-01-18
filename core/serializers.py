@@ -272,7 +272,7 @@ class UnitSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'name': instance.name,
             'symbol': instance.symbol,
-            'code': instance.code
+            # 'code': instance.code
         }
 
 
@@ -285,10 +285,10 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'store': instance.store.name,
+            # 'store': instance.store.name,
             'name': instance.name,
             'description': instance.description,
-            'code': instance.code
+            # 'code': instance.code
         }
 
 
@@ -303,7 +303,7 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
-            'code': instance.code
+            # 'code': instance.code
         }
 
 
@@ -332,18 +332,19 @@ class StoreProductSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'store': instance.store.name,
-            'product_unit': instance.product_unit.name,
-            'product_type': instance.product_type.name,
-            'category': instance.category.name,
-            'recipe_item': instance.recipe_item.name,
+            # 'store': instance.store.name,
+            # BaseUserSerializer(instance.user).data,
+            'product_unit': UnitSerializer(instance.product_unit).data,
+            'product_type': StoreProductTypeSerializer(instance.product_type).data,
+            'category': StoreProductCategorySerializer(instance.category).data,
+            # 'recipe_item': instance.recipe_item.name,
             'name': instance.name,
-            'code': instance.code,
+            # 'code': instance.code,
             'sort_order': instance.sort_order,
             'product_quantity': instance.product_quantity,
             'description': instance.description,
-            'price': instance.price,
-            'packing_price': instance.packing_price,
+            # 'price': instance.price,
+            # 'packing_price': instance.packing_price,
             # 'image': instance.image
         }
 
@@ -396,7 +397,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'title': instance.title,
             'complaint_notes': instance.description,
-            'type': instance.type.name,
+            'type': instance.complaint_type.name,
             'complainted_by': instance.complainted_by.username,
             'status': instance.status.name,
         }

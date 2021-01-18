@@ -116,7 +116,6 @@ class Unit(BaseModel):
 
 
 class StoreProductCategory(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_product_category')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     code = models.CharField(max_length=100, unique=True)
@@ -148,8 +147,7 @@ class Product(BaseModel):
     product_unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
     product_type = models.ForeignKey(StoreProductType, on_delete=models.CASCADE, related_name='type_product')
     category = models.ForeignKey(StoreProductCategory, on_delete=models.CASCADE, null=True, blank=True, related_name='category_product')
-    name = models.CharField(max_length=100)
-    code = models.CharField(max_length=100, unique=True)    
+    name = models.CharField(max_length=100)   
     sort_order = models.PositiveIntegerField()
     product_quantity = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True)
@@ -159,8 +157,8 @@ class Product(BaseModel):
 
 
 class ProductStoreMapping(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    store = models.OneToOneField(Store, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)
 
     def __str__(self):
         return f'{self.store.name} - {self.product.name}'
@@ -172,6 +170,7 @@ class ProductPricingBatch(BaseModel):
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
 
     def __str__(self):
         return f'{self.store.name} - {self.product.name}'
@@ -180,7 +179,7 @@ class ProductPricingBatch(BaseModel):
 class ProductInventory(BaseModel):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_batch = models.ForeignKey(ProductPricingBatch, on_delete=models.CASCADE)
+    product_batch = models.ManyToManyField(ProductPricingBatch)
     date = models.DateTimeField()
     received = models.PositiveIntegerField(null=True, blank=True)
     sell = models.PositiveIntegerField(null=True, blank=True)

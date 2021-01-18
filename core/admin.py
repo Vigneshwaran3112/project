@@ -46,7 +46,7 @@ class UnitAdmin(admin.ModelAdmin):
 
 @admin.register(StoreProductCategory)
 class StoreProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'store', 'name', 'description', 'code', )
+    list_display = ('pk', 'name', 'description', 'code', )
 
 
 @admin.register(StoreProductType)
