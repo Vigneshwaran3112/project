@@ -344,6 +344,7 @@ class StoreProductSerializer(serializers.ModelSerializer):
             'sort_order': instance.sort_order,
             'product_quantity': instance.product_quantity,
             'description': instance.description,
+            'status': instance.status,
             # 'price': instance.price,
             # 'packing_price': instance.packing_price,
             # 'image': instance.image
@@ -508,4 +509,38 @@ class OrderStatusSerializer(serializers.Serializer):
             'code': instance.code,
         }
 
+# class ProductStoreMappingSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = ProductStoreMapping
+#         exclude = ['delete', 'status', 'store']
+
+#     def to_representation(self, instance):
+#         return{
+#             'id': instance.pk,
+#             'store': instance.store.pk,
+#             # 'store_name': instance.store.name,
+#             # 'product': instance.product.pk,
+#         }
     
+
+class ComplaintStatusSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description,
+            # 'code': instance.code,
+        }
+
+
+class ComplaintTypeSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description,
+            # 'code': instance.code,
+        }

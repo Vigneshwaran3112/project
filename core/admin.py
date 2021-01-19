@@ -103,5 +103,10 @@ class BulkOrderAdmin(admin.ModelAdmin):
 class BulkOrderItemAdmin(admin.ModelAdmin):
     list_display = ('pk', 'order', 'item', 'quantity', 'price', 'gst_price', 'total', 'total_item_price', )
 
+# @admin.register(ProductStoreMapping)
+# class ProductStoreMappingAdmin(admin.ModelAdmin):
+#     list_display = ('pk' )
+
+# admin.site.register(ProductStoreMapping)
 
 admin.site.register(Product)

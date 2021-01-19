@@ -235,3 +235,18 @@ class OrderStatusListAPIView(generics.ListAPIView):
 class CustomerListAPIView(generics.ListAPIView):
     queryset = OrderStatus.objects.exclude(delete=True)
     serializer_class = CustomerSerializer
+
+
+# class StoreProductMappingListCreate(generics.ListCreateAPIView):
+#     queryset = ProductStoreMapping.objects.exclude(delete=True)
+#     serializer_class = ProductStoreMappingSerializer
+#     # permission_classes = (IsVendor,)
+
+class ComplaintStatusListAPIView(generics.ListAPIView):
+    queryset = ComplaintStatus.objects.exclude(delete=True)
+    serializer_class = ComplaintStatusSerializer
+
+
+class ComplaintTypeListAPIView(generics.ListAPIView):
+    queryset = ComplaintType.objects.exclude(delete=True)
+    serializer_class = ComplaintTypeSerializer
