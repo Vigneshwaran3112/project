@@ -66,9 +66,9 @@ class UserSerializer(serializers.ModelSerializer):
             is_employee = validated_data['is_employee']
         )
         if validated_data['is_employee']==True:
-            if validated_data['role']:
-                for e in validated_data['role']:
-                    user.role.add(e)
+            if validated_data['employee_role']:
+                for e in validated_data['employee_role']:
+                    user.employee_role.add(e)
             else:
                 raise serializers.ValidationError({'message': "select a role for the employee"})
         return user
@@ -104,11 +104,11 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name': instance.last_name,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
-            'store': instance.store.name,
+            'store': instance.store.name if instance.store else None,
             'role': RoleSerializer(instance.employee_role, many=True).data,
-            'status': instance.status,
-            'updated': instance.updated,
-            'created': instance.created
+            # 'status': instance.status,
+            # 'updated': instance.updated,
+            # 'created': instance.created
         }
 
 
