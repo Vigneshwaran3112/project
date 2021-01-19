@@ -39,7 +39,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication', ],
     'NON_FIELD_ERRORS_KEY': 'message',
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer', ],
-    
+    'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser', ]
     }
 
 TEMPLATES = [
