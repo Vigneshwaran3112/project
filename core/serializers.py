@@ -392,7 +392,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Complaint
-        exclude = ['delete']
+        exclude = ['delete', 'complainted_by']
 
     def to_representation(self, instance):
         return{

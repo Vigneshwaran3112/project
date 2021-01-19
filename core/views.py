@@ -216,6 +216,9 @@ class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True)
     serializer_class = ComplaintSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(complainted_by=self.request.user)
+
 
 class BulkOrderItemListAPIView(generics.ListAPIView):
     queryset = BulkOrderItem.objects.exclude(delete=True)

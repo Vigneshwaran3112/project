@@ -212,7 +212,7 @@ class Complaint(BaseModel):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     complaint_type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE, related_name='complaint_type_complaint')
-    complainted_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='complaint_user')
+    complainted_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='complaint_user', null=True, blank=True)
     status = models.ForeignKey(ComplaintStatus, on_delete=models.CASCADE, related_name='complaint_status_complaint')
 
 
