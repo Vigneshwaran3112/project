@@ -34,9 +34,10 @@ urlpatterns = [
     path('user_out_attendance/<int:pk>/', views.UserOutAttendanceUpdateAPIView.as_view()),
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
     path('order_status/', views.OrderStatusListAPIView.as_view()),
+    path('free_bill_customer/', views.FreeBillCustomerListAPIView.as_view()),
     path('customer/', views.CustomerListAPIView.as_view()),
     path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
-    # path('product_mapping/', views.StoreProductMappingListCreate.as_view()),
+    path('product_mapping/', views.StoreProductMappingListCreate.as_view()),
     path('complaint_type/', views.ComplaintTypeListAPIView.as_view()),
     path('complaint_status/', views.ComplaintStatusListAPIView.as_view()),
 

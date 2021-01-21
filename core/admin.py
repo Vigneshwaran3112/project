@@ -107,6 +107,9 @@ class BulkOrderItemAdmin(admin.ModelAdmin):
 # class ProductStoreMappingAdmin(admin.ModelAdmin):
 #     list_display = ('pk' )
 
-# admin.site.register(ProductStoreMapping)
+admin.site.register(ProductStoreMapping)
 
 admin.site.register(Product)
+
+admin.site.register(FreeBillCustomer)
+

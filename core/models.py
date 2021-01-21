@@ -275,6 +275,15 @@ class WrongBill(BaseModel):
     billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     date = models.DateTimeField()
     description = models.TextField(blank=True)
+
+
+class FreeBillCustomer(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
     
 
 class FreeBill(BaseModel):
@@ -282,5 +291,6 @@ class FreeBill(BaseModel):
     bill_no = models.CharField(max_length=100, unique=True, db_index=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    billed_for = models.ForeignKey(FreeBillCustomer, on_delete=models.CASCADE)
     date = models.DateTimeField()
     description = models.TextField(blank=True)

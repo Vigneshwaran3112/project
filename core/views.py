@@ -200,15 +200,20 @@ class WrongBillAPIView(ViewSet,ModelViewSet):
         return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class FreeBillCustomerListAPIView(generics.ListAPIView):
+    queryset = FreeBillCustomer.objects.exclude(delete=True)
+    serializer_class = FreeBillCustomerSerializer
+
+
 class FreeBillAPIView(ViewSet,ModelViewSet):
-    queryset = FreeBill.objects.filter(delete=False)
+    queryset = FreeBill.objects.filter(delete=False, status=True)
     serializer_class = FreeBillSerializer
 
     def perform_create(self, serializer):
         serializer.save(store=serializer.validated_data['billed_by'].store)
 
     def destroy(self, request, *args, **kwargs):
-        destroy = FreeBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        destroy = FreeBill.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
     
 
@@ -240,10 +245,32 @@ class CustomerListAPIView(generics.ListAPIView):
     serializer_class = CustomerSerializer
 
 
-# class StoreProductMappingListCreate(generics.ListCreateAPIView):
-#     queryset = ProductStoreMapping.objects.exclude(delete=True)
-#     serializer_class = ProductStoreMappingSerializer
-#     # permission_classes = (IsVendor,)
+class StoreProductMappingListCreate(generics.ListCreateAPIView):
+    queryset = ProductStoreMapping.objects.exclude(delete=True)
+    serializer_class = ProductStoreMappingSerializer
+
+    # def perform_create(self, serializer):
+    #     product_mapping = ProductStoreMapping.objects.filter(store=self.request.user.store)
+    #     serializer.save(store=self.request.user.store, product=)
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
+        if product_mapping:
+            print(product_mapping)
+            print('hai ')
+            for e in serializer.validated_data['product']:
+                product_mapping.product.add(e)
+        else:
+            product_mapping = ProductStoreMapping.objects.create(
+                store = self.request.user.store,
+                product = serializer.validated_data['product']
+            )
+        serializer_data = ProductStoreMappingSerializer(product_mapping, many=True).data
+        return Response(serializer_data, status=status.HTTP_201_CREATED)
+        # return Response(product_mapping, status=status.HTTP_201_CREATED)
+
 
 class ComplaintStatusListAPIView(generics.ListAPIView):
     queryset = ComplaintStatus.objects.exclude(delete=True)

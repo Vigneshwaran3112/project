@@ -370,6 +370,20 @@ class WrongBillSerializer(serializers.ModelSerializer):
         }
 
 
+
+class FreeBillCustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FreeBillCustomer
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description,
+        }
+
 class FreeBillSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -383,6 +397,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
             'bill_no': instance.bill_no,
             'amount': instance.amount,
             'billed_by': instance.billed_by.username,
+            'billed_for': instance.billed_for.name,
             'date': instance.date,
             'description': instance.description
         }
@@ -509,19 +524,19 @@ class OrderStatusSerializer(serializers.Serializer):
             'code': instance.code,
         }
 
-# class ProductStoreMappingSerializer(serializers.ModelSerializer):
+class ProductStoreMappingSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = ProductStoreMapping
-#         exclude = ['delete', 'status', 'store']
+    class Meta:
+        model = ProductStoreMapping
+        exclude = ['delete', 'status', 'store']
 
-#     def to_representation(self, instance):
-#         return{
-#             'id': instance.pk,
-#             'store': instance.store.pk,
-#             # 'store_name': instance.store.name,
-#             # 'product': instance.product.pk,
-#         }
+    def to_representation(self, instance):
+        return{
+            # 'id': instance.pk,
+            'store': instance.store.pk,
+            # 'store_name': instance.store.name,
+            # 'product': instance.product.pk,
+        }
     
 
 class ComplaintStatusSerializer(serializers.Serializer):

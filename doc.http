@@ -1,12 +1,13 @@
 @BASE_URL = http://southindiancoffee.vgts.tech/v1/
 @CONTENT_TYPE = application/json
+@TOKEN = qwddc
 
 # @name user_onboarding
 POST  {{ BASE_URL }}user/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}
 
 {
-"username": "nesamanii",
+"username": "nesamaniiii",
 "first_name": "nesamani",
 "last_name": "n",
 "password1": "test@123",
@@ -15,7 +16,7 @@ Content-Type: {{ CONTENT_TYPE }}
 "date_of_joining": "2010-07-30T15:05:00.000Z",
 "store": 1,
 "is_superuser": false,
-"phone": "87654330620",
+"phone": "87654333320",
 "is_staff": false,
 "is_employee": true,
 "is_admin": false,
