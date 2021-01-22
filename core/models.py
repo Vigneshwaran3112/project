@@ -15,6 +15,41 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class Country(BaseModel):
+    id = models.AutoField(primary_key=True, db_index=True, unique=True)
+    name = models.CharField(max_length=200, help_text='Character field')
+    iso3 = models.CharField(max_length=20, help_text='Character field')
+    iso2 = models.CharField(max_length=20, help_text='Character field')
+    phone_code = models.CharField(max_length=50, help_text='Character field')
+    capital = models.CharField(max_length=200, help_text='Character field')
+    currency = models.CharField(max_length=100, help_text='Character field')
+
+    def __str__(self):
+        return self.name
+
+
+class State(BaseModel):
+    id = models.AutoField(primary_key=True, db_index=True, unique=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, help_text='Country foreign key')
+    name = models.CharField(max_length=200, help_text='Character field')
+    state_code = models.CharField(max_length=50, help_text='Character field')
+
+    def __str__(self):
+        return self.name
+
+
+class City(BaseModel):
+    id = models.AutoField(primary_key=True, db_index=True, unique=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, help_text='State foreign key')
+    name = models.CharField(max_length=200, help_text='Character field')
+    latitude = models.CharField(max_length=30, help_text='Character field')
+    longitude = models.CharField(max_length=30, help_text='Character field')
+
+    def __str__(self):
+        return self.name
+
+
+
 class EmployeeRole(BaseModel):
     name = models.CharField(max_length=150)
     code = models.SmallIntegerField()
@@ -27,15 +62,10 @@ class EmployeeRole(BaseModel):
 class Store(BaseModel):
     name = models.CharField(max_length=200)
     address = models.TextField()
-    city = models.CharField(max_length=100)
-    district = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_stores', help_text='City foreign key')
     pincode = models.CharField(max_length=6)
     latitude = models.DecimalField(max_digits=10, decimal_places=6)
     longitude = models.DecimalField(max_digits=10, decimal_places=6)
-
-    def __str__(self): 
-        return f'{self.name} - {self.city}'
 
 
 class StoreBranch(BaseModel):

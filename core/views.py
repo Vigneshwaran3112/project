@@ -1,5 +1,6 @@
 import datetime
 from re import error
+import json, os
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
@@ -17,9 +18,90 @@ from .permissions import *
 from .exceptions import CustomError
 
 
+class CountryViewSet(viewsets.ModelViewSet):
+    queryset = Country.objects.all().order_by('-id')
+    serializer_class = CountrySerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        country = Country.objects.filter(pk=instance.pk).update(status=not instance.status)
+        return Response({'message': 'Status changed Successfully!'})
+
+
+class StateListCreateView(generics.ListCreateAPIView):
+    serializer_class = StateSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def get_queryset(self):
+        queryset = State.objects.filter(country_id=self.kwargs['country_id']).order_by('-id')
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(country=Country.objects.get(id=self.kwargs['country_id']))
+
+
+class StateRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        state = State.objects.filter(pk=instance.pk).update(status=not instance.status)
+        return Response({'message': 'Status changed Successfully!'})
+
+
+class CityListCreateView(generics.ListCreateAPIView):
+    serializer_class = CitySerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def get_queryset(self):
+        queryset = City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(state=State.objects.get(id=self.kwargs['state_id']))
+
+
+class CityRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        city = City.objects.filter(pk=instance.pk).update(status=not instance.status)
+        return Response({'message': 'Status changed Successfully!'})
+
+
+class CountryListView(generics.ListAPIView):
+    queryset = Country.objects.all().order_by('-id')
+    serializer_class = CountryListSerializer
+    # permission_classes = (permissions.AllowAny,)
+
+
+class StateListView(generics.ListAPIView):
+    serializer_class = StateListSerializer
+    # permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self):
+        queryset = State.objects.filter(country_id=self.kwargs['country_id']).order_by('-id')
+        return queryset
+
+
+class CityListView(generics.ListAPIView):
+    serializer_class = CityListSerializer
+    # permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self):
+        queryset = City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
+        return queryset
+
+
 class AuthLoginAPIView(generics.CreateAPIView):
     serializer_class = UserTokenSerializer
-    permission_class = (AllowAny, )
+    # permission_class = (AllowAny, )
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -83,6 +165,37 @@ class RoleAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
+        
+        # world_json = os.path.join(os.getcwd(), 'countries+states+cities.json')
+        # print(world_json)
+        # with open(world_json) as f:
+        #     world_data = json.load(f)
+        # for country in world_data[]
+        # # for country in world_data:
+        # #     country_data = Country.objects.create(
+        # #     id = country['id'],
+        # #     name = country['name'],
+        # #     iso3 = country['iso3'],
+        # #     iso2 = country['iso2'],
+        # #     phone_code = country['phone_code'],
+        # #     capital = country['capital'],
+        # #     currency = country['currency']
+        # # )
+        # #     for state in country['states']:
+        # #         state_data = State.objects.create(
+        # #         country = Country.objects.get(pk=country['id']),
+        # #         id = state['id'],
+        # #         name = state['name'],
+        # #         state_code = state['state_code']
+        # #     )
+        # #         for city in state['cities']:
+        # #             city_data = City.objects.create(
+        # #             state = State.objects.get(pk=state['id']),
+        # #             id = city['id'],
+        # #             name = city['name'],
+        # #             latitude = city['latitude'],
+        # #             longitude = city['longitude']
+        # #         )
         destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -119,12 +232,21 @@ class StoreBranchAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
     def retrieve(self, request, pk):
-        store_branch = StoreBranchSerializer(StoreBranch.objects.filter(store=pk, status=True, delete=False), many=True)
+        store_branch = StoreBranchSerializer(StoreBranch.objects.filter(store=pk, delete=False), many=True)
         return Response(store_branch.data)
 
     def destroy(self, request, *args, **kwargs):
         destroy = StoreBranch.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'Store branch deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class StoreBranchListAPIView(generics.RetrieveAPIView):
+    queryset = StoreBranch.objects.exclude(status=True,delete=True)
+    serializer_class = StoreBranchSerializer
+
+    def retrieve(self, request, pk):
+        store_branch = StoreBranchSerializer(StoreBranch.objects.filter(store=pk, delete=False), many=True)
+        return Response(store_branch.data)
 
 
 class StoreAvailabilityToggle(generics.UpdateAPIView):
@@ -178,6 +300,7 @@ class UnitAPIViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
+
         destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 

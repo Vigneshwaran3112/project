@@ -9,6 +9,122 @@ from rest_framework import fields, serializers
 from .models import *
 
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'iso3': instance.iso3,
+            'iso2': instance.iso2,
+            'phone_code': instance.phone_code,
+            'capital': instance.capital,
+            'currency': instance.currency,
+            'status': instance.status,
+            'created': instance.created,
+            'updated': instance.updated
+        }
+
+
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        exclude = ['country']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'state_code': instance.state_code,
+            'status': instance.status,
+            'created': instance.created,
+            'updated': instance.updated,
+        }
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['state']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            "latitude": instance.latitude,
+            "longitude": instance.longitude,
+            'status': instance.status,
+            'created': instance.created,
+            'updated': instance.updated,
+        }
+
+
+class CityStateCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        field = '__all__'
+
+    def to_representation(self, instance):
+        return {
+            'city_id': instance.pk,
+            'city': instance.name,
+            'state_id': instance.state_id,
+            'state': instance.state.name,
+            'country_id': instance.state.country_id,
+            'country': instance.state.country.name
+        }
+
+
+class CountryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'created': instance.created,
+            'updated': instance.updated,
+        }
+
+
+class StateListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'created': instance.created,
+            'updated': instance.updated,
+        }
+
+
+class CityListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'created': instance.created,
+            'updated': instance.updated,
+        }
+
+
 class UserTokenSerializer(serializers.Serializer):
     username = serializers.CharField(trim_whitespace=True, required=True)
     password = serializers.CharField(trim_whitespace=False, required=True)
@@ -27,8 +143,8 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
-    password2 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
+    # password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
+    # password2 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
     is_admin = serializers.BooleanField(required=False)
     is_employee = serializers.BooleanField(required=False)
 
@@ -36,17 +152,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = BaseUser
         exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active']
 
-    def validate(self, data):
-        if data['password1'] == data['password2']:
-            try:
-                user = BaseUser(username=data['username'], email=data['email'])
-                validate_password(password=data['password1'], user=user)
-                return data
-            except exceptions.ValidationError as e:
-                raise serializers.ValidationError({'password1': list(e.messages)})
-        else:
-            raise serializers.ValidationError({'password1': "Password didn't match!"})
-        
+    # def validate(self, data):
+    #     if data['password1'] == data['password2']:
+    #         try:
+    #             user = BaseUser(username=data['username'], email=data['email'])
+    #             validate_password(password=data['password1'], user=user)
+    #             return data
+    #         except exceptions.ValidationError as e:
+    #             raise serializers.ValidationError({'password1': list(e.messages)})
+    #     else:
+    #         raise serializers.ValidationError({'password1': "Password didn't match!"})
+
     @transaction.atomic
     def create(self, validated_data):
         if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
@@ -143,9 +259,12 @@ class StoreSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'address': instance.address,
             'branch_count': branch_count,
-            'city': instance.city,
-            'district': instance.district,
-            'state': instance.state,
+            'city': instance.city.pk,
+            'city_name': instance.city.name,
+            'state': instance.city.state.pk,
+            'state_name': instance.city.state.name,
+            # 'district': instance.district,
+            # 'state': instance.state,
             'latitude': instance.latitude,
             'pincode': instance.pincode,
             'status': instance.status,

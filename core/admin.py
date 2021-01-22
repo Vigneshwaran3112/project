@@ -14,7 +14,7 @@ class BaseRoleAdmin(admin.ModelAdmin):
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'address', 'city', 'district', 'state', 'latitude', 'longitude', 'status', 'delete', 'created', 'updated')
+    list_display = ('pk', 'name', 'address', 'latitude', 'longitude', 'status', 'delete', 'created', 'updated')
 
 
 @admin.register(UserSalary)
@@ -118,3 +118,11 @@ admin.site.register(ProductStoreMapping)
 admin.site.register(FreeBillCustomer)
 
 admin.site.register(StoreBranch)
+
+admin.site.register(Country)
+admin.site.register(State)
+# admin.site.register(City)
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name' )

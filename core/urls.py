@@ -27,6 +27,15 @@ urlpatterns = [
 
     path('', include(router.urls)),
 
+    path('states/<int:country_id>/', views.StateListCreateView.as_view()),
+    path('states_specific/<int:pk>/', views.StateRetrieveUpdateDestroyView.as_view()),
+    path('cities/<int:state_id>/', views.CityListCreateView.as_view()),
+    path('cities_specific/<int:pk>/', views.CityRetrieveUpdateDestroyView.as_view()),
+
+    path('countries_list/', views.CountryListView.as_view()),
+    path('states_list/<int:country_id>', views.StateListView.as_view()),
+    path('cities_list/<int:state_id>', views.CityListView.as_view()),
+
     # path('store_status_toggle/<int:pk>/', views.StoreAvailabilityToggle.as_view()),
 
     # path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
@@ -56,6 +65,8 @@ urlpatterns = [
     path('unit_list/', views.UnitListAPIView.as_view()),
     path('category_list/', views.ProductCategoryListAPIView.as_view()),
     path('type_list/', views.ProductTypeListAPIView.as_view()),
+    path('store_branch_list/<int:pk>/', views.StoreBranchListAPIView.as_view()),
+
 
 
 
