@@ -333,6 +333,7 @@ class StoreProductSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return{
             'id': instance.pk,
+            'key': instance.pk,
             # 'store': instance.store.name,
             # BaseUserSerializer(instance.user).data,
             'product_unit': UnitSerializer(instance.product_unit).data,
