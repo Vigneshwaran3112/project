@@ -26,17 +26,17 @@ urlpatterns = [
 
     path('', include(router.urls)),
 
-    path('store_status_toggle/<int:pk>/', views.StoreAvailabilityToggle.as_view()),
+    # path('store_status_toggle/<int:pk>/', views.StoreAvailabilityToggle.as_view()),
 
-    path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
+    # path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
 
-    path('role_status_toggle/<int:pk>/', views.RoleStatusToggle.as_view()),
+    # path('role_status_toggle/<int:pk>/', views.RoleStatusToggle.as_view()),
 
-    path('unit_status_toggle/<int:pk>/', views.UnitStatusToggle.as_view()),
+    # path('unit_status_toggle/<int:pk>/', views.UnitStatusToggle.as_view()),
 
-    path('category_status_toggle/<int:pk>/', views.ProductCategoryStatusToggle.as_view()),
+    # path('category_status_toggle/<int:pk>/', views.ProductCategoryStatusToggle.as_view()),
 
-    path('product_type_status_toggle/<int:pk>/', views.StoreProductTypeStatusToggle.as_view()),
+    # path('product_type_status_toggle/<int:pk>/', views.StoreProductTypeStatusToggle.as_view()),
 
 
     # path('testing/', views.Testing.as_view()),

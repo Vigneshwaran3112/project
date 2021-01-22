@@ -62,7 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
             is_superuser = validated_data['is_superuser'],
             phone = validated_data['phone'],
             is_staff = validated_data['is_admin'],
-            password = validated_data['password1'],
+            password = validated_data['phone'],
             is_employee = validated_data['is_employee']
         )
         if validated_data['is_employee']==True:
@@ -248,7 +248,7 @@ class GSTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GST
-        exclude = ['delete', 'status']
+        exclude = ['delete']
     
     def to_representation(self, instance):
         return{
@@ -264,7 +264,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -280,7 +280,7 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StoreProductCategory
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -297,7 +297,7 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StoreProductType
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -313,7 +313,7 @@ class ProductRecipeItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductRecipeItem
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -329,7 +329,7 @@ class StoreProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -355,7 +355,7 @@ class WrongBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WrongBill
-        exclude = ['delete', 'status', 'store']
+        exclude = ['delete', 'store']
 
     def to_representation(self, instance):
         return{
@@ -375,7 +375,7 @@ class FreeBillCustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FreeBillCustomer
-        exclude = ['delete', 'status']
+        exclude = ['delete']
 
     def to_representation(self, instance):
         return{
@@ -388,7 +388,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FreeBill
-        exclude = ['delete', 'status', 'store']
+        exclude = ['delete', 'store']
 
     def to_representation(self, instance):
         return{
@@ -528,7 +528,7 @@ class ProductStoreMappingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductStoreMapping
-        exclude = ['delete', 'status', 'store']
+        exclude = ['delete', 'store']
 
     def to_representation(self, instance):
         return{
