@@ -137,10 +137,12 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
+        branch_count = StoreBranch.objects.filter(store=instance.pk, status=True, delete=False).count()
         return {
             'id': instance.id,
             'name': instance.name,
             'address': instance.address,
+            'branch_count': branch_count,
             'city': instance.city,
             'district': instance.district,
             'state': instance.state,
@@ -152,6 +154,22 @@ class StoreSerializer(serializers.ModelSerializer):
             'created': instance.created,
         }
 
+
+class StoreBranchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StoreBranch
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'name': instance.name,
+            'store': instance.store.name,
+            'status': instance.status,
+            'updated': instance.updated,
+            'created': instance.created
+        }
 
 class BaseUserSerializer(serializers.ModelSerializer):
 

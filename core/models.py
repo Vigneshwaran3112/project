@@ -37,6 +37,7 @@ class Store(BaseModel):
     def __str__(self): 
         return f'{self.name} - {self.city}'
 
+
 class StoreBranch(BaseModel):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_branch')
     name = models.CharField(max_length=200)

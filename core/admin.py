@@ -117,3 +117,4 @@ admin.site.register(ProductStoreMapping)
 
 admin.site.register(FreeBillCustomer)
 
+admin.site.register(StoreBranch)

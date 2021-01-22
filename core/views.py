@@ -113,6 +113,16 @@ class StoreAPIViewset(viewsets.ModelViewSet):
         return Response({'message':'Store deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class StoreBranchAPIViewset(viewsets.ModelViewSet):
+    queryset = StoreBranch.objects.filter(delete=False)
+    serializer_class = StoreBranchSerializer
+    permission_class = (IsAdminUser, )
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = StoreBranch.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'Store branch deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class StoreAvailabilityToggle(generics.UpdateAPIView):
     queryset = Store.objects.filter(delete=False)
     serializer_class = StoreSerializer
