@@ -30,6 +30,15 @@ urlpatterns = [
 
     path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
 
+    path('role_status_toggle/<int:pk>/', views.RoleStatusToggle.as_view()),
+
+    path('unit_status_toggle/<int:pk>/', views.UnitStatusToggle.as_view()),
+
+    path('category_status_toggle/<int:pk>/', views.ProductCategoryStatusToggle.as_view()),
+
+    path('product_type_status_toggle/<int:pk>/', views.StoreProductTypeStatusToggle.as_view()),
+
+
     # path('testing/', views.Testing.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/<int:pk>/', views.UserOutAttendanceUpdateAPIView.as_view()),
@@ -41,6 +50,12 @@ urlpatterns = [
     path('product_mapping/', views.StoreProductMappingListCreate.as_view()),
     path('complaint_type/', views.ComplaintTypeListAPIView.as_view()),
     path('complaint_status/', views.ComplaintStatusListAPIView.as_view()),
+
+    path('all_role/', views.RoleListAPIView.as_view()),
+    path('all_unit/', views.UnitListAPIView.as_view()),
+    path('all_category/', views.ProductCategoryListAPIView.as_view()),
+    path('all_type/', views.ProductTypeListAPIView.as_view()),
+
 
 
 

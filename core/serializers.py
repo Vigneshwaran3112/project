@@ -124,6 +124,7 @@ class RoleSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'code': instance.code,
             'description': instance.description,
+            'status': instance.status,
             'updated': instance.updated,
             'created': instance.created
         }
@@ -270,6 +271,7 @@ class UnitSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'name': instance.name,
             'symbol': instance.symbol,
+            'status': instance.status,
             # 'code': instance.code
         }
 
@@ -286,6 +288,7 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
             # 'store': instance.store.name,
             'name': instance.name,
             'description': instance.description,
+            'status': instance.status,
             # 'code': instance.code
         }
 
@@ -301,6 +304,7 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
+            'status': instance.status,
             # 'code': instance.code
         }
 

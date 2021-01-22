@@ -104,7 +104,7 @@ class GST(BaseModel):
     name = models.CharField(max_length=100)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     percentage = models.BooleanField(default=False)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return '{} - {}'.format(self.name, self.value)
@@ -113,7 +113,7 @@ class GST(BaseModel):
 class Unit(BaseModel):
     name = models.CharField(max_length=100)
     symbol = models.CharField(max_length=100)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -122,7 +122,7 @@ class Unit(BaseModel):
 class StoreProductCategory(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -131,7 +131,7 @@ class StoreProductCategory(BaseModel):
 class StoreProductType(BaseModel): 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -195,7 +195,7 @@ class ProductInventory(BaseModel):
 class ComplaintStatus(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -204,7 +204,7 @@ class ComplaintStatus(BaseModel):
 class ComplaintType(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -221,7 +221,7 @@ class Complaint(BaseModel):
 class OrderStatus(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -282,7 +282,7 @@ class WrongBill(BaseModel):
 class FreeBillCustomer(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    code = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

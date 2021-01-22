@@ -87,6 +87,22 @@ class RoleAPIViewset(viewsets.ModelViewSet):
         return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class RoleListAPIView(generics.ListAPIView):
+    queryset = EmployeeRole.objects.exclude(delete=True)
+    serializer_class = RoleSerializer
+
+
+class RoleStatusToggle(generics.UpdateAPIView):
+    queryset = EmployeeRole.objects.filter(delete=False)
+    serializer_class = RoleSerializer
+    # permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'role status changed'}, status=status.HTTP_202_ACCEPTED)
+
+
 class StoreAPIViewset(viewsets.ModelViewSet):
     queryset = Store.objects.filter(delete=False)
     serializer_class = StoreSerializer
@@ -152,6 +168,22 @@ class UnitAPIViewset(viewsets.ModelViewSet):
         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class UnitListAPIView(generics.ListAPIView):
+    queryset = Unit.objects.exclude(delete=True)
+    serializer_class = UnitSerializer
+
+
+class UnitStatusToggle(generics.UpdateAPIView):
+    queryset = Unit.objects.filter(delete=False)
+    serializer_class = UnitSerializer
+    # permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'Unit status changed'}, status=status.HTTP_202_ACCEPTED)
+
+
 class StoreProductCategoryViewset(viewsets.ModelViewSet):
     queryset = StoreProductCategory.objects.filter(status=True, delete=False)
     serializer_class = StoreProductCategorySerializer
@@ -162,6 +194,22 @@ class StoreProductCategoryViewset(viewsets.ModelViewSet):
         return Response({'message':'product category deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class ProductCategoryListAPIView(generics.ListAPIView):
+    queryset = StoreProductCategory.objects.exclude(delete=True)
+    serializer_class = StoreProductCategorySerializer
+
+
+class ProductCategoryStatusToggle(generics.UpdateAPIView):
+    queryset = StoreProductCategory.objects.filter(delete=False)
+    serializer_class = StoreProductCategorySerializer
+    # permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'Product Category status changed'}, status=status.HTTP_202_ACCEPTED)
+
+
 class StoreProductTypeViewset(viewsets.ModelViewSet):
     queryset = StoreProductType.objects.filter(status=True, delete=False)
     serializer_class = StoreProductTypeSerializer
@@ -170,6 +218,22 @@ class StoreProductTypeViewset(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'product type deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductTypeListAPIView(generics.ListAPIView):
+    queryset = StoreProductType.objects.exclude(delete=True)
+    serializer_class = StoreProductTypeSerializer
+
+
+class StoreProductTypeStatusToggle(generics.UpdateAPIView):
+    queryset = StoreProductType.objects.filter(delete=False)
+    serializer_class = StoreProductTypeSerializer
+    # permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'Product Type status changed'}, status=status.HTTP_202_ACCEPTED)
 
 
 class ProductRecipeItemViewset(viewsets.ModelViewSet):
