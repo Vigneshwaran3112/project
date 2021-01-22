@@ -28,6 +28,7 @@ urlpatterns = [
 
     path('store_status_toggle/<int:pk>/', views.StoreAvailabilityToggle.as_view()),
 
+    path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
 
     # path('testing/', views.Testing.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),

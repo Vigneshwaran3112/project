@@ -188,6 +188,17 @@ class StoreProductViewset(viewsets.ModelViewSet):
         return Response({'message':'store product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class ProductAvailabilityToggle(generics.UpdateAPIView):
+    queryset = Product.objects.filter(delete=False)
+    serializer_class = StoreSerializer
+    # permission_class = (IsAdminUser, )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        store_status = self.queryset.filter(pk=self.kwargs['pk']).update(status=not instance.status)
+        return Response({'message': 'product status changed'}, status=status.HTTP_202_ACCEPTED)
+
+
 class WrongBillAPIView(ViewSet,ModelViewSet):
     queryset = WrongBill.objects.filter(delete=False)
     serializer_class = WrongBillSerializer
