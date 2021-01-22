@@ -255,19 +255,18 @@ class StoreProductMappingListCreate(generics.ListCreateAPIView):
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
-        if product_mapping:
-            print(product_mapping)
-            print('hai ')
+        if ProductStoreMapping.objects.get(store=self.request.user.store):
+            product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
+            remove_all_product = product_mapping.product.clear()
             for e in serializer.validated_data['product']:
                 product_mapping.product.add(e)
         else:
             product_mapping = ProductStoreMapping.objects.create(
-                store = self.request.user.store,
-                product = serializer.validated_data['product']
+                store = self.request.user.store
             )
-        serializer_data = ProductStoreMappingSerializer(product_mapping, many=True).data
+            # product_mapping.product.set(*serializer.validated_data['product'])
+        product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
+        serializer_data = ProductStoreMappingSerializer(product_mapping).data
         return Response(serializer_data, status=status.HTTP_201_CREATED)
         # return Response(product_mapping, status=status.HTTP_201_CREATED)
 
