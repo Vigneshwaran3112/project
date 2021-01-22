@@ -83,7 +83,7 @@ class RoleAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(status=False)
+        destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -164,7 +164,7 @@ class UnitAPIViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = Unit.objects.filter(pk=kwargs['pk']).update(status=False)
+        destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -190,7 +190,7 @@ class StoreProductCategoryViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(status=False)
+        destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'product category deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -216,7 +216,7 @@ class StoreProductTypeViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(status=False)
+        destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'product type deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
