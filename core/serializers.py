@@ -340,7 +340,6 @@ class StoreProductSerializer(serializers.ModelSerializer):
             'name': instance.name,
             # 'code': instance.code,
             'sort_order': instance.sort_order,
-            'product_quantity': instance.product_quantity,
             'status': instance.status,
             # 'price': instance.price,
             # 'packing_price': instance.packing_price,
