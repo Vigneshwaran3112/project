@@ -51,10 +51,10 @@ urlpatterns = [
     path('complaint_type/', views.ComplaintTypeListAPIView.as_view()),
     path('complaint_status/', views.ComplaintStatusListAPIView.as_view()),
 
-    path('all_role/', views.RoleListAPIView.as_view()),
-    path('all_unit/', views.UnitListAPIView.as_view()),
-    path('all_category/', views.ProductCategoryListAPIView.as_view()),
-    path('all_type/', views.ProductTypeListAPIView.as_view()),
+    path('role_list/', views.RoleListAPIView.as_view()),
+    path('unit_list/', views.UnitListAPIView.as_view()),
+    path('category_list/', views.ProductCategoryListAPIView.as_view()),
+    path('type_list/', views.ProductTypeListAPIView.as_view()),
 
 
 

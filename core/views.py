@@ -78,7 +78,7 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
 
 
 class RoleAPIViewset(viewsets.ModelViewSet):
-    queryset = EmployeeRole.objects.filter(status=True, delete=False)
+    queryset = EmployeeRole.objects.exclude(delete=True)
     serializer_class = RoleSerializer
     permission_class = (IsAdminUser, )
 
@@ -88,7 +88,7 @@ class RoleAPIViewset(viewsets.ModelViewSet):
 
 
 class RoleListAPIView(generics.ListAPIView):
-    queryset = EmployeeRole.objects.exclude(delete=True)
+    queryset = EmployeeRole.objects.filter(status=True, delete=False)
     serializer_class = RoleSerializer
 
 
@@ -159,7 +159,7 @@ class GSTAPIViewset(viewsets.ModelViewSet):
 
 
 class UnitAPIViewset(viewsets.ModelViewSet):
-    queryset = Unit.objects.filter(status=True, delete=False)
+    queryset = Unit.objects.exclude(delete=True)
     serializer_class = UnitSerializer
     permission_classes = (IsAdminUser, )
 
@@ -169,7 +169,7 @@ class UnitAPIViewset(viewsets.ModelViewSet):
 
 
 class UnitListAPIView(generics.ListAPIView):
-    queryset = Unit.objects.exclude(delete=True)
+    queryset = Unit.objects.filter(status=True, delete=False)
     serializer_class = UnitSerializer
 
 
@@ -185,7 +185,7 @@ class UnitStatusToggle(generics.UpdateAPIView):
 
 
 class StoreProductCategoryViewset(viewsets.ModelViewSet):
-    queryset = StoreProductCategory.objects.filter(status=True, delete=False)
+    queryset = StoreProductCategory.objects.exclude(delete=True)
     serializer_class = StoreProductCategorySerializer
     permission_classes = (IsAdminUser, )
 
@@ -195,7 +195,7 @@ class StoreProductCategoryViewset(viewsets.ModelViewSet):
 
 
 class ProductCategoryListAPIView(generics.ListAPIView):
-    queryset = StoreProductCategory.objects.exclude(delete=True)
+    queryset = StoreProductCategory.objects.filter(status=True, delete=False)
     serializer_class = StoreProductCategorySerializer
 
 
@@ -211,7 +211,7 @@ class ProductCategoryStatusToggle(generics.UpdateAPIView):
 
 
 class StoreProductTypeViewset(viewsets.ModelViewSet):
-    queryset = StoreProductType.objects.filter(status=True, delete=False)
+    queryset = StoreProductType.objects.exclude(delete=True)
     serializer_class = StoreProductTypeSerializer
     permission_classes = (IsAdminUser, )
 
@@ -221,7 +221,7 @@ class StoreProductTypeViewset(viewsets.ModelViewSet):
 
 
 class ProductTypeListAPIView(generics.ListAPIView):
-    queryset = StoreProductType.objects.exclude(delete=True)
+    queryset = StoreProductType.objects.filter(status=True, delete=False)
     serializer_class = StoreProductTypeSerializer
 
 
