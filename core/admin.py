@@ -14,7 +14,7 @@ class BaseRoleAdmin(admin.ModelAdmin):
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'address1', 'address2', 'city', 'district', 'state', 'latitude', 'longitude', 'status', 'delete', 'created', 'updated')
+    list_display = ('pk', 'name', 'address', 'city', 'district', 'state', 'latitude', 'longitude', 'status', 'delete', 'created', 'updated')
 
 
 @admin.register(UserSalary)

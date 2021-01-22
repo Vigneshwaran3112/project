@@ -82,6 +82,10 @@ class RoleAPIViewset(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
     permission_class = (IsAdminUser, )
 
+    def destroy(self, request, *args, **kwargs):
+        destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(status=False)
+        return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
 
 class StoreAPIViewset(viewsets.ModelViewSet):
     queryset = Store.objects.filter(delete=False)
@@ -139,32 +143,32 @@ class GSTAPIViewset(viewsets.ModelViewSet):
 
 
 class UnitAPIViewset(viewsets.ModelViewSet):
-    queryset = Unit.objects.filter(delete=False)
+    queryset = Unit.objects.filter(status=True, delete=False)
     serializer_class = UnitSerializer
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
+        destroy = Unit.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class StoreProductCategoryViewset(viewsets.ModelViewSet):
-    queryset = StoreProductCategory.objects.filter(delete=False)
+    queryset = StoreProductCategory.objects.filter(status=True, delete=False)
     serializer_class = StoreProductCategorySerializer
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(delete=True)
+        destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'product category deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class StoreProductTypeViewset(viewsets.ModelViewSet):
-    queryset = StoreProductType.objects.filter(delete=False)
+    queryset = StoreProductType.objects.filter(status=True, delete=False)
     serializer_class = StoreProductTypeSerializer
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(delete=True)
+        destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'product type deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -260,23 +264,17 @@ class StoreProductMappingListCreate(generics.ListCreateAPIView):
     queryset = ProductStoreMapping.objects.exclude(delete=True)
     serializer_class = ProductStoreMappingSerializer
 
-    # def perform_create(self, serializer):
-    #     product_mapping = ProductStoreMapping.objects.filter(store=self.request.user.store)
-    #     serializer.save(store=self.request.user.store, product=)
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        if ProductStoreMapping.objects.get(store=self.request.user.store):
+        try:
             product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
-            remove_all_product = product_mapping.product.clear()
-            for e in serializer.validated_data['product']:
-                product_mapping.product.add(e)
-        else:
-            product_mapping = ProductStoreMapping.objects.create(
-                store = self.request.user.store
-            )
-            # product_mapping.product.set(*serializer.validated_data['product'])
-        product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
+            print(serializer.validated_data['product'])
+            product_mapping.product.add(*serializer.validated_data['product'])
+        except ProductStoreMapping.DoesNotExist:
+            product_mapping = ProductStoreMapping.objects.create(store=self.request.user.store)
+            product_mapping.product.add(*serializer.validated_data['product'])
+            product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
         serializer_data = ProductStoreMappingSerializer(product_mapping).data
         return Response(serializer_data, status=status.HTTP_201_CREATED)
         # return Response(product_mapping, status=status.HTTP_201_CREATED)

@@ -139,9 +139,7 @@ class StoreSerializer(serializers.ModelSerializer):
         return {
             'id': instance.id,
             'name': instance.name,
-            'branch': instance.branch,
-            'address1': instance.address1,
-            'address2': instance.address2,
+            'address': instance.address,
             'city': instance.city,
             'district': instance.district,
             'state': instance.state,
@@ -151,7 +149,6 @@ class StoreSerializer(serializers.ModelSerializer):
             'longitude': instance.longitude,
             'updated': instance.updated,
             'created': instance.created,
-            'status': instance.status
         }
 
 
@@ -344,7 +341,6 @@ class StoreProductSerializer(serializers.ModelSerializer):
             # 'code': instance.code,
             'sort_order': instance.sort_order,
             'product_quantity': instance.product_quantity,
-            'description': instance.description,
             'status': instance.status,
             # 'price': instance.price,
             # 'packing_price': instance.packing_price,
