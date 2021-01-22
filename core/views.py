@@ -118,6 +118,10 @@ class StoreBranchAPIViewset(viewsets.ModelViewSet):
     serializer_class = StoreBranchSerializer
     permission_class = (IsAdminUser, )
 
+    def retrieve(self, request, pk):
+        store_branch = StoreBranchSerializer(StoreBranch.objects.filter(store=pk, status=True, delete=False), many=True)
+        return Response(store_branch.data)
+
     def destroy(self, request, *args, **kwargs):
         destroy = StoreBranch.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'Store branch deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
