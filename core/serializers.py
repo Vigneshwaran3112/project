@@ -304,6 +304,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
+        # print(instance.employee_role__code)
         # data = RoleSerializer(instance.employee_role, many=True).data
         return {
             'id': instance.id,
@@ -317,6 +318,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
+            'is_incharge': True,
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
