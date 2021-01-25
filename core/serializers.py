@@ -682,7 +682,7 @@ class ProductStoreMappingSerializer(serializers.ModelSerializer):
             # 'id': instance.pk,
             'store': instance.store.pk,
             # 'store_name': instance.store.name,
-            # 'product': instance.product.pk,
+            'product': StoreProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)),many=True).data,
         }
     
 

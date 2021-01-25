@@ -57,9 +57,12 @@ urlpatterns = [
     path('free_bill_customer/', views.FreeBillCustomerListAPIView.as_view()),
     path('customer/', views.CustomerListAPIView.as_view()),
     path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
-    path('product_mapping/', views.StoreProductMappingListCreate.as_view()),
+    path('product_mapping/<int:store_id>', views.StoreProductMappingListCreate.as_view()),
+    path('product_mapping_update/<int:store_id>', views.StoreProductMappingUpdate.as_view()),
+
     path('complaint_type/', views.ComplaintTypeListAPIView.as_view()),
     path('complaint_status/', views.ComplaintStatusListAPIView.as_view()),
+
 
     path('role_list/', views.RoleListAPIView.as_view()),
     path('unit_list/', views.UnitListAPIView.as_view()),

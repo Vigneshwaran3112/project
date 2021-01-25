@@ -438,20 +438,32 @@ class StoreProductMappingListCreate(generics.ListCreateAPIView):
     queryset = ProductStoreMapping.objects.exclude(delete=True)
     serializer_class = ProductStoreMappingSerializer
 
-    def create(self, request):
+    def create(self, request, store_id):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
-            print(serializer.validated_data['product'])
+            product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=store_id, delete=False))
             product_mapping.product.add(*serializer.validated_data['product'])
         except ProductStoreMapping.DoesNotExist:
-            product_mapping = ProductStoreMapping.objects.create(store=self.request.user.store)
+            product_mapping = ProductStoreMapping.objects.create(store=Store.objects.get(pk=store_id, delete=False))
             product_mapping.product.add(*serializer.validated_data['product'])
-            product_mapping = ProductStoreMapping.objects.get(store=self.request.user.store)
+            product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=store_id, delete=False))
         serializer_data = ProductStoreMappingSerializer(product_mapping).data
         return Response(serializer_data, status=status.HTTP_201_CREATED)
-        # return Response(product_mapping, status=status.HTTP_201_CREATED)
+        # return Response(product_mapping, status=status.HTTP_201_CREATED
+
+
+class StoreProductMappingUpdate(generics.UpdateAPIView):
+    queryset = ProductStoreMapping.objects.exclude(delete=True)
+    serializer_class = ProductStoreMappingSerializer
+
+    def update(self, request, store_id):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=store_id, delete=False))
+        product_mapping.product.remove(*serializer.validated_data['product'])
+        serializer_data = ProductStoreMappingSerializer(product_mapping).data
+        return Response(serializer_data, status=status.HTTP_201_CREATED)
 
 
 class ComplaintStatusListAPIView(generics.ListAPIView):
