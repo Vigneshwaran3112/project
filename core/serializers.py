@@ -359,7 +359,6 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
         fields = ('user', 'start')
 
     def to_representation(self, instance):
-        # total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=Coalesce(Sum('grand_total'), V(0)))
         return {
             'id': instance.pk,
             # 'user': BaseUserSerializer(instance.user).data,
@@ -370,7 +369,6 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            # 'grand_total_salary' : 
         }
 
 
@@ -381,6 +379,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
         fields = ('user', 'stop')
 
     def to_representation(self, instance):
+        total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
         return {
             'id': instance.pk,
             'user': BaseUserSerializer(instance.user).data,
@@ -390,7 +389,8 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'time_spend': instance.time_spend,
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            'ot_salary': instance.ot_salary
+            'ot_salary': instance.ot_salary,
+            'grand_total_salary' : total_salary['total']
         }
 
 
