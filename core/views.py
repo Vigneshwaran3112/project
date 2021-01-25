@@ -128,7 +128,6 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
     # permission_classes = (IsIncharge, )
 
     def get_object(self):
-        print(self.request.user)
         return self.request.user
 
 
@@ -252,7 +251,8 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        queryset = UserAttendance.objects.filter(date=self.kwargs['date'], delete=False)
+        print(self.request.user.store)
+        queryset = UserAttendance.objects.filter(date=self.kwargs['date'], user__store=self.request.user.store, delete=False)
         return queryset
 
 
