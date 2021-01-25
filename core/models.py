@@ -81,7 +81,7 @@ class BaseUser(AbstractUser):
     date_of_joining = models.DateTimeField(blank=True, null=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users', blank=True, null=True)
     is_employee = models.BooleanField(default=False)
-    employee_role = models.ManyToManyField(EmployeeRole, blank=True)
+    employee_role = models.ManyToManyField(EmployeeRole, blank=True, related_name='role_user')
     aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     pan_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     date_of_resignation = models.DateTimeField(blank=True, null=True)

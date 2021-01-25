@@ -238,22 +238,22 @@ class UserSalaryAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
 
-class UserAttendanceListAPIView(generics.ListAPIView):
-    serializer_class = UserAttendanceInSerializer
-    # permission_class = (IsAuthenticated, )
+# class UserAttendanceListAPIView(generics.ListAPIView):
+    # serializer_class = UserAttendanceInSerializer
+    # # permission_class = (IsAuthenticated, )
 
-    def get_serializer_context(self):
-        return {
-            'request': self.request,
-            'format': self.format_kwarg,
-            'view': self,
-            'date': self.kwargs['date']
-        }
+    # def get_serializer_context(self):
+    #     return {
+    #         'request': self.request,
+    #         'format': self.format_kwarg,
+    #         'view': self,
+    #         'date': self.kwargs['date']
+    #     }
 
-    def get_queryset(self):
-        print(self.request.user.store)
-        queryset = UserAttendance.objects.filter(date=self.kwargs['date'], user__store=self.request.user.store, delete=False)
-        return queryset
+    # def get_queryset(self):
+    #     # print(self.request.user.store)
+    #     queryset = UserAttendance.objects.filter(date=self.kwargs['date'], user__store=self.request.user.store, delete=False)
+    #     return queryset
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
@@ -402,6 +402,10 @@ class WrongBillAPIView(ViewSet,ModelViewSet):
     queryset = WrongBill.objects.filter(delete=False)
     serializer_class = WrongBillSerializer
 
+    def get_queryset(self):
+        queryset = WrongBill.objects.filter(store=self.request.user.store, delete=False, status=True)
+        return queryset
+
     def perform_create(self, serializer):
         serializer.save(store=serializer.validated_data['billed_by'].store)
 
@@ -418,6 +422,10 @@ class FreeBillCustomerListAPIView(generics.ListAPIView):
 class FreeBillAPIView(ViewSet,ModelViewSet):
     queryset = FreeBill.objects.filter(delete=False, status=True)
     serializer_class = FreeBillSerializer
+
+    def get_queryset(self):
+        queryset = FreeBill.objects.filter(store=self.request.user.store, delete=False, status=True)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(store=serializer.validated_data['billed_by'].store)
@@ -444,6 +452,16 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
     queryset = BulkOrder.objects.exclude(delete=True)
     serializer_class = BulkOrderSerializer
 
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'store': self.request.user.store
+        }
+    def get_queryset(self):
+        queryset = BulkOrder.objects.filter(store=self.request.user.store, delete=False)
+        return queryset
 
 class OrderStatusListAPIView(generics.ListAPIView):
     queryset = OrderStatus.objects.exclude(delete=True)
@@ -504,3 +522,20 @@ class ProductForMappingList(generics.ListAPIView):
         queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
         return queryset
 
+
+class UserAttendanceListAPIView(generics.ListAPIView):
+    queryset = BaseUser.objects.filter(is_active=True)
+    serializer_class = UserAttendanceListSerializer
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'date': self.kwargs['date']
+        }
+
+    def get_queryset(self):
+        # print(self.request.user.store)date=self.kwargs['date']
+        queryset = BaseUser.objects.filter(store=self.request.user.store)
+        return queryset

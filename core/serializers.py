@@ -151,8 +151,6 @@ class UserSerializer(serializers.ModelSerializer):
     ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
     salary_update_date = serializers.DateTimeField()
 
-
-
     class Meta:
         model = BaseUser
         exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active']
@@ -306,6 +304,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
+        # data = RoleSerializer(instance.employee_role, many=True).data
         return {
             'id': instance.id,
             'first_name': instance.first_name,
@@ -316,6 +315,8 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'email': instance.email,
             'is_staff': instance.is_staff,
             'is_active': instance.is_active,
+            'is_employee': instance.is_employee,
+            'is_superuser': instance.is_superuser,
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
@@ -656,7 +657,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BulkOrder
-        exclude = ['order_unique_id']
+        exclude = ['order_unique_id', 'store']
 
     @transaction.atomic
     def create(self, validated_data):
@@ -673,7 +674,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
         bulk_order = BulkOrder.objects.create(
                 customer = create_customer,
-                store = validated_data['store'],
+                store = self.context['store'],
                 order_status = validated_data['order_status'],
                 delivery_date = validated_data['delivery_date'],
                 order_notes = validated_data['order_notes'],
@@ -698,7 +699,8 @@ class BulkOrderSerializer(serializers.ModelSerializer):
         return{
             'id': instance.pk,
             'customer': instance.customer.name,
-            'store': instance.store.name,
+            'store': instance.store.pk,
+            'store_name': instance.store.name,
             'order_status': instance.order_status.name,
             'order_unique_id': instance.order_unique_id,
             'delivery_date': instance.delivery_date,
@@ -750,4 +752,61 @@ class ComplaintTypeSerializer(serializers.Serializer):
             'name': instance.name,
             'description': instance.description,
             # 'code': instance.code,
+        }
+
+
+class AttendanceSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            # 'user': BaseUserSerializer(instance.user).data,
+            'start': instance.start,
+            'stop': instance.stop,
+            'date': instance.date,
+            'stop_availability': False if instance.stop else True,
+            'time_spend': instance.time_spend,
+            'salary': instance.salary,
+            'ot_time_spend': instance.ot_time_spend,
+            'ot_salary': instance.ot_salary,
+            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
+        }
+
+
+class AttendanceBreakSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'start': instance.start,
+            'stop': instance.stop,
+            'date': instance.date,
+            'stop_availability': False if instance.stop else True,
+            'time_spend': instance.time_spend
+        }
+
+
+class UserAttendanceListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        # salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'username': instance.username,
+            'email': instance.email,
+            'first_name': instance.first_name,
+            'last_name': instance.last_name,
+            'date_of_joining': instance.date_of_joining,
+            'phone': instance.phone,
+            'store': instance.store.name if instance.store else None,
+            'aadhaar_number': instance.aadhaar_number,
+            'pan_number': instance.pan_number,
+            'date_of_resignation': instance.date_of_resignation,
+            'reason_of_resignation': instance.reason_of_resignation,
+            'role': RoleSerializer(instance.employee_role, many=True).data,
+            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']), many=True).data,
+            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
+
+            # 'salary': salary_data
         }
