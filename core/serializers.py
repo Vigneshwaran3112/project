@@ -143,25 +143,18 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # password1 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
-    # password2 = serializers.CharField(write_only=True, required=False, help_text='Character field(password)')
     is_admin = serializers.BooleanField(required=False)
     is_employee = serializers.BooleanField(required=False)
+    per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
+    work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
+    ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
+    salary_update_date = serializers.DateTimeField()
+
+
 
     class Meta:
         model = BaseUser
         exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active']
-
-    # def validate(self, data):
-    #     if data['password1'] == data['password2']:
-    #         try:
-    #             user = BaseUser(username=data['username'], email=data['email'])
-    #             validate_password(password=data['password1'], user=user)
-    #             return data
-    #         except exceptions.ValidationError as e:
-    #             raise serializers.ValidationError({'password1': list(e.messages)})
-    #     else:
-    #         raise serializers.ValidationError({'password1': "Password didn't match!"})
 
     @transaction.atomic
     def create(self, validated_data):
@@ -179,7 +172,16 @@ class UserSerializer(serializers.ModelSerializer):
             phone = validated_data['phone'],
             is_staff = validated_data['is_admin'],
             password = validated_data['phone'],
-            is_employee = validated_data['is_employee']
+            is_employee = validated_data['is_employee'],
+            aadhaar_number = validated_data['aadhaar_number'],
+            pan_number = validated_data['pan_number']
+        )
+        user_salary = UserSalary.objects.create(
+            user = user,
+            date = validated_data['salary_update_date'],
+            per_hour = validated_data['per_hour'],
+            work_hours = validated_data['work_hours'],
+            ot_per_hour = validated_data['ot_per_hour']
         )
         if validated_data['is_employee']==True:
             if validated_data['employee_role']:
@@ -211,6 +213,7 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
         
     def to_representation(self, instance):
+        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
         return {
             'id': instance.pk,
             'key': instance.pk,
@@ -221,7 +224,12 @@ class UserSerializer(serializers.ModelSerializer):
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
             'store': instance.store.name if instance.store else None,
+            'aadhaar_number': instance.aadhaar_number,
+            'pan_number': instance.pan_number,
+            'date_of_resignation': instance.date_of_resignation,
+            'reason_of_resignation': instance.reason_of_resignation,
             'role': RoleSerializer(instance.employee_role, many=True).data,
+            'salary': salary_data
             # 'status': instance.status,
             # 'updated': instance.updated,
             # 'created': instance.created
@@ -318,26 +326,28 @@ class UserSalarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserSalary
-        fields = ('user', 'per_hour', 'work_hours', 'ot_per_hour')
+        fields = ('user', 'per_hour', 'work_hours', 'ot_per_hour', 'date')
 
     def update(self, instance, validated_data):
         instance.user = validated_data.get('user', instance.user)
         instance.per_hour = validated_data.get('per_hour', instance.per_hour)
         instance.work_hours = validated_data.get('work_hours', instance.work_hours)
         instance.ot_per_hour = validated_data.get('ot_per_hour', instance.ot_per_hour)
+        instance.date = validated_data.get('date', instance.date)
         instance.save()
         return instance
 
     def to_representation(self, instance):
         return {
-            'id': instance.id,
+            'id': instance.pk,
             'per_hour': instance.per_hour,
             'per_minute': instance.per_minute,
             'work_hours': instance.work_hours,
             'work_minutes': instance.work_minutes,
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
-            'user': BaseUserSerializer(instance.user).data
+            'date': instance.date
+            # 'user': BaseUserSerializer(instance.user).data
         }
 
 

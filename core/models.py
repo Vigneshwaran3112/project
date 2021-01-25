@@ -82,6 +82,10 @@ class BaseUser(AbstractUser):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users', blank=True, null=True)
     is_employee = models.BooleanField(default=False)
     employee_role = models.ManyToManyField(EmployeeRole, blank=True)
+    aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    pan_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    date_of_resignation = models.DateTimeField(blank=True, null=True)
+    reason_of_resignation = models.CharField(max_length=300, unique=True, blank=True, null=True)
 
 
     def __str__(self):
@@ -96,6 +100,7 @@ class UserSalary(BaseModel):
     work_minutes = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
         self.per_minute = self.per_hour / 60

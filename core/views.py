@@ -113,33 +113,6 @@ class AuthLoginAPIView(generics.CreateAPIView):
         return Response(response)
 
 
-# class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-
-#     def test_func(self):
-#         if self.request.user.is_superuser:
-#             return True
-#         else:
-#             raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
-
-
-# class AdminUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-
-#     def test_func(self):
-#         if self.request.user.is_staff:
-#             return True
-#         else:
-#             raise CustomError(detail={'message': "You don't have permission"}, code=status.HTTP_403_FORBIDDEN)
-
-
-# class EmployeeUserMixin():
-
-#     def test_func(self):
-#         if self.request.user.is_employee:
-#             return 1
-#         else:
-#             pass
-
-
 class UserAPIView(viewsets.ModelViewSet):
     queryset = BaseUser.objects.filter(is_active=True)
     serializer_class = UserSerializer
