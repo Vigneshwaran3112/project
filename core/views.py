@@ -481,5 +481,5 @@ class ProductForMappingList(generics.ListAPIView):
 
     def get_queryset(self):
         product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
-        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True))
+        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True), delete=True)
         return queryset
