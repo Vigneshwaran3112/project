@@ -68,6 +68,7 @@ urlpatterns = [
     path('unit_list/', views.UnitListAPIView.as_view()),
     path('category_list/', views.ProductCategoryListAPIView.as_view()),
     path('type_list/', views.ProductTypeListAPIView.as_view()),
+    path('product_list_mapping/<int:store_id>', views.ProductForMappingList.as_view()),
     path('store_branch_list/<int:pk>/', views.StoreBranchListAPIView.as_view()),
 
 

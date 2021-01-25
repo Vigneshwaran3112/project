@@ -474,3 +474,12 @@ class ComplaintStatusListAPIView(generics.ListAPIView):
 class ComplaintTypeListAPIView(generics.ListAPIView):
     queryset = ComplaintType.objects.exclude(delete=True)
     serializer_class = ComplaintTypeSerializer
+
+
+class ProductForMappingList(generics.ListAPIView):
+    serializer_class = StoreProductSerializer
+
+    def get_queryset(self):
+        product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
+        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True))
+        return queryset
