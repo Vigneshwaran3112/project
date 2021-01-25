@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
 from django.db.models.fields import NullBooleanField
+from django.db.models import Sum ,Value as V
 
 from rest_framework import fields, serializers
 
@@ -358,6 +359,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
         fields = ('user', 'start')
 
     def to_representation(self, instance):
+        # total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=Coalesce(Sum('grand_total'), V(0)))
         return {
             'id': instance.pk,
             # 'user': BaseUserSerializer(instance.user).data,
@@ -367,7 +369,8 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'time_spend': instance.time_spend,
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            'ot_salary': instance.ot_salary
+            'ot_salary': instance.ot_salary,
+            # 'grand_total_salary' : 
         }
 
 
@@ -679,9 +682,6 @@ class ProductStoreMappingSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
-            # 'id': instance.pk,
-            'store': instance.store.pk,
-            # 'store_name': instance.store.name,
             'product': StoreProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)),many=True).data,
         }
     
