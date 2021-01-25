@@ -137,6 +137,19 @@ class UserAttendance(BaseModel):
         super(UserAttendance, self).save(*args, **kwargs)
 
 
+class UserAttendanceBreak(BaseModel):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_attendances_break')
+    start = models.DateTimeField()
+    stop = models.DateTimeField(null=True, blank=True)
+    date = models.DateField(auto_now_add=True)
+    time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.stop:
+            self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
+        super(UserAttendanceBreak, self).save(*args, **kwargs)
+
+
 class GST(BaseModel):
     name = models.CharField(max_length=100)
     value = models.DecimalField(max_digits=10, decimal_places=2)

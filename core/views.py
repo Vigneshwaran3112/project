@@ -239,6 +239,23 @@ class UserSalaryAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
 
+class UserAttendanceListAPIView(generics.ListAPIView):
+    serializer_class = UserAttendanceInSerializer
+    # permission_class = (IsAuthenticated, )
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'date': self.kwargs['date']
+        }
+
+    def get_queryset(self):
+        queryset = UserAttendance.objects.filter(date=self.kwargs['date'], delete=False)
+        return queryset
+
+
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceInSerializer
     # permission_class = (IsAuthenticated, )
@@ -249,12 +266,17 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserAttendanceOutSerializer
     # permission_class = (IsAuthenticated,)
 
-    # def partial_update(self, request, *args, **kwargs):
-    #     user_attendance = UserAttendance.objects.filter(user=request.user).latest('created')
-    #     user_attendance.stop = datetime.datetime.now()
-    #     print(request.user, 'hai')
-    #     user_attendance.save()
-    #     return Response(self.serializer_class(user_attendance).data)
+
+
+class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
+    serializer_class = UserAttendanceBreakInSerializer
+    # permission_class = (IsAuthenticated, )
+
+
+class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
+    queryset = UserAttendanceBreak.objects.filter(delete=False)
+    serializer_class = UserAttendanceBreakOutSerializer
+    # permission_class = (IsAuthenticated,)
 
 
 class GSTAPIViewset(viewsets.ModelViewSet):
@@ -273,7 +295,6 @@ class UnitAPIViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-
         destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -434,8 +455,8 @@ class CustomerListAPIView(generics.ListAPIView):
     serializer_class = CustomerSerializer
 
 
-class StoreProductMappingListCreate(generics.ListCreateAPIView):
-    queryset = ProductStoreMapping.objects.exclude(delete=True)
+class StoreProductMappingListCreate(generics.CreateAPIView):
+    queryset = ProductStoreMapping.objects.exclude(delete=True).order_by('pk')
     serializer_class = ProductStoreMappingSerializer
 
     def create(self, request, store_id):
@@ -448,13 +469,12 @@ class StoreProductMappingListCreate(generics.ListCreateAPIView):
             product_mapping = ProductStoreMapping.objects.create(store=Store.objects.get(pk=store_id, delete=False))
             product_mapping.product.add(*serializer.validated_data['product'])
             product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=store_id, delete=False))
-        serializer_data = ProductStoreMappingSerializer(product_mapping).data
+        serializer_data = self.serializer_class(product_mapping).data
         return Response(serializer_data, status=status.HTTP_201_CREATED)
-        # return Response(product_mapping, status=status.HTTP_201_CREATED
 
 
 class StoreProductMappingUpdate(generics.UpdateAPIView):
-    queryset = ProductStoreMapping.objects.exclude(delete=True)
+    queryset = ProductStoreMapping.objects.exclude(delete=True).order_by('pk')
     serializer_class = ProductStoreMappingSerializer
 
     def update(self, request, store_id):
@@ -481,5 +501,6 @@ class ProductForMappingList(generics.ListAPIView):
 
     def get_queryset(self):
         product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
-        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True), delete=True)
+        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
         return queryset
+

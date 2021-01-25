@@ -361,14 +361,16 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            # 'user': BaseUserSerializer(instance.user).data,
+            'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
+            'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend,
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
+            'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
         }
 
 
@@ -389,13 +391,51 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
+            'stop_availability': False if instance.stop else True,
             'time_spend_minuts': instance.time_spend,
             'time_spend_hours': '%d:%02d' % (time_spend_hours, time_spend_minutes),
             'salary': instance.salary,
             'ot_time_spend_minuts': instance.ot_time_spend,
             'ot_time_spend_hours': '%d:%02d' % (ot_hours, ot_minutes),
             'ot_salary': instance.ot_salary,
-            'grand_total_salary' : total_salary['total']
+            'grand_total_salary' : total_salary['total'],
+            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
+        }
+
+
+class UserAttendanceBreakInSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserAttendanceBreak
+        fields = ('user', 'start')
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            # 'user': BaseUserSerializer(instance.user).data,
+            'start': instance.start,
+            'stop': instance.stop,
+            'date': instance.date,
+            'stop_availability': False if instance.stop else True,
+            'time_spend': instance.time_spend
+        }
+
+
+class UserAttendanceBreakOutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserAttendance
+        fields = ('user', 'stop')
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'user': BaseUserSerializer(instance.user).data,
+            'start': instance.start,
+            'stop': instance.stop,
+            'date': instance.date,
+            'stop_availability': False if instance.stop else True,
+            'time_spend': instance.time_spend
         }
 
 
@@ -687,7 +727,7 @@ class ProductStoreMappingSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
-            'product': StoreProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)),many=True).data,
+            'product': StoreProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
         }
     
 

@@ -52,6 +52,8 @@ urlpatterns = [
     # path('testing/', views.Testing.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/<int:pk>/', views.UserOutAttendanceUpdateAPIView.as_view()),
+    path('user_in_attendance_break/', views.UserInAttendanceBreakCreateAPIView.as_view()),
+    path('user_out_attendance_break/<int:pk>/', views.UserOutAttendanceBreakUpdateAPIView.as_view()),
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
     path('order_status/', views.OrderStatusListAPIView.as_view()),
     path('free_bill_customer/', views.FreeBillCustomerListAPIView.as_view()),
@@ -70,6 +72,8 @@ urlpatterns = [
     path('type_list/', views.ProductTypeListAPIView.as_view()),
     path('product_list_mapping/<int:store_id>', views.ProductForMappingList.as_view()),
     path('store_branch_list/<int:pk>/', views.StoreBranchListAPIView.as_view()),
+    path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
+
 
 
 
