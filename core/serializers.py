@@ -260,7 +260,7 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        branch_count = instance.branch.count()
+        branch_count = instance.branch.filter(delete=False).count()
         return {
             'id': instance.id,
             'name': instance.name,
