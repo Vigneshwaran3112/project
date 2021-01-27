@@ -61,7 +61,7 @@ urlpatterns = [
     
     path('store_branch/<int:pk>/', views.StoreBranchRetUpdDelAPIView.as_view()),
     path('store_branch_update/<int:pk>/', views.StoreBranchUpdateApiView.as_view()),
-    path('store_branch_create/', views.StoreBranchCreate.as_view()),
+    path('store_branch_create/<int:store_id>/', views.StoreBranchCreate.as_view()),
     
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
 

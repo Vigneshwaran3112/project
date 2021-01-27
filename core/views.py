@@ -192,11 +192,11 @@ class StoreBranchCreate(generics.UpdateAPIView):
     serializer_class = StoreBranchSerializer
     # permission_class = (IsAdminUser, )
 
-    def partial_update(self, request):
+    def partial_update(self, request, store_id):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         branch = Branch.objects.create(name = serializer.validated_data['name'])
-        store = Store.objects.get(pk=self.request.user.store.pk, delete=False)
+        store = Store.objects.get(pk=store_id, delete=False)
         store.branch.add(branch)
         return Response(StoreSerializer(store).data, status=status.HTTP_201_CREATED)
 
