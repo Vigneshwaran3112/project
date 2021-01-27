@@ -198,7 +198,8 @@ class StoreBranchCreate(generics.UpdateAPIView):
         branch = Branch.objects.create(name = serializer.validated_data['name'])
         store = Store.objects.get(pk=store_id, delete=False)
         store.branch.add(branch)
-        return Response(StoreSerializer(store).data, status=status.HTTP_201_CREATED)
+        return Response({'message':'branch created sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 class StoreBranchUpdateApiView(generics.UpdateAPIView):

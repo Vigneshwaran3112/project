@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
 from django.db.models.fields import NullBooleanField
-from django.db.models import Sum ,Value as V
+from django.db.models import Sum ,Value as V, Prefetch
 
 from rest_framework import fields, serializers
 
@@ -275,7 +275,7 @@ class StoreSerializer(serializers.ModelSerializer):
             'latitude': instance.latitude,
             'pincode': instance.pincode,
             'status': instance.status,
-            'branch': StoreBranchSerializer(instance.branch, many=True).data,
+            # 'branch': StoreBranchSerializer(instance.branch, many=True).data,
             'longitude': instance.longitude,
             'updated': instance.updated,
             'created': instance.created,
@@ -290,8 +290,10 @@ class StoreBranchSerializer(serializers.ModelSerializer):
         fields = ('status', 'name', )
 
     def to_representation(self, instance):
+        store = Store.objects.get(branch__pk=instance.pk).name
         return {
             'id': instance.pk,
+            'store' :store,
             'name': instance.name,
             'status': instance.status,
             'created': instance.created
