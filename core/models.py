@@ -59,21 +59,24 @@ class EmployeeRole(BaseModel):
         return f'{self.name} - {self.code}'
 
 
+class Branch(BaseModel):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self): 
+        return f'{self.name}'
+
+
 class Store(BaseModel):
     name = models.CharField(max_length=200)
     address = models.TextField()
+    branch = models.ManyToManyField(Branch, blank=True, related_name='branch_store')
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_stores', help_text='City foreign key')
     pincode = models.CharField(max_length=6)
     latitude = models.DecimalField(max_digits=10, decimal_places=6)
     longitude = models.DecimalField(max_digits=10, decimal_places=6)
-
-
-class StoreBranch(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_branch')
-    name = models.CharField(max_length=200)
-
-    def __str__(self): 
-        return f'{self.name} - {self.store.name}'
+    
+    def __str__(self):
+        return f'{self.name}'
 
 
 class BaseUser(AbstractUser):
@@ -346,3 +349,34 @@ class FreeBill(BaseModel):
     billed_for = models.ForeignKey(FreeBillCustomer, on_delete=models.CASCADE)
     date = models.DateTimeField()
     description = models.TextField(blank=True)
+
+
+class CreditSaleCustomer(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_credit_sale_customer')
+    name = models.CharField(max_length=100)
+    phone1 = models.CharField(max_length=20, db_index=True)
+    phone2 = models.CharField(max_length=20, null=True, blank=True)
+    address1 = models.TextField(blank=True)
+    address2 = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class CreditSales(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_credit_sale')
+    customer = models.ForeignKey(CreditSaleCustomer, on_delete=models.CASCADE, related_name='customer_credit_sale')
+    bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+    description = models.TextField(blank=True)
+
+
+class ElectricBill(BaseModel):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_electric_bill')
+    opening_reading = models.CharField(max_length=100, unique=True, db_index=True)
+    closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.store.name} - {self.date}'

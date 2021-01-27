@@ -117,7 +117,7 @@ admin.site.register(ProductStoreMapping)
 
 admin.site.register(FreeBillCustomer)
 
-admin.site.register(StoreBranch)
+admin.site.register(Branch)
 
 admin.site.register(Country)
 admin.site.register(State)
@@ -126,3 +126,13 @@ admin.site.register(State)
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
+
+
+@admin.register(CreditSaleCustomer)
+class CreditSaleCustomerAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'store' )
+
+
+@admin.register(CreditSales)
+class CreditSalesAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'bill_no', 'amount', 'store', 'customer', 'description', 'date')

@@ -260,7 +260,7 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        branch_count = StoreBranch.objects.filter(store=instance.pk, status=True, delete=False).count()
+        branch_count = instance.branch.count()
         return {
             'id': instance.id,
             'name': instance.name,
@@ -275,6 +275,7 @@ class StoreSerializer(serializers.ModelSerializer):
             'latitude': instance.latitude,
             'pincode': instance.pincode,
             'status': instance.status,
+            'branch': StoreBranchSerializer(instance.branch, many=True).data,
             'longitude': instance.longitude,
             'updated': instance.updated,
             'created': instance.created,
@@ -282,20 +283,20 @@ class StoreSerializer(serializers.ModelSerializer):
 
 
 class StoreBranchSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
 
     class Meta:
-        model = StoreBranch
-        fields = '__all__'
+        model = Store
+        fields = ('status', 'name', )
 
     def to_representation(self, instance):
         return {
-            'id': instance.id,
+            'id': instance.pk,
             'name': instance.name,
-            'store': instance.store.name,
             'status': instance.status,
-            'updated': instance.updated,
             'created': instance.created
         }
+
 
 class BaseUserSerializer(serializers.ModelSerializer):
 
@@ -304,8 +305,6 @@ class BaseUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        # print(instance.employee_role__code)
-        # data = RoleSerializer(instance.employee_role, many=True).data
         return {
             'id': instance.id,
             'first_name': instance.first_name,
@@ -318,7 +317,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
-            'is_incharge': True,
+            'is_incharge': instance.employee_role.filter(code=1).exists(),
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
@@ -644,12 +643,12 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
-            'id': instance.pk,
-            'name': instance.name,
-            'phone1': instance.phone1,
-            'phone2': instance.phone2,
-            'address1': instance.address1,
-            'address2': instance.address2,
+            'id': instance.customer.pk,
+            'name': instance.customer.name,
+            'phone1': instance.customer.phone1,
+            'phone2': instance.customer.phone2,
+            'address1': instance.customer.address1,
+            'address2': instance.customer.address2,
         }
 
 
@@ -811,4 +810,22 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
 
             # 'salary': salary_data
+        }
+
+
+class CreditSaleCustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CreditSaleCustomer
+        exclude = ['delete']
+    
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'store': instance.store,
+            'name': instance.name,
+            'phone1': instance.phone1,
+            'phone2': instance.phone2,
+            'address1': instance.address1,
+            'address2': instance.address2,
         }

@@ -9,7 +9,7 @@ router = DefaultRouter()
 router.register(r'role', views.RoleAPIViewset, basename='role')
 router.register(r'user', views.UserAPIView, basename='user')
 router.register(r'store', views.StoreAPIViewset, basename='store')
-router.register(r'store_branch', views.StoreBranchAPIViewset, basename='store_branch')
+# router.register(r'store_branch', views.StoreBranchAPIViewset, basename='store_branch')
 router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salary')
 router.register(r'gst', views.GSTAPIViewset, basename='gst')
 router.register(r'unit', views.UnitAPIViewset, basename='unit')
@@ -36,19 +36,6 @@ urlpatterns = [
     path('states_list/<int:country_id>', views.StateListView.as_view()),
     path('cities_list/<int:state_id>', views.CityListView.as_view()),
 
-    # path('store_status_toggle/<int:pk>/', views.StoreAvailabilityToggle.as_view()),
-
-    # path('product_status_toggle/<int:pk>/', views.ProductAvailabilityToggle.as_view()),
-
-    # path('role_status_toggle/<int:pk>/', views.RoleStatusToggle.as_view()),
-
-    # path('unit_status_toggle/<int:pk>/', views.UnitStatusToggle.as_view()),
-
-    # path('category_status_toggle/<int:pk>/', views.ProductCategoryStatusToggle.as_view()),
-
-    # path('product_type_status_toggle/<int:pk>/', views.StoreProductTypeStatusToggle.as_view()),
-
-
     # path('testing/', views.Testing.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/<int:pk>/', views.UserOutAttendanceUpdateAPIView.as_view()),
@@ -71,7 +58,10 @@ urlpatterns = [
     path('category_list/', views.ProductCategoryListAPIView.as_view()),
     path('type_list/', views.ProductTypeListAPIView.as_view()),
     path('product_list_mapping/<int:store_id>', views.ProductForMappingList.as_view()),
-    path('store_branch_list/<int:pk>/', views.StoreBranchListAPIView.as_view()),
+    path('store_branch/<int:pk>/', views.StoreBranchRetUpdDelAPIView.as_view()),
+    path('store_branch_update/<int:pk>/', views.StoreBranchUpdateApiView.as_view()),
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
+    path('store_branch_create/<int:store_id>/', views.StoreBranchCreate.as_view()),
+
     path('store_specific_user/<int:store_id>/', views.StoreSpecificUserListAPIView.as_view()),
 ]
