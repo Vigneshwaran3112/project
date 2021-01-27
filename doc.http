@@ -7,14 +7,12 @@ POST  {{ BASE_URL }}user/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}
 
 {
-"username": "Vigneshweran",
-"first_name": "vignesh",
-"last_name": "eswaran",
+"username": "Vigneshwerann",
 "email": "vigneshweran@vgts.com",
 "date_of_joining": "2010-07-30T15:05:00.000Z",
 "store": 1,
 "is_superuser": false,
-"phone": "9998887776",
+"phone": "9998887771",
 "is_staff": false,
 "is_employee": true,
 "is_admin": false,
@@ -25,7 +23,11 @@ Content-Type: {{ CONTENT_TYPE }}
 "work_hours": 8,
 "ot_per_hour": 30,
 "date_of_resignation": null,
-"reason_of_resignation": null
+"reason_of_resignation": null,
+"salary_update_date": "2010-07-30T15:05:00.000Z",
+"per_hour": 60,
+"work_hour": 8,
+"ot_per_hour":30
 }
 
 # # @name user_onboarding

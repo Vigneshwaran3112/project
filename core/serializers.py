@@ -163,8 +163,8 @@ class UserSerializer(serializers.ModelSerializer):
         user = BaseUser.objects.create_user(
             username = validated_data['username'],
             email = validated_data['email'],
-            first_name = validated_data['first_name'],
-            last_name = validated_data['last_name'],
+            # first_name = validated_data['first_name'],
+            # last_name = validated_data['last_name'],
             date_of_joining = validated_data['date_of_joining'],
             store = validated_data['store'],
             is_superuser = validated_data['is_superuser'],
@@ -218,8 +218,8 @@ class UserSerializer(serializers.ModelSerializer):
             'key': instance.pk,
             'username': instance.username,
             'email': instance.email,
-            'first_name': instance.first_name,
-            'last_name': instance.last_name,
+            # 'first_name': instance.first_name,
+            # 'last_name': instance.last_name,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
             'store': instance.store.name if instance.store else None,
@@ -676,7 +676,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
         bulk_order = BulkOrder.objects.create(
                 customer = create_customer,
-                store = self.context['store'],
+                store = self.context['user'].store,
                 order_status = validated_data['order_status'],
                 delivery_date = validated_data['delivery_date'],
                 order_notes = validated_data['order_notes'],
