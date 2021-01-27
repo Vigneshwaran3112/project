@@ -539,3 +539,12 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         # print(self.request.user.store)date=self.kwargs['date']
         queryset = BaseUser.objects.filter(store=self.request.user.store)
         return queryset
+
+
+class StoreSpecificUserListAPIView(generics.ListAPIView):
+    queryset = BaseUser.objects.filter(is_active=True)
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = BaseUser.objects.filter(store=self.kwargs["store_id"])
+        return queryset

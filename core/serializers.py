@@ -676,7 +676,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
         bulk_order = BulkOrder.objects.create(
                 customer = create_customer,
-                store = self.context['user'].store,
+                store = self.context['store'],
                 order_status = validated_data['order_status'],
                 delivery_date = validated_data['delivery_date'],
                 order_notes = validated_data['order_notes'],

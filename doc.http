@@ -1,4 +1,4 @@
-@BASE_URL = http://127.0.0.1:8000/v1/
+@BASE_URL = http://southindiancoffee.vgts.tech/v1/
 @CONTENT_TYPE = application/json
 @TOKEN = qwddc
 
@@ -30,23 +30,36 @@ Content-Type: {{ CONTENT_TYPE }}
 "ot_per_hour":30
 }
 
-# # @name user_onboarding
-# POST  {{ BASE_URL }}user/ HTTP/1.1
-# Content-Type: {{ CONTENT_TYPE }}
 
-# {
-# "username": "nesamanii",
-# "first_name": "nesamani",
-# "last_name": "n",
-# "password1": "test@123",
-# "password2": "test@123",
-# "email": "nesamani@vgts.com",
-# "date_of_joining": "2010-07-30T15:05:00.000Z",
-# "store": 1,
-# "is_superuser": false,
-# "phone": "87654330620",
-# "is_staff": false,
-# "is_employee": true,
-# "is_admin": false,
-# "employee_role": [1,2]
-# }
+@BASE_URL = http://southindiancoffee.vgts.tech/v1/
+@CONTENT_TYPE = application/json
+@TOKEN = qwddc
+
+# @name store_specific_user
+
+POST  {{ BASE_URL }}store_specific_user/1/ HTTP/1.1
+Content-Type: {{ CONTENT_TYPE }}
+
+{
+"username": "Vigneshwerann",
+"email": "vigneshweran@vgts.com",
+"date_of_joining": "2010-07-30T15:05:00.000Z",
+"store": 1,
+"is_superuser": false,
+"phone": "9998887771",
+"is_staff": false,
+"is_employee": true,
+"is_admin": false,
+"employee_role": [1,2],
+"aadhaar_number": "849849384934",
+"pan_number": "AZ653",
+"per_hour": 62.5,
+"work_hours": 8,
+"ot_per_hour": 30,
+"date_of_resignation": null,
+"reason_of_resignation": null,
+"salary_update_date": "2010-07-30T15:05:00.000Z",
+"per_hour": 60,
+"work_hour": 8,
+"ot_per_hour":30
+}
