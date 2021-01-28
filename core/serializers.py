@@ -246,7 +246,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmployeeRole
-        fields = '__all__'
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return {
@@ -381,7 +381,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
+            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.start, user=instance.user), many=True).data
         }
 
 
@@ -454,7 +454,7 @@ class GSTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GST
-        exclude = ['delete']
+        exclude = ['delete', 'code']
     
     def to_representation(self, instance):
         return{
@@ -462,7 +462,7 @@ class GSTSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'value': instance.value,
             'percentage': instance.percentage,
-            'code': instance.code
+            # 'code': instance.code
         }
 
 
@@ -470,7 +470,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        exclude = ['delete']
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return{
@@ -486,7 +486,7 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StoreProductCategory
-        exclude = ['delete']
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return{
@@ -503,7 +503,7 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StoreProductType
-        exclude = ['delete']
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return{
@@ -728,7 +728,7 @@ class OrderStatusSerializer(serializers.Serializer):
             'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
-            'code': instance.code,
+            # 'code': instance.code,
         }
 
 class ProductStoreMappingSerializer(serializers.ModelSerializer):

@@ -71,7 +71,7 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
 class RoleAPIViewset(viewsets.ModelViewSet):
     queryset = EmployeeRole.objects.exclude(delete=True)
     serializer_class = RoleSerializer
-    permission_class = (IsAdminUser, )
+    # permission_class = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -86,7 +86,7 @@ class RoleListAPIView(generics.ListAPIView):
 class StoreAPIViewset(viewsets.ModelViewSet):
     queryset = Store.objects.filter(delete=False)
     serializer_class = StoreSerializer
-    permission_class = (IsAdminUser, )
+    # permission_class = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = Store.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -163,7 +163,7 @@ class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
 class GSTAPIViewset(viewsets.ModelViewSet):
     queryset = GST.objects.filter(delete=False)
     serializer_class = GSTSerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = GST.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -173,7 +173,7 @@ class GSTAPIViewset(viewsets.ModelViewSet):
 class UnitAPIViewset(viewsets.ModelViewSet):
     queryset = Unit.objects.exclude(delete=True)
     serializer_class = UnitSerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -188,7 +188,7 @@ class UnitListAPIView(generics.ListAPIView):
 class StoreProductCategoryViewset(viewsets.ModelViewSet):
     queryset = StoreProductCategory.objects.exclude(delete=True)
     serializer_class = StoreProductCategorySerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = StoreProductCategory.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -203,7 +203,7 @@ class ProductCategoryListAPIView(generics.ListAPIView):
 class StoreProductTypeViewset(viewsets.ModelViewSet):
     queryset = StoreProductType.objects.exclude(delete=True)
     serializer_class = StoreProductTypeSerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = StoreProductType.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -218,7 +218,7 @@ class ProductTypeListAPIView(generics.ListAPIView):
 class ProductRecipeItemViewset(viewsets.ModelViewSet):
     queryset = ProductRecipeItem.objects.filter(delete=False)
     serializer_class = ProductRecipeItemSerializer
-    permission_classes = (IsAdminUser, )
+    # permission_classes = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
         destroy = ProductRecipeItem.objects.filter(pk=kwargs['pk']).update(delete=True)
