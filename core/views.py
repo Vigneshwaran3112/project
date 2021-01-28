@@ -17,87 +17,24 @@ from .serializers import *
 from .permissions import *
 from .exceptions import CustomError
 
+# ------------------------- Begin State City Country ------------------------ #
 
-class CountryViewSet(viewsets.ModelViewSet):
-    queryset = Country.objects.all().order_by('-id')
-    serializer_class = CountrySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        country = Country.objects.filter(pk=instance.pk).update(status=not instance.status)
-        return Response({'message': 'Status changed Successfully!'})
-
-
-class StateListCreateView(generics.ListCreateAPIView):
+class StateListAPIView(generics.ListAPIView):
     serializer_class = StateSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        queryset = State.objects.filter(country_id=self.kwargs['country_id']).order_by('-id')
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(country=Country.objects.get(id=self.kwargs['country_id']))
+        return State.objects.filter(country_id=101).order_by('-id')
 
 
-class StateRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = State.objects.all()
-    serializer_class = StateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        state = State.objects.filter(pk=instance.pk).update(status=not instance.status)
-        return Response({'message': 'Status changed Successfully!'})
-
-
-class CityListCreateView(generics.ListCreateAPIView):
+class CityListAPIView(generics.ListAPIView):
     serializer_class = CitySerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        queryset = City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
-        return queryset
+        return City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
 
-    def perform_create(self, serializer):
-        serializer.save(state=State.objects.get(id=self.kwargs['state_id']))
-
-
-class CityRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        city = City.objects.filter(pk=instance.pk).update(status=not instance.status)
-        return Response({'message': 'Status changed Successfully!'})
-
-
-class CountryListView(generics.ListAPIView):
-    queryset = Country.objects.all().order_by('-id')
-    serializer_class = CountryListSerializer
-    # permission_classes = (permissions.AllowAny,)
-
-
-class StateListView(generics.ListAPIView):
-    serializer_class = StateListSerializer
-    # permission_classes = (permissions.AllowAny,)
-
-    def get_queryset(self):
-        queryset = State.objects.filter(country_id=self.kwargs['country_id']).order_by('-id')
-        return queryset
-
-
-class CityListView(generics.ListAPIView):
-    serializer_class = CityListSerializer
-    # permission_classes = (permissions.AllowAny,)
-
-    def get_queryset(self):
-        queryset = City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
-        return queryset
-
+# ------------------------- End State City Country ------------------------ #
 
 class AuthLoginAPIView(generics.CreateAPIView):
     serializer_class = UserTokenSerializer
@@ -137,37 +74,6 @@ class RoleAPIViewset(viewsets.ModelViewSet):
     permission_class = (IsAdminUser, )
 
     def destroy(self, request, *args, **kwargs):
-        
-        # world_json = os.path.join(os.getcwd(), 'countries+states+cities.json')
-        # print(world_json)
-        # with open(world_json) as f:
-        #     world_data = json.load(f)
-        # for country in world_data[]
-        # # for country in world_data:
-        # #     country_data = Country.objects.create(
-        # #     id = country['id'],
-        # #     name = country['name'],
-        # #     iso3 = country['iso3'],
-        # #     iso2 = country['iso2'],
-        # #     phone_code = country['phone_code'],
-        # #     capital = country['capital'],
-        # #     currency = country['currency']
-        # # )
-        # #     for state in country['states']:
-        # #         state_data = State.objects.create(
-        # #         country = Country.objects.get(pk=country['id']),
-        # #         id = state['id'],
-        # #         name = state['name'],
-        # #         state_code = state['state_code']
-        # #     )
-        # #         for city in state['cities']:
-        # #             city_data = City.objects.create(
-        # #             state = State.objects.get(pk=state['id']),
-        # #             id = city['id'],
-        # #             name = city['name'],
-        # #             latitude = city['latitude'],
-        # #             longitude = city['longitude']
-        # #         )
         destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -230,24 +136,6 @@ class UserSalaryAPIViewset(viewsets.ModelViewSet):
     queryset = UserSalary.objects.filter(status=True, delete=False)
     serializer_class = UserSalarySerializer
     permission_class = (IsAdminUser, )
-
-
-# class UserAttendanceListAPIView(generics.ListAPIView):
-    # serializer_class = UserAttendanceInSerializer
-    # # permission_class = (IsAuthenticated, )
-
-    # def get_serializer_context(self):
-    #     return {
-    #         'request': self.request,
-    #         'format': self.format_kwarg,
-    #         'view': self,
-    #         'date': self.kwargs['date']
-    #     }
-
-    # def get_queryset(self):
-    #     # print(self.request.user.store)
-    #     queryset = UserAttendance.objects.filter(date=self.kwargs['date'], user__store=self.request.user.store, delete=False)
-    #     return queryset
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
@@ -352,8 +240,7 @@ class WrongBillAPIView(viewsets.ModelViewSet):
     serializer_class = WrongBillSerializer
 
     def get_queryset(self):
-        queryset = WrongBill.objects.filter(store=self.request.user.store, delete=False, status=True)
-        return queryset
+        return WrongBill.objects.filter(store=self.request.user.store, delete=False, status=True)
 
     def perform_create(self, serializer):
         serializer.save(store=serializer.validated_data['billed_by'].store)
@@ -373,8 +260,7 @@ class FreeBillAPIView(viewsets.ModelViewSet):
     serializer_class = FreeBillSerializer
 
     def get_queryset(self):
-        queryset = FreeBill.objects.filter(store=self.request.user.store, delete=False, status=True)
-        return queryset
+        return FreeBill.objects.filter(store=self.request.user.store, delete=False, status=True)
 
     def perform_create(self, serializer):
         serializer.save(store=serializer.validated_data['billed_by'].store)
@@ -409,8 +295,7 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
             # 'store': self.request.user.store
         }
     def get_queryset(self):
-        queryset = BulkOrder.objects.filter(store=self.request.user.store, delete=False)
-        return queryset
+        return BulkOrder.objects.filter(store=self.request.user.store, delete=False)
 
 class OrderStatusListAPIView(generics.ListAPIView):
     queryset = OrderStatus.objects.exclude(delete=True)
@@ -468,8 +353,7 @@ class ProductForMappingList(generics.ListAPIView):
 
     def get_queryset(self):
         product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
-        queryset = Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
-        return queryset
+        return Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
 
 
 class UserAttendanceListAPIView(generics.ListAPIView):
@@ -485,8 +369,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        queryset = BaseUser.objects.filter(store=self.request.user.store)
-        return queryset
+        return BaseUser.objects.filter(store=self.request.user.store)
 
 
 class StoreSpecificUserListAPIView(generics.ListAPIView):
@@ -494,13 +377,8 @@ class StoreSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        queryset = BaseUser.objects.filter(store=self.kwargs["store_id"])
-        return queryset
+        return BaseUser.objects.filter(store=self.kwargs["store_id"])
 
-
-# class CreditSaleCustomerListCreateAPIView(generics.ListCreateAPIView):
-#     queryset = CreditSaleCustomer.objects.exclude(delete=True)
-#     serializer_class = BulkOrderSerializer
 
 class ElectricBillAPIView(viewsets.ModelViewSet):
     queryset = ElectricBill.objects.exclude(delete=True)
@@ -515,10 +393,10 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
     queryset = ProductPricingBatch.objects.filter(delete=False)
     serializer_class = ProductPricingBatchSerializer
+    # permission_class = (IsAdminUser,)
 
     def get_queryset(self):
-        queryset = ProductPricingBatch.objects.filter(store=self.request.user.store, delete=False, status=True)
-        return queryset
+        return ProductPricingBatch.objects.filter(store=self.request.user.store, delete=False, status=True)
 
     def perform_create(self, serializer):
         serializer.save(store=self.request.user.store)
@@ -533,8 +411,7 @@ class ProductInventoryAPIView(viewsets.ModelViewSet):
     serializer_class = ProductInventorySerializer
 
     def get_queryset(self):
-        queryset = ProductInventory.objects.filter(store=self.request.user.store, delete=False, status=True)
-        return queryset
+        return ProductInventory.objects.filter(store=self.request.user.store, delete=False, status=True)
 
     def perform_create(self, serializer):
         serializer.save(store=self.request.user.store)
