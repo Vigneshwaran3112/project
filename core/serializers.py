@@ -213,13 +213,12 @@ class UserSerializer(serializers.ModelSerializer):
         
     def to_representation(self, instance):
         salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
         return {
             'id': instance.pk,
             'key': instance.pk,
             'username': instance.username,
             'email': instance.email,
-            # 'first_name': instance.first_name,
-            # 'last_name': instance.last_name,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
             'store': instance.store.name if instance.store else None,
@@ -227,11 +226,14 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
+            'per_hour': current_salary.per_hour,
+            'work_hours': current_salary.work_hours,
+            'ot_per_hour': current_salary.ot_per_hour,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'salary': salary_data
+            # 'created': instance.created,
             # 'status': instance.status,
             # 'updated': instance.updated,
-            # 'created': instance.created
         }
 
 
@@ -830,4 +832,22 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
             'phone2': instance.phone2,
             'address1': instance.address1,
             'address2': instance.address2,
+        }
+
+
+class ElectricBillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ElectricBill
+        exclude = ['delete']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'store': instance.store.pk,
+            'store_name': instance.store.name,
+            'opening_reading': instance.opening_reading,
+            'closing_reading': instance.closing_reading,
+            'date': instance.date,
+            'created': instance.created
         }

@@ -406,7 +406,7 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
             'request': self.request,
             'format': self.format_kwarg,
             'view': self,
-            # 'store': self.request.user.store
+            'store': self.request.user.store
         }
     def get_queryset(self):
         queryset = BulkOrder.objects.filter(store=self.request.user.store, delete=False)
@@ -502,3 +502,11 @@ class StoreSpecificUserListAPIView(generics.ListAPIView):
 #     queryset = CreditSaleCustomer.objects.exclude(delete=True)
 #     serializer_class = BulkOrderSerializer
 
+class ElectricBillAPIView(viewsets.ModelViewSet):
+    queryset = ElectricBill.objects.exclude(delete=True)
+    serializer_class = ElectricBillSerializer
+    # permission_class = (AllowAny,)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)

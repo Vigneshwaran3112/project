@@ -374,7 +374,7 @@ class CreditSales(BaseModel):
 
 class ElectricBill(BaseModel):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_electric_bill')
-    opening_reading = models.CharField(max_length=100, unique=True, db_index=True)
+    opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
 

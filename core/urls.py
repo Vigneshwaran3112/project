@@ -19,6 +19,8 @@ router.register(r'recipe_item', views.ProductRecipeItemViewset, basename='recipe
 router.register(r'store_product', views.StoreProductViewset, basename='store_product')
 router.register(r'wrong_bill', views.WrongBillAPIView, basename='wrong_bill')
 router.register(r'free_bill', views.FreeBillAPIView, basename='free_bill')
+router.register(r'electric_bill', views.ElectricBillAPIView, basename='electric_bill')
+
 
 
 urlpatterns = [
