@@ -65,67 +65,6 @@ class CitySerializer(serializers.ModelSerializer):
         }
 
 
-class CityStateCountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = City
-        field = '__all__'
-
-    def to_representation(self, instance):
-        return {
-            'city_id': instance.pk,
-            'city': instance.name,
-            'state_id': instance.state_id,
-            'state': instance.state.name,
-            'country_id': instance.state.country_id,
-            'country': instance.state.country.name
-        }
-
-
-class CountryListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Country
-        fields = ['id', 'name']
-
-    def to_representation(self, instance):
-        return {
-            'id': instance.pk,
-            'key': instance.pk,
-            'name': instance.name,
-            'created': instance.created,
-            'updated': instance.updated,
-        }
-
-
-class StateListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = State
-        fields = ['id', 'name']
-
-    def to_representation(self, instance):
-        return {
-            'id': instance.pk,
-            'key': instance.pk,
-            'name': instance.name,
-            'created': instance.created,
-            'updated': instance.updated,
-        }
-
-
-class CityListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = City
-        fields = ['id', 'name']
-
-    def to_representation(self, instance):
-        return {
-            'id': instance.pk,
-            'key': instance.pk,
-            'name': instance.name,
-            'created': instance.created,
-            'updated': instance.updated,
-        }
-
-
 class UserTokenSerializer(serializers.Serializer):
     username = serializers.CharField(trim_whitespace=True, required=True)
     password = serializers.CharField(trim_whitespace=False, required=True)
@@ -394,7 +333,12 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-        ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
+        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        try:
+            ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
+            ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
+        except:
+            ot_time_spend_hours = None
 
         return {
             'id': instance.pk,
@@ -404,13 +348,13 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend_minuts': instance.time_spend,
-            'time_spend_hours': '%d:%02d' % (time_spend_hours, time_spend_minutes),
+            'time_spend_hours': time_spend_hours,
             'salary': instance.salary,
             'ot_time_spend_minuts': instance.ot_time_spend,
-            'ot_time_spend_hours': '%d:%02d' % (ot_hours, ot_minutes),
+            'ot_time_spend_hours': ot_time_spend_hours,
             'ot_salary': instance.ot_salary,
             'grand_total_salary' : total_salary['total'],
-            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
+            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user), many=True).data
         }
 
 
@@ -779,7 +723,7 @@ class AttendanceSerializer(serializers.Serializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user=instance.user), many=True).data
+            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user), many=True).data
         }
 
 
