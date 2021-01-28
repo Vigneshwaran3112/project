@@ -841,7 +841,6 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
 
 
 class ElectricBillSerializer(serializers.ModelSerializer):
-    # branch = 
 
     class Meta:
         model = ElectricBill
@@ -855,5 +854,49 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
             'date': instance.date,
+            'created': instance.created
+        }
+
+
+
+class ProductPricingBatchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductPricingBatch
+        exclude = ['delete', 'store', 'status']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'store': instance.store.pk,
+            'store_name': instance.store.name,
+            'product': instance.product.pk,
+            'product_name': instance.product.name,
+            'mrp_price': instance.mrp_price,
+            'Buying_price': instance.Buying_price,
+            'selling_price': instance.selling_price,
+            'date': instance.date,
+            'created': instance.created
+        }
+
+
+class ProductInventorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductInventory
+        exclude = ['delete', 'store', 'status', 'on_hand']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'store': instance.store.pk,
+            'store_name': instance.store.name,
+            'product': instance.product.pk,
+            'product_name': instance.product.name,
+            'product_batch':ProductPricingBatchSerializer(instance.product_batch, many=True).data,
+            'received': instance.received,
+            'sell': instance.sell,
+            'date': instance.date,
+            'on_hand': instance.on_hand,
             'created': instance.created
         }

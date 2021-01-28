@@ -240,6 +240,11 @@ class ProductInventory(BaseModel):
     sell = models.PositiveIntegerField(null=True, blank=True)
     on_hand = models.PositiveIntegerField(null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.sell:
+            self.on_hand = decimal.Decimal((self.received - self.sell))
+        super(ProductInventory, self).save(*args, **kwargs)
+
     def __str__(self):
         return f'{self.store.name} - {self.product.name}'
 

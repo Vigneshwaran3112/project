@@ -347,7 +347,7 @@ class StoreProductViewset(viewsets.ModelViewSet):
         return Response({'message':'store product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class WrongBillAPIView(ViewSet,ModelViewSet):
+class WrongBillAPIView(viewsets.ModelViewSet):
     queryset = WrongBill.objects.filter(delete=False)
     serializer_class = WrongBillSerializer
 
@@ -368,7 +368,7 @@ class FreeBillCustomerListAPIView(generics.ListAPIView):
     serializer_class = FreeBillCustomerSerializer
 
 
-class FreeBillAPIView(ViewSet,ModelViewSet):
+class FreeBillAPIView(viewsets.ModelViewSet):
     queryset = FreeBill.objects.filter(delete=False, status=True)
     serializer_class = FreeBillSerializer
 
@@ -406,7 +406,7 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
             'request': self.request,
             'format': self.format_kwarg,
             'view': self,
-            'store': self.request.user.store
+            # 'store': self.request.user.store
         }
     def get_queryset(self):
         queryset = BulkOrder.objects.filter(store=self.request.user.store, delete=False)
@@ -510,3 +510,35 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductPricingBatchAPIView(viewsets.ModelViewSet):
+    queryset = ProductPricingBatch.objects.filter(delete=False)
+    serializer_class = ProductPricingBatchSerializer
+
+    def get_queryset(self):
+        queryset = ProductPricingBatch.objects.filter(store=self.request.user.store, delete=False, status=True)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(store=self.request.user.store)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ProductPricingBatch.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'product batch deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductInventoryAPIView(viewsets.ModelViewSet):
+    queryset = ProductInventory.objects.filter(delete=False)
+    serializer_class = ProductInventorySerializer
+
+    def get_queryset(self):
+        queryset = ProductInventory.objects.filter(store=self.request.user.store, delete=False, status=True)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(store=self.request.user.store)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ProductInventory.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'product batch deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
