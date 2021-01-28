@@ -759,7 +759,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
             'role': RoleSerializer(instance.employee_role, many=True).data,
-            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']), many=True).data,
+            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
             'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
 
             # 'salary': salary_data
