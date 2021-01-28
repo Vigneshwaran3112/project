@@ -229,7 +229,12 @@ class UserSerializer(serializers.ModelSerializer):
             'per_hour': current_salary.per_hour,
             'work_hours': current_salary.work_hours,
             'ot_per_hour': current_salary.ot_per_hour,
+            'date': current_salary.date,
             'role': RoleSerializer(instance.employee_role, many=True).data,
+            'is_superuser': instance.is_superuser,
+            'is_admin': instance.is_staff,
+            'is_employee': instance.is_employee,
+            'is_active': instance.is_active,
             'salary': salary_data
             # 'created': instance.created,
             # 'status': instance.status,
@@ -836,6 +841,7 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
 
 
 class ElectricBillSerializer(serializers.ModelSerializer):
+    # branch = 
 
     class Meta:
         model = ElectricBill
