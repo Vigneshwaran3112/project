@@ -381,7 +381,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.start, user=instance.user), many=True).data
+            'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.start, user=instance.user), many=True).data
         }
 
 

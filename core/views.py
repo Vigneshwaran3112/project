@@ -352,8 +352,12 @@ class ProductForMappingList(generics.ListAPIView):
     serializer_class = StoreProductSerializer
 
     def get_queryset(self):
-        product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
-        return Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
+        try:
+            product_mapping = ProductStoreMapping.objects.get(store=Store.objects.get(pk=self.kwargs['store_id'], delete=False))
+            return Product.objects.exclude(pk__in=product_mapping.product.values_list('pk', flat=True)).exclude(delete=True)
+        except ProductStoreMapping.DoesNotExist:
+            raise ValidationError({'message': 'Data does not exist'})
+
 
 
 class UserAttendanceListAPIView(generics.ListAPIView):
