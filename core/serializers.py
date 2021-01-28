@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate
+from django.core.validators import validate_email, validate_integer
+from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
 from django.db.models.fields import NullBooleanField
-from django.db.models import Sum ,Value as V, Prefetch
+from django.db.models import Sum ,Value as V, Prefetch, Q
 
 from rest_framework import fields, serializers
 
@@ -66,20 +68,43 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class UserTokenSerializer(serializers.Serializer):
-    username = serializers.CharField(trim_whitespace=True, required=True)
-    password = serializers.CharField(trim_whitespace=False, required=True)
+    value = serializers.CharField(trim_whitespace=True, required=True)
+    password = serializers.CharField(label='Password', style={'input_type': 'password'}, trim_whitespace=False, required=True)
 
     def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
-        if username and password:
-            user = authenticate(request=self.context.get('request'), username=username, password=password)
-            if not user:
-                raise serializers.ValidationError({'message': 'Unable to log in with provided credentials.'})
+        try:
+            user_data = BaseUser.objects.get(Q(email=data['value'])|Q(phone=data['value'])|Q(username=data['value']))
+        except BaseUser.DoesNotExist:
+            try:
+                validate_email(data['value'])
+                raise serializers.ValidationError({'value': "Entered Email doesn't exist."})
+            except ValidationError:
+                try:
+                    validate_integer(data['value'])
+                    raise serializers.ValidationError({'value': "Entered Phone doesn't exist."})
+                except ValidationError:
+                    raise serializers.ValidationError({'value': "Entered User ID doesn't exist."})
+        if user_data.check_password(data['password']):
+            user = authenticate(request=self.context.get('request'), username=user_data.username, password=data['password'])
         else:
-            raise serializers.ValidationError({'username': 'Must include Username!', 'password': 'Must include Password!'})
+            raise serializers.ValidationError({'password': 'The Password entered is incorrect.'})
         data['user'] = user
         return data
+
+    # username = serializers.CharField(trim_whitespace=True, required=True)
+    # password = serializers.CharField(trim_whitespace=False, required=True)
+
+    # def validate(self, data):
+    #     username = data.get('username')
+    #     password = data.get('password')
+    #     if username and password:
+    #         user = authenticate(request=self.context.get('request'), username=username, password=password)
+    #         if not user:
+    #             raise serializers.ValidationError({'message': 'Unable to log in with provided credentials.'})
+    #     else:
+    #         raise serializers.ValidationError({'username': 'Must include Username!', 'password': 'Must include Password!'})
+    #     data['user'] = user
+    #     return data
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -92,17 +117,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BaseUser
-        exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active']
+        exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active', 'username']
 
     @transaction.atomic
     def create(self, validated_data):
         if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
             raise serializers.ValidationError({'phone': "Entered phone already exist."})
-        
+
+        # self.username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp()))
         user = BaseUser.objects.create_user(
-            username = validated_data['username'],
+            username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp())),
             email = validated_data['email'],
-            # first_name = validated_data['first_name'],
+            first_name = validated_data['first_name'],
             # last_name = validated_data['last_name'],
             date_of_joining = validated_data['date_of_joining'],
             store = validated_data['store'],
@@ -148,7 +174,7 @@ class UserSerializer(serializers.ModelSerializer):
     #         else:
     #             raise serializers.ValidationError({'message': "select a role for the employee"})
 
-        return instance
+        # return instance
         
     def to_representation(self, instance):
         salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
@@ -156,7 +182,7 @@ class UserSerializer(serializers.ModelSerializer):
         return {
             'id': instance.pk,
             'key': instance.pk,
-            'username': instance.username,
+            'username': instance.first_name,
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
@@ -258,7 +284,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'first_name': instance.first_name,
             'last_name': instance.last_name,
             'full_name': instance.get_full_name(),
-            'username': instance.username,
+            'username': instance.first_name,
             'phone': instance.phone,
             'email': instance.email,
             'is_staff': instance.is_staff,
@@ -514,7 +540,7 @@ class WrongBillSerializer(serializers.ModelSerializer):
             'bill_no': instance.bill_no,
             'wrong_amount': instance.wrong_amount,
             'correct_amount': instance.correct_amount,
-            'billed_by': instance.billed_by.username,
+            'billed_by': instance.billed_by.first_name,
             'date': instance.date,
             'description': instance.description
         }
@@ -546,7 +572,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
             'store': instance.store.name,
             'bill_no': instance.bill_no,
             'amount': instance.amount,
-            'billed_by': instance.billed_by.username,
+            'billed_by': instance.billed_by.first_name,
             'billed_for': instance.billed_for.name,
             'date': instance.date,
             'description': instance.description
@@ -565,7 +591,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
             'title': instance.title,
             'complaint_notes': instance.description,
             'type': instance.complaint_type.name,
-            'complainted_by': instance.complainted_by.username,
+            'complainted_by': instance.complainted_by.first_name,
             'status': instance.status.name,
         }
 
@@ -747,7 +773,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
         return {
             'id': instance.pk,
             'key': instance.pk,
-            'username': instance.username,
+            'username': instance.first_name,
             'email': instance.email,
             'first_name': instance.first_name,
             'last_name': instance.last_name,

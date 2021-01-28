@@ -90,6 +90,9 @@ class BaseUser(AbstractUser):
     date_of_resignation = models.DateTimeField(blank=True, null=True)
     reason_of_resignation = models.CharField(max_length=300, unique=True, blank=True, null=True)
 
+    def __str__(self):
+        return self.company_name
+
 
     def __str__(self):
         return f'{self.username} - {self.phone}'
