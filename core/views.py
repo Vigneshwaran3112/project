@@ -148,6 +148,13 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserAttendanceOutSerializer
     # permission_class = (IsAuthenticated,)
 
+    # def perform_update(self, serializer):
+    #     instance = self.get_object()
+    #     break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
+    #     break_data.stop = instance.stop
+    #     break_data.save()
+    #     serializer.save()
+
 
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceBreakInSerializer

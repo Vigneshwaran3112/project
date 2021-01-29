@@ -354,9 +354,12 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendance
-        fields = ('user', 'stop')
+        fields = ('stop', )
 
     def to_representation(self, instance):
+        break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
+        break_data.stop = instance.stop
+        break_data.save()
         total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
         time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
@@ -406,7 +409,7 @@ class UserAttendanceBreakOutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendance
-        fields = ('user', 'stop')
+        fields = ('stop', )
 
     def to_representation(self, instance):
         return {
@@ -417,6 +420,38 @@ class UserAttendanceBreakOutSerializer(serializers.ModelSerializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend
+        }
+
+
+class UserAttendanceListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date'], stop=None).exists()
+        attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk, stop=None).exists()
+        break_in = True if attendance_break_data==False and attendance_data==True else False
+
+        return {
+            'id': instance.pk,
+            'key': instance.pk,
+            'username': instance.first_name,
+            'email': instance.email,
+            'first_name': instance.first_name,
+            'last_name': instance.last_name,
+            'date_of_joining': instance.date_of_joining,
+            'phone': instance.phone,
+            'store': instance.store.name if instance.store else None,
+            'aadhaar_number': instance.aadhaar_number,
+            'pan_number': instance.pan_number,
+            'date_of_resignation': instance.date_of_resignation,
+            'reason_of_resignation': instance.reason_of_resignation,
+            'check_in':not attendance_data,
+            'check_out': attendance_data,
+            'break_in':break_in,
+            'break_out': attendance_break_data,
+            'role': RoleSerializer(instance.employee_role, many=True).data,
+            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
+            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
         }
 
 
@@ -763,37 +798,6 @@ class AttendanceBreakSerializer(serializers.Serializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend
-        }
-
-
-class UserAttendanceListSerializer(serializers.Serializer):
-
-    def to_representation(self, instance):
-        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date'], stop=None).exists()
-        attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk, stop=None).exists()
-
-        return {
-            'id': instance.pk,
-            'key': instance.pk,
-            'username': instance.first_name,
-            'email': instance.email,
-            'first_name': instance.first_name,
-            'last_name': instance.last_name,
-            'date_of_joining': instance.date_of_joining,
-            'phone': instance.phone,
-            'store': instance.store.name if instance.store else None,
-            'aadhaar_number': instance.aadhaar_number,
-            'pan_number': instance.pan_number,
-            'date_of_resignation': instance.date_of_resignation,
-            'reason_of_resignation': instance.reason_of_resignation,
-            'check_in':not attendance_data,
-            'check_out': attendance_data,
-            'break_in':not attendance_break_data,
-            'break_out':attendance_break_data,
-            'role': RoleSerializer(instance.employee_role, many=True).data,
-            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
-            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
         }
 
 
