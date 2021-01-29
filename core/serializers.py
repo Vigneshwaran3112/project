@@ -108,8 +108,9 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    is_admin = serializers.BooleanField(required=False)
-    is_employee = serializers.BooleanField(required=False)
+    role = serializers.IntegerField(required=True)
+    # is_admin = serializers.BooleanField(required=False)
+    # is_employee = serializers.BooleanField(required=False)
     per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
@@ -117,26 +118,24 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BaseUser
-        exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active', 'username']
+        exclude = ['last_login', 'date_joined', 'password', 'groups', 'user_permissions', 'is_staff', 'is_active', 'username', 'is_superuser']
 
     @transaction.atomic
     def create(self, validated_data):
         if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
             raise serializers.ValidationError({'phone': "Entered phone already exist."})
 
-        # self.username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp()))
         user = BaseUser.objects.create_user(
             username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp())),
             email = validated_data['email'],
             first_name = validated_data['first_name'],
-            # last_name = validated_data['last_name'],
             date_of_joining = validated_data['date_of_joining'],
             store = validated_data['store'],
-            is_superuser = validated_data['is_superuser'],
             phone = validated_data['phone'],
-            is_staff = validated_data['is_admin'],
+            is_superuser = True if validated_data['role']==0 else False,
+            is_staff = True if validated_data['role']==1 else False,
+            is_employee = True if validated_data['role']==2 else False,
             password = validated_data['phone'],
-            is_employee = validated_data['is_employee'],
             aadhaar_number = validated_data['aadhaar_number'],
             pan_number = validated_data['pan_number']
         )
@@ -147,7 +146,7 @@ class UserSerializer(serializers.ModelSerializer):
             work_hours = validated_data['work_hours'],
             ot_per_hour = validated_data['ot_per_hour']
         )
-        if validated_data['is_employee']==True:
+        if validated_data['role']==2 :
             if validated_data['employee_role']:
                 for e in validated_data['employee_role']:
                     user.employee_role.add(e)
@@ -179,6 +178,13 @@ class UserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
         current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        if instance.is_superuser == True:
+            user_role = 0
+        elif instance.is_staff == True:
+            user_role = 1
+        else:
+            user_role = 2
+
         return {
             'id': instance.pk,
             'key': instance.pk,
@@ -195,10 +201,12 @@ class UserSerializer(serializers.ModelSerializer):
             'work_hours': current_salary.work_hours,
             'ot_per_hour': current_salary.ot_per_hour,
             'date': current_salary.date,
-            'role': RoleSerializer(instance.employee_role, many=True).data,
-            'is_superuser': instance.is_superuser,
-            'is_admin': instance.is_staff,
-            'is_employee': instance.is_employee,
+            'employee_role': RoleSerializer(instance.employee_role, many=True).data,
+            'employee_role_list': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
+            'user_role': user_role,
+            # 'is_superuser': instance.is_superuser,
+            # 'is_admin': instance.is_staff,
+            # 'is_employee': instance.is_employee,
             'is_active': instance.is_active,
             'salary': salary_data
             # 'created': instance.created,
@@ -357,14 +365,14 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
         fields = ('stop', )
 
     def to_representation(self, instance):
+        time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
+        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
         try:
             break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
             break_data.stop = instance.stop
             break_data.save()
         except:
             break_data = 0
-        time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
         try:
             total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
         except:
@@ -402,7 +410,6 @@ class UserAttendanceBreakInSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            # 'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
@@ -432,7 +439,6 @@ class UserAttendanceBreakOutSerializer(serializers.ModelSerializer):
 class UserAttendanceListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
         attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date'], stop=None).exists()
         attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk, stop=None).exists()
         break_in = True if attendance_break_data==False and attendance_data==True else False
