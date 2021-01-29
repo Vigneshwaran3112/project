@@ -68,22 +68,22 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class UserTokenSerializer(serializers.Serializer):
-    value = serializers.CharField(trim_whitespace=True, required=True)
+    user = serializers.CharField(trim_whitespace=True, required=True)
     password = serializers.CharField(label='Password', style={'input_type': 'password'}, trim_whitespace=False, required=True)
 
     def validate(self, data):
         try:
-            user_data = BaseUser.objects.get(Q(email=data['value'])|Q(phone=data['value'])|Q(username=data['value']))
+            user_data = BaseUser.objects.get(Q(email=data['user'])|Q(phone=data['user'])|Q(username=data['user']))
         except BaseUser.DoesNotExist:
             try:
-                validate_email(data['value'])
-                raise serializers.ValidationError({'value': "Entered Email doesn't exist."})
+                validate_email(data['user'])
+                raise serializers.ValidationError({'user': "Entered Email doesn't exist."})
             except ValidationError:
                 try:
-                    validate_integer(data['value'])
-                    raise serializers.ValidationError({'value': "Entered Phone doesn't exist."})
+                    validate_integer(data['user'])
+                    raise serializers.ValidationError({'user': "Entered Phone doesn't exist."})
                 except ValidationError:
-                    raise serializers.ValidationError({'value': "Entered User ID doesn't exist."})
+                    raise serializers.ValidationError({'user': "Entered User ID doesn't exist."})
         if user_data.check_password(data['password']):
             user = authenticate(request=self.context.get('request'), username=user_data.username, password=data['password'])
         else:
