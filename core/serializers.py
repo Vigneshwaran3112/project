@@ -110,9 +110,9 @@ class UserTokenSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     is_admin = serializers.BooleanField(required=False)
     is_employee = serializers.BooleanField(required=False)
-    per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
-    work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
-    ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, required=True, help_text='Decimal field')
+    per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
+    work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
+    ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     salary_update_date = serializers.DateTimeField()
 
     class Meta:
@@ -346,7 +346,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user), many=True).data
+            'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
 
@@ -357,12 +357,18 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
         fields = ('stop', )
 
     def to_representation(self, instance):
-        break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
-        break_data.stop = instance.stop
-        break_data.save()
-        total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
+        try:
+            break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
+            break_data.stop = instance.stop
+            break_data.save()
+        except:
+            break_data = 0
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
         time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        try:
+            total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
+        except:
+            total_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
             ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
@@ -382,8 +388,8 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'ot_time_spend_minuts': instance.ot_time_spend,
             'ot_time_spend_hours': ot_time_spend_hours,
             'ot_salary': instance.ot_salary,
-            'grand_total_salary' : total_salary['total'],
-            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user), many=True).data
+            'grand_total_salary' : total_salary['total'] if total_salary['total'] else 0,
+            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
 
@@ -430,7 +436,6 @@ class UserAttendanceListSerializer(serializers.Serializer):
         attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date'], stop=None).exists()
         attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk, stop=None).exists()
         break_in = True if attendance_break_data==False and attendance_data==True else False
-
         return {
             'id': instance.pk,
             'key': instance.pk,
@@ -451,7 +456,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'break_out': attendance_break_data,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
-            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
+            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk).order_by('-pk'), many=True).data
         }
 
 

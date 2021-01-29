@@ -348,6 +348,8 @@ class StoreProductMappingUpdate(generics.UpdateAPIView):
 class ComplaintStatusListAPIView(generics.ListAPIView):
     queryset = ComplaintStatus.objects.exclude(delete=True)
     serializer_class = ComplaintStatusSerializer
+    # permission_classes = (IsAdmin,)1
+
 
 
 class ComplaintTypeListAPIView(generics.ListAPIView):

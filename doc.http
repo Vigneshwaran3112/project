@@ -12,22 +12,16 @@ Content-Type: {{ CONTENT_TYPE }}
  "date_of_joining": "2010-07-30T15:05:00.000Z",
  "store": 1,
  "is_superuser": false,
- "phone": "99988173714",
+ "phone": "99988171714",
  "is_staff": false,
  "is_employee": true,
  "is_admin": false,
  "employee_role": [1,2],
- "aadhaar_number": "84984924931",
- "pan_number": "AZ6511e3",
- "per_hour": 62.5,
- "work_hours": 8,
- "ot_per_hour": 30,
+ "aadhaar_number": "849849124971",
+ "pan_number": "AZ6511e1o3",
  "date_of_resignation": null,
  "reason_of_resignation": null,
- "salary_update_date": "2010-07-30T15:05:00.000Z",
- "per_hour": 60,
- "work_hour": 8,
- "ot_per_hour":30
+ "salary_update_date": "2010-07-30T15:05:00.000Z"
 }
 
 
