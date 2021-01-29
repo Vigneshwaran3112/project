@@ -332,7 +332,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendance
-        fields = ('user', 'start')
+        fields = ('user', 'start', 'date')
 
     def to_representation(self, instance):
         return {
@@ -397,7 +397,7 @@ class UserAttendanceBreakInSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAttendanceBreak
-        fields = ('user', 'start')
+        fields = ('user', 'start', 'date')
 
     def to_representation(self, instance):
         return {
