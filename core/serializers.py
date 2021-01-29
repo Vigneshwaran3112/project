@@ -769,20 +769,9 @@ class AttendanceBreakSerializer(serializers.Serializer):
 class UserAttendanceListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        # salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        # try:
-        #     attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).latest('created')
-        #     attendance = attendance_data.stop
-        # except:
-        #     attendance = True
-        # try:
-        #     attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk).latest('created')
-        #     attendance_break = attendance_break_data.stop
-        # except:
-        #     attendance_break = True
-
-        # print(attendance)
-        # print(attendance_break)
+        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date'], stop=None).exists()
+        attendance_break_data = UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk, stop=None).exists()
 
         return {
             'id': instance.pk,
@@ -798,15 +787,13 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            'check_in':True,
-            'check_out':True,
-            'break_in':True,
-            'break_out':True,
+            'check_in':not attendance_data,
+            'check_out': attendance_data,
+            'break_in':not attendance_break_data,
+            'break_out':attendance_break_data,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
             'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
-
-            # 'salary': salary_data
         }
 
 

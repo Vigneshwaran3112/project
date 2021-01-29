@@ -19,7 +19,7 @@ class StoreAdmin(admin.ModelAdmin):
 
 @admin.register(UserSalary)
 class UserSalaryAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'per_hour', 'per_minute', 'work_hours', 'ot_per_hour', 'ot_per_minute', 'delete', 'status', 'created', 'updated')
+    list_display = ('pk', 'per_hour', 'per_minute', 'work_hours', 'ot_per_hour', 'ot_per_minute', 'delete', 'user', 'created', 'updated')
 
 
 @admin.register(BaseUser)
