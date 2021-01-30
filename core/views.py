@@ -150,8 +150,17 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
 
 
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
+    queryset = UserAttendanceBreak.objects.filter(delete=False)
     serializer_class = UserAttendanceBreakInSerializer
     # permission_class = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        if not UserAttendance.objects.filter(user=serializer.validated_data['user'], date=serializer.validated_data['date']).exists():
+            return Response({'message': 'You have to create attendance to use this option'}, status=status.HTTP_202_ACCEPTED)  
+        else:
+            return self.create(request, *args, **kwargs)
 
 
 class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
@@ -425,3 +434,15 @@ class ProductInventoryAPIView(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         destroy = ProductInventory.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'product batch deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AttendanceBulkCreateAPIView(generics.CreateAPIView):
+    queryset = UserAttendance.objects.exclude(delete=True).order_by('pk')
+    serializer_class = AttendanceBulkSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message': 1})
+
