@@ -109,8 +109,6 @@ class UserTokenSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.IntegerField(required=True)
-    # is_admin = serializers.BooleanField(required=False)
-    # is_employee = serializers.BooleanField(required=False)
     per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
@@ -205,14 +203,8 @@ class UserSerializer(serializers.ModelSerializer):
             'employee_role': RoleSerializer(instance.employee_role, many=True).data,
             'employee_role_list': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
-            # 'is_superuser': instance.is_superuser,
-            # 'is_admin': instance.is_staff,
-            # 'is_employee': instance.is_employee,
             'is_active': instance.is_active,
             'salary': salary_data
-            # 'created': instance.created,
-            # 'status': instance.status,
-            # 'updated': instance.updated,
         }
 
 
@@ -251,12 +243,9 @@ class StoreSerializer(serializers.ModelSerializer):
             'city_name': instance.city.name,
             'state': instance.city.state.pk,
             'state_name': instance.city.state.name,
-            # 'district': instance.district,
-            # 'state': instance.state,
             'latitude': instance.latitude,
             'pincode': instance.pincode,
             'status': instance.status,
-            # 'branch': StoreBranchSerializer(instance.branch, many=True).data,
             'longitude': instance.longitude,
             'updated': instance.updated,
             'created': instance.created,
@@ -333,7 +322,6 @@ class UserSalarySerializer(serializers.ModelSerializer):
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
             'date': instance.date
-            # 'user': BaseUserSerializer(instance.user).data
         }
 
 
@@ -480,7 +468,6 @@ class GSTSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'value': instance.value,
             'percentage': instance.percentage,
-            # 'code': instance.code
         }
 
 
@@ -496,7 +483,6 @@ class UnitSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'symbol': instance.symbol,
             'status': instance.status,
-            # 'code': instance.code
         }
 
 
@@ -509,11 +495,9 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            # 'store': instance.store.name,
             'name': instance.name,
             'description': instance.description,
             'status': instance.status,
-            # 'code': instance.code
         }
 
 
@@ -529,7 +513,6 @@ class StoreProductTypeSerializer(serializers.ModelSerializer):
             'name': instance.name,
             'description': instance.description,
             'status': instance.status,
-            # 'code': instance.code
         }
 
 
@@ -746,7 +729,6 @@ class OrderStatusSerializer(serializers.Serializer):
             'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
-            # 'code': instance.code,
         }
 
 class ProductStoreMappingSerializer(serializers.ModelSerializer):
@@ -768,7 +750,6 @@ class ComplaintStatusSerializer(serializers.Serializer):
             'id': instance.pk,
             'name': instance.name,
             'description': instance.description,
-            # 'code': instance.code,
         }
 
 
@@ -778,8 +759,7 @@ class ComplaintTypeSerializer(serializers.Serializer):
         return{
             'id': instance.pk,
             'name': instance.name,
-            'description': instance.description,
-            # 'code': instance.code,
+            'description': instance.description
         }
 
 
@@ -788,7 +768,6 @@ class AttendanceSerializer(serializers.Serializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            # 'user': BaseUserSerializer(instance.user).data,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
@@ -797,7 +776,7 @@ class AttendanceSerializer(serializers.Serializer):
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
-            # 'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user), many=True).data
+            'existing': True
         }
 
 
@@ -810,7 +789,8 @@ class AttendanceBreakSerializer(serializers.Serializer):
             'stop': instance.stop,
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
-            'time_spend': instance.time_spend
+            'time_spend': instance.time_spend,
+            'existing': True
         }
 
 
