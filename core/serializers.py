@@ -188,7 +188,7 @@ class UserSerializer(serializers.ModelSerializer):
         return {
             'id': instance.pk,
             'key': instance.pk,
-            'username': instance.first_name,
+            'first_name': instance.first_name,
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
@@ -376,8 +376,9 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             break_data = 0
         try:
             total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
+            grand_salary = total_salary['total']
         except:
-            total_salary = 0
+            grand_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
             ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
@@ -397,7 +398,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'ot_time_spend_minuts': instance.ot_time_spend,
             'ot_time_spend_hours': ot_time_spend_hours,
             'ot_salary': instance.ot_salary,
-            'grand_total_salary' : total_salary['total'] if total_salary['total'] else 0,
+            'grand_total_salary' : grand_salary,
             'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
