@@ -883,10 +883,8 @@ class BulkAttendanceSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         if validated_data['existing']:
-            print('Updating')
             data = UserAttendance.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
         else:
-            print('Creating')
             data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
         return data
 
@@ -900,9 +898,7 @@ class BulkBreakTimeSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         if validated_data['existing']:
-            print('Updating')
             data = UserAttendanceBreak.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
         else:
-            print('Creating')
             data = UserAttendanceBreak.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
         return data
