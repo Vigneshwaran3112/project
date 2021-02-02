@@ -438,11 +438,20 @@ class ProductInventoryAPIView(viewsets.ModelViewSet):
 
 class AttendanceBulkCreateAPIView(generics.CreateAPIView):
     queryset = UserAttendance.objects.exclude(delete=True).order_by('pk')
-    serializer_class = AttendanceBulkSerializer
+    serializer_class = BulkAttendanceSerializer
+    attendance_serializer_class = BulkAttendanceSerializer
+    break_serializer_class = BulkBreakTimeSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 1})
+        for data in request.data:
+            user = BaseUser.objects.get(pk=data['id'])
+            for user_attendance_data in data['user_attendance']:
+                serializer = self.attendance_serializer_class(data=user_attendance_data, context={'request': request, 'user': user})
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+            for break_time_data in data['break_time']:
+                serializer = self.break_serializer_class(data=break_time_data, context={'request': request, 'user': user})
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+        return Response({'message': 'Data Saved!'})
 

@@ -70,7 +70,7 @@ Content-Type: {{ CONTENT_TYPE }}
         "id": "377b4fe-6057-2461-16a3-67be81d86c16",
         "existing": false,
         "start": "2021-01-30 16:35:43",
-        "stop": "",
+        "stop": null,
         "date": "2021-01-30"
       }
     ],
@@ -116,7 +116,22 @@ Content-Type: {{ CONTENT_TYPE }}
         "created": "2021-01-19T15:44:47.396163"
       }
     ],
-    "user_attendance": [],
+    "user_attendance": [
+      {
+        "id": 130,
+        "existing": true,
+        "start": "2021-01-30 09:09:53",
+        "stop": "2021-01-30 09:09:38",
+        "date": "2021-01-30"
+      },
+      {
+        "id": 129,
+        "existing": true,
+        "start": "2021-01-30 10:10:43",
+        "stop": null,
+        "date": "2021-01-30"
+      }
+    ],
     "break_time": [],
     "update": false,
     "delete": false,

@@ -72,4 +72,7 @@ urlpatterns = [
     path('store_branch_create/<int:store_id>/', views.StoreBranchCreate.as_view()),
     
     path('store_specific_user/<int:store_id>/', views.StoreSpecificUserListAPIView.as_view()),
+
+    path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
+
 ]

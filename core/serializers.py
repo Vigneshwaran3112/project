@@ -872,3 +872,37 @@ class ProductInventorySerializer(serializers.ModelSerializer):
             'on_hand': instance.on_hand,
             'created': instance.created
         }
+
+
+class BulkAttendanceSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    existing = serializers.BooleanField()
+    start = serializers.DateTimeField()
+    stop = serializers.DateTimeField(required=False, allow_null=True)
+    date = serializers.DateField()
+
+    def create(self, validated_data):
+        if validated_data['existing']:
+            print('Updating')
+            data = UserAttendance.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+        else:
+            print('Creating')
+            data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+        return data
+
+
+class BulkBreakTimeSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    existing = serializers.BooleanField()
+    start = serializers.DateTimeField()
+    stop = serializers.DateTimeField(required=False, allow_null=True)
+    date = serializers.DateField()
+
+    def create(self, validated_data):
+        if validated_data['existing']:
+            print('Updating')
+            data = UserAttendanceBreak.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+        else:
+            print('Creating')
+            data = UserAttendanceBreak.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+        return data
