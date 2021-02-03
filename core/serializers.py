@@ -113,7 +113,7 @@ class UserSerializer(serializers.ModelSerializer):
     per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
-    salary_update_date = serializers.DateTimeField()
+    salary_update_date = serializers.DateTimeField(required=False)
 
     class Meta:
         model = BaseUser
@@ -138,9 +138,13 @@ class UserSerializer(serializers.ModelSerializer):
             aadhaar_number = validated_data['aadhaar_number'],
             pan_number = validated_data['pan_number']
         )
+        try:
+            salary_update_date = validated_data['salary_update_date']
+        except:
+            salary_update_date = datetime.datetime.now()
         user_salary = UserSalary.objects.create(
             user = user,
-            date = validated_data['salary_update_date'],
+            date = salary_update_date,
             per_hour = validated_data['per_hour'],
             work_hours = validated_data['work_hours'],
             ot_per_hour = validated_data['ot_per_hour']
@@ -152,6 +156,7 @@ class UserSerializer(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError({'message': "select a role for the employee"})
         return user
+
 
 
     # def update(self, instance, validated_data):
