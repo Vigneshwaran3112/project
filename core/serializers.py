@@ -12,6 +12,7 @@ from rest_framework import fields, serializers
 from .models import *
 
 
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
@@ -200,8 +201,8 @@ class UserSerializer(serializers.ModelSerializer):
             'work_hours': current_salary.work_hours,
             'ot_per_hour': current_salary.ot_per_hour,
             'date': current_salary.date,
-            'employee_role': RoleSerializer(instance.employee_role, many=True).data,
-            'employee_role_list': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
+            'employee_role_data': RoleSerializer(instance.employee_role, many=True).data,
+            'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
             'is_active': instance.is_active,
             'salary': salary_data
