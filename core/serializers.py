@@ -158,7 +158,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-
     # def update(self, instance, validated_data):
     #     user = BaseUser.objects.get(pk=instance.pk)
     #     user.username = validated_data.get('username', instance.username)
