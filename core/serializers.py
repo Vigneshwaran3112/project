@@ -302,6 +302,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
+
 class UserSalarySerializer(serializers.ModelSerializer):
 
     class Meta:
