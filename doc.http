@@ -7,16 +7,16 @@ POST  {{ BASE_URL }}user/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}
 
 {
- "first_name": "sujith",
- "email": "vigneshweran@vgts.com",
+ "first_name": "mahe",
+ "email": "mahe@vgts.com",
  "date_of_joining": "2010-07-30T15:05:00.000Z",
  "store": 1,
  "is_superuser": false,
- "phone": "99988111714",
+ "phone": "7868853679",
  "role": 2,
- "employee_role": [1,2],
- "aadhaar_number": "8498491124971",
- "pan_number": "AZ6511e11o3",
+ "employee_role": [2],
+ "aadhaar_number": "84984911241",
+ "pan_number": "AZ6511e1o3",
  "date_of_resignation": null,
  "reason_of_resignation": null,
  "salary_update_date": "2010-07-30T15:05:00.000Z"
