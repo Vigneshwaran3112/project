@@ -294,7 +294,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
-            'is_incharge': instance.employee_role.filter(code=1).exists(),
+            'is_admin': instance.employee_role.filter(code=1).exists(),
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
