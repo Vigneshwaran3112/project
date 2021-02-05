@@ -72,15 +72,15 @@ class Store(BaseModel):
     branch = models.ManyToManyField(Branch, blank=True, related_name='branch_store')
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_stores', help_text='City foreign key')
     pincode = models.CharField(max_length=6)
-    latitude = models.DecimalField(max_digits=10, decimal_places=6)
-    longitude = models.DecimalField(max_digits=10, decimal_places=6)
+    latitude = models.CharField(max_length=30)
+    longitude = models.CharField(max_length=30)
     
     def __str__(self):
         return f'{self.name}'
 
 
 class BaseUser(AbstractUser):
-    phone = models.CharField(max_length=20, unique=True, db_index=True)
+    phone = models.CharField(max_length=20, db_index=True)
     date_of_joining = models.DateTimeField(blank=True, null=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users', blank=True, null=True)
     is_employee = models.BooleanField(default=False)

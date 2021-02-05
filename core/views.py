@@ -457,3 +457,18 @@ class AttendanceBulkCreateAPIView(generics.CreateAPIView):
                 serializer.save()
         return Response({'message': 'Data Saved!'})
 
+
+class AttendanceReportListAPIView(generics.RetrieveAPIView):
+    queryset = UserAttendance.objects.exclude(delete=True).order_by('pk')
+
+    def retrieve(self, request, pk):
+        start = datetime.datetime.strptime(request.query_params.get('start'), '%Y-%m-%d')
+        stop = datetime.datetime.strptime(request.query_params.get('stop'), '%Y-%m-%d')
+
+        attendance_data = AttendanceSerializer(UserAttendance.objects.filter(user__pk=pk).filter(date__range=[start, stop], status=True, delete=False).order_by('-date'), many=True).data
+        break_data = AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(user__pk=pk).filter(date__range=[start, stop], status=True, delete=False).order_by('-date'), many=True).data
+
+        return Response({
+            'attendance': attendance_data,
+            'break': break_data,
+        })

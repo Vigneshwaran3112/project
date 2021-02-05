@@ -50,6 +50,7 @@ class StateSerializer(serializers.ModelSerializer):
             'updated': instance.updated,
         }
 
+
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
@@ -772,13 +773,19 @@ class ComplaintTypeSerializer(serializers.Serializer):
 class AttendanceSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
+        if instance.time_spend:
+            time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
+            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        else:
+            time_spend_hours = None
+            
         return {
             'id': instance.pk,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
-            'time_spend': instance.time_spend,
+            'time_spend': time_spend_hours,
             'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             'ot_salary': instance.ot_salary,
@@ -789,13 +796,18 @@ class AttendanceSerializer(serializers.Serializer):
 class AttendanceBreakSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
+        if instance.time_spend:
+            time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
+            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        else:
+            time_spend_hours = None
         return {
             'id': instance.pk,
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
-            'time_spend': instance.time_spend,
+            'time_spend': time_spend_hours,
             'existing': True
         }
 
@@ -884,14 +896,14 @@ class BulkAttendanceSerializer(serializers.Serializer):
     id = serializers.CharField()
     existing = serializers.BooleanField()
     start = serializers.DateTimeField()
-    stop = serializers.DateTimeField(required=False, allow_null=True)
+    stop = serializers.DateTimeField(required=False)
     date = serializers.DateField()
 
     def create(self, validated_data):
         if validated_data['existing']:
-            data = UserAttendance.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+            data = UserAttendance.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         else:
-            data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+            data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         return data
 
 
@@ -904,7 +916,7 @@ class BulkBreakTimeSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         if validated_data['existing']:
-            data = UserAttendanceBreak.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+            data = UserAttendanceBreak.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         else:
-            data = UserAttendanceBreak.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data['stop'], date=validated_data['date'])
+            data = UserAttendanceBreak.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         return data

@@ -122,6 +122,7 @@ admin.site.register(Branch)
 admin.site.register(Country)
 admin.site.register(State)
 # admin.site.register(City)
+admin.site.register(UserAttendanceBreak)
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
