@@ -146,6 +146,7 @@ class UserSerializer(serializers.ModelSerializer):
         user_salary = UserSalary.objects.create(
             user = user,
             date = salary_update_date,
+            # date = validated_data.get('salary_update_date', datetime.datetime.now()),
             per_hour = validated_data['per_hour'],
             work_hours = validated_data['work_hours'],
             ot_per_hour = validated_data['ot_per_hour']
@@ -291,11 +292,11 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'username': instance.first_name,
             'phone': instance.phone,
             'email': instance.email,
-            'is_staff': instance.is_staff,
+            # 'is_staff': instance.is_staff,
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
-            'is_admin': instance.employee_role.filter(code=1).exists(),
+            'is_admin': instance.is_staff,
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
