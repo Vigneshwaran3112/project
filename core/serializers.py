@@ -110,7 +110,7 @@ class UserTokenSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.IntegerField(required=True)
+    user_role = serializers.IntegerField(required=True)
     per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     work_hours = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
     ot_per_hour = serializers.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Decimal field')
@@ -132,49 +132,47 @@ class UserSerializer(serializers.ModelSerializer):
             date_of_joining = validated_data['date_of_joining'],
             store = validated_data.get('store', None),
             phone = validated_data['phone'],
-            is_superuser = True if validated_data['role']==0 else False,
-            is_staff = True if validated_data['role']==1 else False,
-            is_employee = True if validated_data['role']==2 else False,
+            is_superuser = True if validated_data['user_role']==0 else False,
+            is_staff = True if validated_data['user_role']==1 else False,
+            is_employee = True if validated_data['user_role']==2 else False,
             password = validated_data['phone'],
             aadhaar_number = validated_data.get('aadhaar_number', None),
             pan_number = validated_data.get('pan_number', None)
         )
         user_salary = UserSalary.objects.create(
             user = user,
-            # date = salary_update_date,
             date = validated_data.get('salary_update_date', datetime.datetime.now()),
             per_hour = validated_data['per_hour'],
             work_hours = validated_data['work_hours'],
             ot_per_hour = validated_data['ot_per_hour']
         )
-        if validated_data['role']==2 :
-            if validated_data['employee_role']:
-                for e in validated_data['employee_role']:
-                    user.employee_role.add(e)
-            else:
-                raise serializers.ValidationError({'message': "select a role for the employee"})
+        if validated_data['user_role'] !=0:
+            for e in validated_data['employee_role']:
+                user.employee_role.add(e)
         return user
 
 
-    # def update(self, instance, validated_data):
-    #     user = BaseUser.objects.get(pk=instance.pk)
-    #     user.username = validated_data.get('username', instance.username)
-    #     user.email = validated_data.get('email', instance.email)
-    #     user.first_name = validated_data.get('first_name', instance.first_name)
-    #     user.last_name = validated_data.get('last_name', instance.last_name)
-    #     user.phone = validated_data.get('phone', instance.phone) 
-    #     user.save()
-    #     instance.store = validated_data.get('store', instance.store)
-    #     instance.is_staff = validated_data.get('is_staff', instance.is_staff)
-    #     instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
-    #     instance.date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining)
-    #     if validated_data['is_employee']==True:
-    #         if validated_data['role']:
-    #             instance.role.set(validated_data['role'])
-    #         else:
-    #             raise serializers.ValidationError({'message': "select a role for the employee"})
+    def update(self, instance, validated_data):
+        user = BaseUser.objects.get(pk=instance.pk)
+        user.email = validated_data.get('email', instance.email)
+        user.first_name = validated_data.get('first_name', instance.first_name)
+        user.phone = validated_data.get('phone', instance.phone) 
+        date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining),
+        store = validated_data.get('store', instance.store),
+        is_superuser = True if validated_data['user_role']==0 else False,
+        is_staff = True if validated_data['user_role']==1 else False,
+        is_employee = True if validated_data['user_role']==2 else False,
+        aadhaar_number = validated_data.get('aadhaar_number', None),
+        pan_number = validated_data.get('pan_number', None)
+        user.save()
+        if validated_data['user_role']!=0:
+            user.employee_role.clear()
+            for e in validated_data['employee_role']:
+                user.employee_role.add(e)
+        else:
+            user.employee_role.clear()
 
-        # return instance
+        return user
         
     def to_representation(self, instance):
         salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data

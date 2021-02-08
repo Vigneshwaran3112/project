@@ -3,7 +3,7 @@
 @TOKEN = qwddc
 
 # @name user_onboarding
-POST  {{ BASE_URL }}user/ HTTP/1.1
+PUT  {{ BASE_URL }}user/100/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}
 
 {
@@ -11,11 +11,11 @@ Content-Type: {{ CONTENT_TYPE }}
  "email": "mahe@vgts.com",
  "date_of_joining": "2010-07-30T15:05:00.000Z",
  "is_superuser": false,
- "phone": "78681679",
- "role": 1,
- "employee_role": [2],
- "aadhaar_number": "849849112141",
- "pan_number": "AZ65111e1o3",
+ "phone": "7868122679",
+ "user_role": 2,
+ "employee_role": [2,3],
+ "aadhaar_number": "84984922112141",
+ "pan_number": "AZ6522111e1o3",
  "date_of_resignation": null,
  "reason_of_resignation": null,
  "salary_update_date": "2010-07-30T15:05:00.000Z"
