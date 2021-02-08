@@ -28,3 +28,10 @@ class IsSuperAdmin(IsAuthenticated):
     def has_permission(self, request, view):
         # super_admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_superuser=True, is_staff=True).exists()
         return bool(request.user.is_superuser and request.user)
+
+
+class CreateAndIsSuperAdmin(IsSuperAdmin):
+
+    def has_permission(self, request, view):
+        return (view.action == 'create'
+                and super(CreateAndIsSuperAdmin, self).has_permission(request, view))

@@ -1,10 +1,11 @@
 @BASE_URL = http://127.0.0.1:8000/v1/
 @CONTENT_TYPE = application/json
-@TOKEN = qwddc
+@TOKEN = Token 75f3f590cb5cf03f0086cbcfa360aa5b3e46ffc2
 
 # @name user_onboarding
-PUT  {{ BASE_URL }}user/100/ HTTP/1.1
+POST  {{ BASE_URL }}user/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}
+Authorization: {{ TOKEN }}
 
 {
  "first_name": "test_backend",
