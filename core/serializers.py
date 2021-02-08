@@ -136,17 +136,13 @@ class UserSerializer(serializers.ModelSerializer):
             is_staff = True if validated_data['role']==1 else False,
             is_employee = True if validated_data['role']==2 else False,
             password = validated_data['phone'],
-            aadhaar_number = validated_data['aadhaar_number'],
-            pan_number = validated_data['pan_number']
+            aadhaar_number = validated_data.get('aadhaar_number', None),
+            pan_number = validated_data.get('pan_number', None)
         )
-        try:
-            salary_update_date = validated_data['salary_update_date']
-        except:
-            salary_update_date = datetime.datetime.now()
         user_salary = UserSalary.objects.create(
             user = user,
-            date = salary_update_date,
-            # date = validated_data.get('salary_update_date', datetime.datetime.now()),
+            # date = salary_update_date,
+            date = validated_data.get('salary_update_date', datetime.datetime.now()),
             per_hour = validated_data['per_hour'],
             work_hours = validated_data['work_hours'],
             ot_per_hour = validated_data['ot_per_hour']
