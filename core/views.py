@@ -264,7 +264,26 @@ class StoreSpecificWrongBillAPIView(generics.ListAPIView):
     serializer_class = WrongBillSerializer
 
     def get_queryset(self):
-        return WrongBill.objects.filter(store=self.kwargs['pk'], delete=False, status=True)
+        try:
+            start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
+            stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
+        except:
+            start = None
+            stop = None
+
+        store = self.kwargs['pk']
+        if start == None:
+            if store == 0:
+                wrongbill_data = WrongBill.objects.filter(delete=False, status=True)
+            else:
+                wrongbill_data = WrongBill.objects.filter(store=store, delete=False, status=True)
+
+        else:
+            if store == 0:
+                wrongbill_data = WrongBill.objects.filter(date__range=[start, stop], delete=False, status=True)
+            else:
+                wrongbill_data = WrongBill.objects.filter(date__range=[start, stop], store=store, delete=False, status=True)
+        return wrongbill_data
 
 
 class FreeBillCustomerListAPIView(generics.ListAPIView):
@@ -292,7 +311,26 @@ class StoreSpecificFreeBillAPIView(generics.ListAPIView):
     serializer_class = FreeBillSerializer
 
     def get_queryset(self):
-        return FreeBill.objects.filter(store=self.kwargs['pk'], delete=False, status=True)
+        try:
+            start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
+            stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
+        except:
+            start = None
+            stop = None
+
+        store = self.kwargs['pk']
+
+        if start == None:
+            if store == 0:
+                freebill_data = FreeBill.objects.filter(delete=False, status=True)
+            else:
+                freebill_data = FreeBill.objects.filter(store=self.kwargs['pk'], delete=False, status=True)
+        else:
+            if store == 0:
+                freebill_data = FreeBill.objects.filter(date__range=[start, stop], delete=False, status=True)
+            else:
+                freebill_data = FreeBill.objects.filter(date__range=[start, stop], store=self.kwargs['pk'], delete=False, status=True)
+        return freebill_data
 
 
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
