@@ -36,6 +36,10 @@ urlpatterns = [
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
 
+    path('store_specific_wrongbill/<int:pk>/', views.StoreSpecificWrongBillAPIView.as_view()),
+    path('store_specific_freebill/<int:pk>/', views.StoreSpecificFreeBillAPIView.as_view()),
+
+
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
     path('user_out_attendance/<int:pk>/', views.UserOutAttendanceUpdateAPIView.as_view()),

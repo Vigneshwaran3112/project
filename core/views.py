@@ -259,6 +259,14 @@ class WrongBillAPIView(viewsets.ModelViewSet):
         return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class StoreSpecificWrongBillAPIView(generics.ListAPIView):
+    queryset = WrongBill.objects.filter(delete=False, status=True)
+    serializer_class = WrongBillSerializer
+
+    def get_queryset(self):
+        return WrongBill.objects.filter(store=self.kwargs['pk'], delete=False, status=True)
+
+
 class FreeBillCustomerListAPIView(generics.ListAPIView):
     queryset = FreeBillCustomer.objects.exclude(delete=True)
     serializer_class = FreeBillCustomerSerializer
@@ -278,6 +286,14 @@ class FreeBillAPIView(viewsets.ModelViewSet):
         destroy = FreeBill.objects.filter(pk=kwargs['pk']).update(status=False)
         return Response({'message':'wrong bill deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
     
+
+class StoreSpecificFreeBillAPIView(generics.ListAPIView):
+    queryset = FreeBill.objects.filter(delete=False, status=True)
+    serializer_class = FreeBillSerializer
+
+    def get_queryset(self):
+        return FreeBill.objects.filter(store=self.kwargs['pk'], delete=False, status=True)
+
 
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True)
