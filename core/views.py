@@ -472,3 +472,6 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
             'attendance': attendance_data,
             'break': break_data,
         })
+
+
+# class EmployeePayRoleRetrieveAPIView(generics.RetrieveAPIView):

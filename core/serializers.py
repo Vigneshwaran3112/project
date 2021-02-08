@@ -130,7 +130,7 @@ class UserSerializer(serializers.ModelSerializer):
             email = validated_data['email'],
             first_name = validated_data['first_name'],
             date_of_joining = validated_data['date_of_joining'],
-            store = validated_data['store'],
+            store = validated_data.get('store', None),
             phone = validated_data['phone'],
             is_superuser = True if validated_data['role']==0 else False,
             is_staff = True if validated_data['role']==1 else False,
