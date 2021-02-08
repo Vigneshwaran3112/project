@@ -286,7 +286,6 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'username': instance.first_name,
             'phone': instance.phone,
             'email': instance.email,
-            # 'is_staff': instance.is_staff,
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
@@ -573,7 +572,8 @@ class WrongBillSerializer(serializers.ModelSerializer):
             'bill_no': instance.bill_no,
             'wrong_amount': instance.wrong_amount,
             'correct_amount': instance.correct_amount,
-            'billed_by': instance.billed_by.first_name,
+            'billed_by': instance.billed_by.pk,
+            'billed_by_name': instance.billed_by.first_name,
             'date': instance.date,
             'description': instance.description
         }
@@ -605,7 +605,8 @@ class FreeBillSerializer(serializers.ModelSerializer):
             'store': instance.store.name,
             'bill_no': instance.bill_no,
             'amount': instance.amount,
-            'billed_by': instance.billed_by.first_name,
+            'billed_by': instance.billed_by.pk,
+            'billed_by_name': instance.billed_by.first_name,
             'billed_for': instance.billed_for.name,
             'date': instance.date,
             'description': instance.description

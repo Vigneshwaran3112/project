@@ -35,12 +35,6 @@ urlpatterns = [
 
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
-    # path('states_specific/<int:pk>/', views.StateRetrieveUpdateDestroyView.as_view()),
-    # path('cities_specific/<int:pk>/', views.CityRetrieveUpdateDestroyView.as_view()),
-
-    # path('countries_list/', views.CountryListView.as_view()),
-    # path('states_list/<int:country_id>', views.StateListView.as_view()),
-    # path('cities_list/<int:state_id>', views.CityListView.as_view()),
 
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
