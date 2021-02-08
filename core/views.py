@@ -84,7 +84,7 @@ class RoleListAPIView(generics.ListAPIView):
 
 
 class StoreAPIViewset(viewsets.ModelViewSet):
-    queryset = Store.objects.filter(delete=False)
+    queryset = Store.objects.filter(delete=False).order_by('-pk')
     serializer_class = StoreSerializer
     # permission_class = (IsAdminUser, )
 
