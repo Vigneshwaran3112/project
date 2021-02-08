@@ -384,7 +384,6 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-
         user = BaseUser.objects.filter(is_superuser=False)
         store_user = user.filter(store=self.request.user.store)
         return store_user
