@@ -545,5 +545,10 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
             'break': break_data,
         })
 
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = UserListSerializer
+
+    def get_queryset(self):
+        return BaseUser.objects.filter(store=self.request.user.store, is_active=True, is_superuser=False)
 
 # class EmployeePayRoleRetrieveAPIView(generics.RetrieveAPIView):
