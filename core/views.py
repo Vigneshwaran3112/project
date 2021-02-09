@@ -337,7 +337,7 @@ class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ComplaintSerializer
 
     def perform_create(self, serializer):
-        serializer.save(complainted_by=self.request.user)
+        serializer.save(complainted_by=self.request.user, status=ComplaintStatus.objects.get(code=1))
 
 
 class BulkOrderItemListAPIView(generics.ListAPIView):
