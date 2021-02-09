@@ -445,17 +445,16 @@ class UserAttendanceListAPIView(generics.ListAPIView):
 class AttendanceUserListAPIView(generics.ListAPIView):
     serializer_class = UserListSerializer
 
-    # def get_serializer_context(self):
-    #     return {
-    #         'request': self.request,
-    #         'format': self.format_kwarg,
-    #         'view': self,
-    #         'date': self.kwargs['date']
-    #     }
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'date': self.kwargs['date']
+        }
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(is_superuser=False, date_of_resignation__date__gte=self.kwargs['date'])
-        print(user)
+        user = BaseUser.objects.filter(is_superuser=False, date_of_resignation__date__gte=self.kwargs['date'], date_of_joining__date__lte=self.kwargs['date'])
         store_user = user.filter(store__pk=self.kwargs['pk'])
         return store_user
 
@@ -535,11 +534,13 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, pk):
         start = datetime.datetime.strptime(request.query_params.get('start'), '%Y-%m-%d')
         stop = datetime.datetime.strptime(request.query_params.get('stop'), '%Y-%m-%d')
+        user = BaseUser.objects.get(pk=pk, is_active=True)
 
         attendance_data = AttendanceSerializer(UserAttendance.objects.filter(user__pk=pk).filter(date__range=[start, stop], status=True, delete=False).order_by('-date'), many=True).data
         break_data = AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(user__pk=pk).filter(date__range=[start, stop], status=True, delete=False).order_by('-date'), many=True).data
 
         return Response({
+            'username': user.first_name,
             'attendance': attendance_data,
             'break': break_data,
         })

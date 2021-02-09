@@ -921,8 +921,11 @@ class BulkBreakTimeSerializer(serializers.Serializer):
 class UserListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
+        attendance_data = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).exists()
+        print(attendance_data)
         return {
             'id': instance.pk,
             'username': instance.first_name,
-            'phone': instance.phone
+            'phone': instance.phone,
+            'attendance':attendance_data
         }
