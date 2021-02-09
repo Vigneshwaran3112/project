@@ -546,7 +546,7 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
         })
 
 class UserListAPIView(generics.ListAPIView):
-    serializer_class = UserListSerializer
+    serializer_class = StoreUserListSerializer
 
     def get_queryset(self):
         return BaseUser.objects.filter(store=self.request.user.store, is_active=True, is_superuser=False)
