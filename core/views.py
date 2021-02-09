@@ -245,7 +245,6 @@ class StoreProductViewset(viewsets.ModelViewSet):
 
 
 class WrongBillAPIView(viewsets.ModelViewSet):
-    queryset = WrongBill.objects.filter(delete=False)
     serializer_class = WrongBillSerializer
 
     def get_queryset(self):
@@ -440,6 +439,24 @@ class UserAttendanceListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = BaseUser.objects.filter(is_superuser=False)
         store_user = user.filter(store=self.request.user.store)
+        return store_user
+
+
+class AttendanceUserListAPIView(generics.ListAPIView):
+    serializer_class = UserListSerializer
+
+    # def get_serializer_context(self):
+    #     return {
+    #         'request': self.request,
+    #         'format': self.format_kwarg,
+    #         'view': self,
+    #         'date': self.kwargs['date']
+    #     }
+
+    def get_queryset(self):
+        user = BaseUser.objects.filter(is_superuser=False, date_of_resignation__date__gte=self.kwargs['date'])
+        print(user)
+        store_user = user.filter(store__pk=self.kwargs['pk'])
         return store_user
 
 

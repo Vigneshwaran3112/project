@@ -916,3 +916,13 @@ class BulkBreakTimeSerializer(serializers.Serializer):
         else:
             data = UserAttendanceBreak.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         return data
+
+
+class UserListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'username': instance.first_name,
+            'phone': instance.phone
+        }
