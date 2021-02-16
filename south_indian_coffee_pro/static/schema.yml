@@ -1,0 +1,3670 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /v1/verify/:
+    get:
+      operationId: retrieveBaseUser
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseUser'
+          description: ''
+      tags:
+      - v1
+  /v1/role/:
+    get:
+      operationId: listEmployeeRoles
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createEmployeeRole
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+  /v1/role/{id}/:
+    get:
+      operationId: retrieveEmployeeRole
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this employee role.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateEmployeeRole
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this employee role.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateEmployeeRole
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this employee role.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyEmployeeRole
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this employee role.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/user/:
+    get:
+      operationId: listBaseUsers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createBaseUser
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+  /v1/user/{id}/:
+    get:
+      operationId: retrieveBaseUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateBaseUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateBaseUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyBaseUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/store/:
+    get:
+      operationId: listStores
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createStore
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: ''
+      tags:
+      - v1
+  /v1/store/{id}/:
+    get:
+      operationId: retrieveStore
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateStore
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateStore
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyStore
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/user_salary/:
+    get:
+      operationId: listUserSalarys
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSalary'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createUserSalary
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSalary'
+          description: ''
+      tags:
+      - v1
+  /v1/user_salary/{id}/:
+    get:
+      operationId: retrieveUserSalary
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user salary.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSalary'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateUserSalary
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user salary.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSalary'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateUserSalary
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user salary.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSalary'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyUserSalary
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user salary.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/gst/:
+    get:
+      operationId: listGSTs
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GST'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createGST
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GST'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GST'
+          description: ''
+      tags:
+      - v1
+  /v1/gst/{id}/:
+    get:
+      operationId: retrieveGST
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this gst.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GST'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateGST
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this gst.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GST'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GST'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateGST
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this gst.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GST'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GST'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyGST
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this gst.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/unit/:
+    get:
+      operationId: listUnits
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createUnit
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Unit'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+  /v1/unit/{id}/:
+    get:
+      operationId: retrieveUnit
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this unit.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateUnit
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this unit.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Unit'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateUnit
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this unit.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Unit'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyUnit
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this unit.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/product_category/:
+    get:
+      operationId: listStoreProductCategorys
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createStoreProductCategory
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+  /v1/product_category/{id}/:
+    get:
+      operationId: retrieveStoreProductCategory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product category.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateStoreProductCategory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product category.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateStoreProductCategory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product category.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyStoreProductCategory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product category.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/product_type/:
+    get:
+      operationId: listStoreProductTypes
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createStoreProductType
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+  /v1/product_type/{id}/:
+    get:
+      operationId: retrieveStoreProductType
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product type.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateStoreProductType
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product type.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateStoreProductType
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product type.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyStoreProductType
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this store product type.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/recipe_item/:
+    get:
+      operationId: listProductRecipeItems
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductRecipeItem'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createProductRecipeItem
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRecipeItem'
+          description: ''
+      tags:
+      - v1
+  /v1/recipe_item/{id}/:
+    get:
+      operationId: retrieveProductRecipeItem
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product recipe item.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRecipeItem'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateProductRecipeItem
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product recipe item.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRecipeItem'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateProductRecipeItem
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product recipe item.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRecipeItem'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyProductRecipeItem
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product recipe item.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/store_product/:
+    get:
+      operationId: listProducts
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createProduct
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+  /v1/store_product/{id}/:
+    get:
+      operationId: retrieveProduct
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateProduct
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateProduct
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyProduct
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/wrong_bill/:
+    get:
+      operationId: listWrongBills
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createWrongBill
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+  /v1/wrong_bill/{id}/:
+    get:
+      operationId: retrieveWrongBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateWrongBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateWrongBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyWrongBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/free_bill/:
+    get:
+      operationId: listFreeBills
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createFreeBill
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+  /v1/free_bill/{id}/:
+    get:
+      operationId: retrieveFreeBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this free bill.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateFreeBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this free bill.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateFreeBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this free bill.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyFreeBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this free bill.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/electric_bill/:
+    get:
+      operationId: listElectricBills
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ElectricBill'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createElectricBill
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricBill'
+          description: ''
+      tags:
+      - v1
+  /v1/electric_bill/{id}/:
+    get:
+      operationId: retrieveElectricBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this electric bill.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricBill'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateElectricBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this electric bill.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricBill'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateElectricBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this electric bill.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectricBill'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyElectricBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this electric bill.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/product_price_batch/:
+    get:
+      operationId: listProductPricingBatchs
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductPricingBatch'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createProductPricingBatch
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPricingBatch'
+          description: ''
+      tags:
+      - v1
+  /v1/product_price_batch/{id}/:
+    get:
+      operationId: retrieveProductPricingBatch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product pricing batch.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPricingBatch'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateProductPricingBatch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product pricing batch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPricingBatch'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateProductPricingBatch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product pricing batch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPricingBatch'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyProductPricingBatch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product pricing batch.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/product_inventory/:
+    get:
+      operationId: listProductInventorys
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductInventory'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createProductInventory
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+          description: ''
+      tags:
+      - v1
+  /v1/product_inventory/{id}/:
+    get:
+      operationId: retrieveProductInventory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product inventory.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateProductInventory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product inventory.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateProductInventory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product inventory.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyProductInventory
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this product inventory.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/states/:
+    get:
+      operationId: listStates
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/State'
+          description: ''
+      tags:
+      - v1
+  /v1/cities/{state_id}/:
+    get:
+      operationId: retrieveCity
+      description: ''
+      parameters:
+      - name: state_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/City'
+          description: ''
+      tags:
+      - v1
+  /v1/store_specific_wrongbill/{id}/:
+    get:
+      operationId: retrieveWrongBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this wrong bill.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrongBill'
+          description: ''
+      tags:
+      - v1
+  /v1/store_specific_freebill/{id}/:
+    get:
+      operationId: retrieveFreeBill
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this free bill.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeBill'
+          description: ''
+      tags:
+      - v1
+  /v1/attendance_list/{date}/:
+    get:
+      operationId: retrieveBaseUser
+      description: ''
+      parameters:
+      - name: date
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceList'
+          description: ''
+      tags:
+      - v1
+  /v1/attendance_report/{id}/:
+    get:
+      operationId: retrieveUserAttendance
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user attendance.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkAttendance'
+          description: ''
+      tags:
+      - v1
+  /v1/attendance_user_list/{id}/{date}/:
+    get:
+      operationId: retrieveUserList
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: date
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+          description: ''
+      tags:
+      - v1
+  /v1/store_user/:
+    get:
+      operationId: listStoreUserLists
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreUserList'
+          description: ''
+      tags:
+      - v1
+  /v1/order_status/:
+    get:
+      operationId: listOrderStatus
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderStatus'
+          description: ''
+      tags:
+      - v1
+  /v1/bulk_order/:
+    get:
+      operationId: listBulkOrders
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BulkOrder'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createBulkOrder
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkOrder'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkOrder'
+          description: ''
+      tags:
+      - v1
+  /v1/free_bill_customer/:
+    get:
+      operationId: listFreeBillCustomers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FreeBillCustomer'
+          description: ''
+      tags:
+      - v1
+  /v1/customer/:
+    get:
+      operationId: listCustomers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+          description: ''
+      tags:
+      - v1
+  /v1/product_list_mapping/{store_id}:
+    get:
+      operationId: retrieveStoreProduct
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreProduct'
+          description: ''
+      tags:
+      - v1
+  /v1/complaint/:
+    get:
+      operationId: listComplaints
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Complaint'
+          description: ''
+      tags:
+      - v1
+    post:
+      operationId: createComplaint
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Complaint'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Complaint'
+          description: ''
+      tags:
+      - v1
+  /v1/complaint_type/:
+    get:
+      operationId: listComplaintTypes
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComplaintType'
+          description: ''
+      tags:
+      - v1
+  /v1/complaint_status/:
+    get:
+      operationId: listComplaintStatus
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComplaintStatus'
+          description: ''
+      tags:
+      - v1
+  /v1/role_list/:
+    get:
+      operationId: listEmployeeRoles
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+          description: ''
+      tags:
+      - v1
+  /v1/unit_list/:
+    get:
+      operationId: listUnits
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Unit'
+          description: ''
+      tags:
+      - v1
+  /v1/category_list/:
+    get:
+      operationId: listStoreProductCategorys
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreProductCategory'
+          description: ''
+      tags:
+      - v1
+  /v1/type_list/:
+    get:
+      operationId: listStoreProductTypes
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StoreProductType'
+          description: ''
+      tags:
+      - v1
+  /v1/store_branch/{id}/:
+    get:
+      operationId: retrieveBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+    put:
+      operationId: updateBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+    delete:
+      operationId: destroyBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - v1
+  /v1/store_specific_user/{store_id}/:
+    get:
+      operationId: retrieveBaseUser
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - v1
+  /v1/login/:
+    post:
+      operationId: createUserToken
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserToken'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserToken'
+          description: ''
+      tags:
+      - v1
+  /v1/user_in_attendance/:
+    post:
+      operationId: createUserAttendanceIn
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceIn'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceIn'
+          description: ''
+      tags:
+      - v1
+  /v1/user_in_attendance_break/:
+    post:
+      operationId: createUserAttendanceBreak
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakIn'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceBreakIn'
+          description: ''
+      tags:
+      - v1
+  /v1/product_mapping/{store_id}:
+    post:
+      operationId: createProductStoreMapping
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductStoreMapping'
+          description: ''
+      tags:
+      - v1
+  /v1/attendance_bulk_create/:
+    post:
+      operationId: createUserAttendance
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkAttendance'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkAttendance'
+          description: ''
+      tags:
+      - v1
+  /v1/user_out_attendance/{id}/:
+    put:
+      operationId: updateUserAttendance
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user attendance.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceOut'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateUserAttendance
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user attendance.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceOut'
+          description: ''
+      tags:
+      - v1
+  /v1/user_out_attendance_break/{id}/:
+    put:
+      operationId: updateUserAttendanceBreak
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user attendance break.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceBreakOut'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateUserAttendanceBreak
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user attendance break.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAttendanceBreakOut'
+          description: ''
+      tags:
+      - v1
+  /v1/product_mapping_update/{store_id}:
+    put:
+      operationId: updateProductStoreMapping
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductStoreMapping'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateProductStoreMapping
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductStoreMapping'
+          description: ''
+      tags:
+      - v1
+  /v1/store_branch_update/{id}/:
+    put:
+      operationId: updateBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateBranch
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this branch.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+  /v1/store_branch_create/{store_id}/:
+    put:
+      operationId: updateStore
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+    patch:
+      operationId: partialUpdateStore
+      description: ''
+      parameters:
+      - name: store_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreBranch'
+          description: ''
+      tags:
+      - v1
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    BaseUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          maxLength: 128
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+\z
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        is_staff:
+          type: boolean
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        phone:
+          type: string
+          maxLength: 20
+        date_of_joining:
+          type: string
+          format: date-time
+          nullable: true
+        is_employee:
+          type: boolean
+        aadhaar_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        pan_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        date_of_resignation:
+          type: string
+          format: date-time
+          nullable: true
+        reason_of_resignation:
+          type: string
+          nullable: true
+          maxLength: 300
+        store:
+          type: integer
+          nullable: true
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+        employee_role:
+          type: array
+          items:
+            type: integer
+      required:
+      - password
+      - username
+      - phone
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+      required:
+      - name
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_role:
+          type: integer
+        per_hour:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+          default: 0
+          description: Decimal field
+        work_hours:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+          default: 0
+          description: Decimal field
+        ot_per_hour:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+          default: 0
+          description: Decimal field
+        salary_update_date:
+          type: string
+          format: date-time
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 20
+        date_of_joining:
+          type: string
+          format: date-time
+          nullable: true
+        is_employee:
+          type: boolean
+        aadhaar_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        pan_number:
+          type: string
+          nullable: true
+          maxLength: 50
+        date_of_resignation:
+          type: string
+          format: date-time
+          nullable: true
+        reason_of_resignation:
+          type: string
+          nullable: true
+          maxLength: 300
+        store:
+          type: integer
+          nullable: true
+        employee_role:
+          type: array
+          items:
+            type: integer
+      required:
+      - user_role
+      - phone
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        delete:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        address:
+          type: string
+        pincode:
+          type: string
+          maxLength: 6
+        latitude:
+          type: string
+          maxLength: 30
+        longitude:
+          type: string
+          maxLength: 30
+        city:
+          type: integer
+          description: City foreign key
+        branch:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
+      - address
+      - pincode
+      - latitude
+      - longitude
+      - city
+    UserSalary:
+      type: object
+      properties:
+        user:
+          type: integer
+        per_hour:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        work_hours:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        ot_per_hour:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        date:
+          type: string
+          format: date-time
+      required:
+      - user
+      - per_hour
+      - work_hours
+      - ot_per_hour
+      - date
+    GST:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        value:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        percentage:
+          type: boolean
+      required:
+      - name
+      - value
+    Unit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        symbol:
+          type: string
+          maxLength: 100
+      required:
+      - name
+      - symbol
+    StoreProductCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+      required:
+      - name
+    StoreProductType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+      required:
+      - name
+    ProductRecipeItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        item_quantity:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        unit:
+          type: integer
+      required:
+      - item_quantity
+      - name
+      - unit
+    StoreProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        sort_order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        product_unit:
+          type: integer
+        product_type:
+          type: integer
+        category:
+          type: integer
+          nullable: true
+      required:
+      - name
+      - sort_order
+      - product_unit
+      - product_type
+    WrongBill:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        bill_no:
+          type: string
+          maxLength: 100
+        wrong_amount:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        correct_amount:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        date:
+          type: string
+          format: date-time
+        description:
+          type: string
+        billed_by:
+          type: integer
+      required:
+      - bill_no
+      - wrong_amount
+      - correct_amount
+      - date
+      - billed_by
+    FreeBill:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        bill_no:
+          type: string
+          maxLength: 100
+        amount:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        date:
+          type: string
+          format: date-time
+        description:
+          type: string
+        billed_by:
+          type: integer
+        billed_for:
+          type: integer
+      required:
+      - bill_no
+      - amount
+      - date
+      - billed_by
+      - billed_for
+    ElectricBill:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        opening_reading:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        closing_reading:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        date:
+          type: string
+          format: date-time
+        store:
+          type: integer
+        branch:
+          type: integer
+      required:
+      - opening_reading
+      - closing_reading
+      - date
+      - store
+    ProductPricingBatch:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        mrp_price:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        Buying_price:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        selling_price:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        date:
+          type: string
+          format: date-time
+        product:
+          type: integer
+      required:
+      - mrp_price
+      - Buying_price
+      - selling_price
+      - date
+      - product
+    ProductInventory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+        received:
+          type: integer
+          maximum: 2147483647
+          nullable: true
+          minimum: 0
+        sell:
+          type: integer
+          maximum: 2147483647
+          nullable: true
+          minimum: 0
+        product:
+          type: integer
+        product_batch:
+          type: array
+          items:
+            type: integer
+      required:
+      - date
+      - product
+      - product_batch
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        delete:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: Character field
+          maxLength: 200
+        state_code:
+          type: string
+          description: Character field
+          maxLength: 50
+      required:
+      - name
+      - state_code
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        delete:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: Character field
+          maxLength: 200
+        latitude:
+          type: string
+          description: Character field
+          maxLength: 30
+        longitude:
+          type: string
+          description: Character field
+          maxLength: 30
+      required:
+      - name
+      - latitude
+      - longitude
+    UserAttendanceList:
+      type: object
+      properties: {}
+    BulkAttendance:
+      type: object
+      properties:
+        id:
+          type: string
+        existing:
+          type: boolean
+        start:
+          type: string
+          format: date-time
+        stop:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date
+      required:
+      - id
+      - existing
+      - start
+      - date
+    UserList:
+      type: object
+      properties: {}
+    StoreUserList:
+      type: object
+      properties: {}
+    OrderStatus:
+      type: object
+      properties: {}
+    BulkOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                readOnly: true
+              order:
+                type: integer
+              status:
+                type: boolean
+              delete:
+                type: boolean
+              created:
+                type: string
+                format: date-time
+                readOnly: true
+              updated:
+                type: string
+                format: date-time
+                readOnly: true
+              item:
+                type: string
+                nullable: true
+                maxLength: 100
+              quantity:
+                type: string
+                format: decimal
+                multipleOf: 0.01
+                maximum: 100000000
+                minimum: -100000000
+                nullable: true
+              price:
+                type: string
+                format: decimal
+                multipleOf: 0.01
+                maximum: 100000000
+                minimum: -100000000
+                nullable: true
+              gst_price:
+                type: string
+                format: decimal
+                multipleOf: 0.01
+                maximum: 100000000
+                minimum: -100000000
+                nullable: true
+              total:
+                type: string
+                format: decimal
+                multipleOf: 0.01
+                maximum: 100000000
+                minimum: -100000000
+                nullable: true
+              total_item_price:
+                type: string
+                format: decimal
+                multipleOf: 0.01
+                maximum: 100000000
+                minimum: -100000000
+                nullable: true
+        customer:
+          type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            status:
+              type: boolean
+            delete:
+              type: boolean
+            created:
+              type: string
+              format: date-time
+              readOnly: true
+            updated:
+              type: string
+              format: date-time
+              readOnly: true
+            name:
+              type: string
+              maxLength: 100
+            phone1:
+              type: string
+              maxLength: 20
+            phone2:
+              type: string
+              nullable: true
+              maxLength: 20
+            address1:
+              type: string
+            address2:
+              type: string
+          required:
+          - name
+          - phone1
+        status:
+          type: boolean
+        delete:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        delivery_date:
+          type: string
+          format: date-time
+        order_notes:
+          type: string
+        grand_total:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100000000
+          minimum: -100000000
+        completed:
+          type: boolean
+        order_status:
+          type: integer
+      required:
+      - items
+      - customer
+      - delivery_date
+      - grand_total
+      - order_status
+    FreeBillCustomer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+      required:
+      - name
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        delete:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        phone1:
+          type: string
+          maxLength: 20
+        phone2:
+          type: string
+          nullable: true
+          maxLength: 20
+        address1:
+          type: string
+        address2:
+          type: string
+      required:
+      - name
+      - phone1
+    Complaint:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        complaint_type:
+          type: integer
+      required:
+      - title
+      - complaint_type
+    ComplaintType:
+      type: object
+      properties: {}
+    ComplaintStatus:
+      type: object
+      properties: {}
+    StoreBranch:
+      type: object
+      properties:
+        status:
+          type: boolean
+        name:
+          type: string
+      required:
+      - name
+    UserToken:
+      type: object
+      properties:
+        user:
+          type: string
+        password:
+          type: string
+      required:
+      - user
+      - password
+    UserAttendanceIn:
+      type: object
+      properties:
+        user:
+          type: integer
+        start:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date
+      required:
+      - user
+      - start
+      - date
+    UserAttendanceBreakIn:
+      type: object
+      properties:
+        user:
+          type: integer
+        start:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date
+      required:
+      - user
+      - start
+      - date
+    ProductStoreMapping:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+        product:
+          type: array
+          items:
+            type: integer
+      required:
+      - product
+    UserAttendanceOut:
+      type: object
+      properties:
+        stop:
+          type: string
+          format: date-time
+          nullable: true
+    UserAttendanceBreakOut:
+      type: object
+      properties:
+        stop:
+          type: string
+          format: date-time
+          nullable: true

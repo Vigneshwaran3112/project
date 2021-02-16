@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
@@ -28,6 +29,9 @@ router.register(r'product_inventory', views.ProductInventoryAPIView, basename='p
 
 
 urlpatterns = [
+    path('swagger/', TemplateView.as_view(template_name='index.html')),
+
+
     path('login/', views.AuthLoginAPIView.as_view()),
     path('verify/', views.AuthVerifyAPIView.as_view()),
 
