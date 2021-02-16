@@ -1,10 +1,125 @@
 openapi: 3.0.2
 info:
-  title: ''
-  version: ''
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  title: 'TheSouthIndianCoffee'
+  version: '1.0'
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "kabil@vgts.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "thesouthindiancoffee.com"
+basePath: "/v1/"
+tags:
+  - name: "Role"
+    description: "Employee Roles"
+  - name: "Verify"
+    description: "Verify login user details"
+  - name: "User"
+    description: "User details"
+  - name: "Store"
+    description: "Store details"
+  - name: "User Salary"
+    description: "User Salary details"
+  - name: "GST"
+    description: "GST"
+  - name: "Units"
+    description: "Units list"
+  - name: "Store Product Categorys"
+    description: "store product category details"
+  - name: "Store Product Type"
+    description: "store product type details"
+  - name: "Product Recipe Items"
+    description: "product recipe item details"
+  - name: "Products"
+    description: "products details"
+  - name: "Wrong Bills"
+    description: "wrond bill details"
+  - name: "Free Bills"
+    description: "free bill details"
+  - name: "Electric Bills"
+    description: "electric bill details"
+  - name: "Product Pricing Batchs"
+    description: "product pricing batch details"
+  - name: "Product Inventorys"
+    description: "product inventorys details"
+  - name: "States"
+    description: "states details"
+  - name: "City"
+    description: "city details"
+  - name: "Wrong Bill"
+    description: "retrieve specific wrong bill details"
+  - name: "Free Bill"
+    description: "retrieve specific free bill details"
+  - name: "Attendance List"
+    description: "retrieve specific Attendance list details"
+  - name: "Attendance Report"
+    description: "retrieve specific attendance report details"
+  - name: "Attendance User List"
+    description: "retrieve specific attendance user list details"
+  - name: "Store User Lists"
+    description: "list the store users lists"
+  - name: "Order Status"
+    description: "list the order status"
+  - name: "Bulk Orders"
+    description: "list and create the bulk order"
+  - name: "Free Bill Customers"
+    description: "list the free bill customers details"
+  - name: "Customers"
+    description: "list the customers details"
+  - name: "Product List Mapping"
+    description: "retrieve specific product list mapping details"
+  - name: "Complaints"
+    description: "list and create the complaints"
+  - name: "Complaint Types"
+    description: "list the complaint types"
+  - name: "Complaint Status"
+    description: "list the complaint status"
+  - name: "Role List"
+    description: "list the roles"
+  - name: "Unit List"
+    description: "list the units"
+  - name: "Category List"
+    description: "list the categorys"
+  - name: "Type List"
+    description: "list the types"
+  - name: "Store Branch"
+    description: "retrieve, update and delete the specific store branch details"
+  - name: "Store Specific User"
+    description: "retrieve the specific store user details"  
+  - name: "Generate Pay Role"
+    description: "retrieve the pay role details"
+  - name: "Login"
+    description: "generate the token for login users"
+  - name: "User In Attendance"
+    description: "UserIn attendance"
+  - name: "User In Attendance Break" 
+    description: "UserIn attendance break details"
+  - name: "Product Mapping"
+    description: "product mapping"
+  - name: "Attendance Bulk Create"
+    description: "add the attendance bulk create"
+  - name: "User Out Attendance"
+    description: "specific UserOut attendance details"
+  - name: "Store Product Types"
+    description: "add the attendance bulk create"
+  - name: "User Out Attendance Break"
+    description: "UserOut attendance break"
+  - name: "Product Mapping Update"
+    description: "specific product mapping"
+  - name: "Store Branch Update"
+    description: "store branch update"
+  - name: "Store Branch Create"
+    description: "product mapping create"
+  
+
+Schemes:
+ - "https"
 paths:
   /v1/verify/:
     get:
+      summary: "Verify the login user details"
       operationId: retrieveBaseUser
       description: ''
       parameters: []
@@ -16,9 +131,10 @@ paths:
                 $ref: '#/components/schemas/BaseUser'
           description: ''
       tags:
-      - v1
+      - Verify
   /v1/role/:
     get:
+      summary: "List the employee roles"
       operationId: listEmployeeRoles
       description: ''
       parameters: []
@@ -32,14 +148,21 @@ paths:
                   $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role
     post:
+      summary: "Create new employee role"
       operationId: createEmployeeRole
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Role'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Role'
       responses:
@@ -50,9 +173,10 @@ paths:
                 $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role
   /v1/role/{id}/:
     get:
+      summary: "Retrieve the specific employee role"
       operationId: retrieveEmployeeRole
       description: ''
       parameters:
@@ -70,8 +194,9 @@ paths:
                 $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role
     put:
+      summary: "Update the specific emplyee role"
       operationId: updateEmployeeRole
       description: ''
       parameters:
@@ -86,6 +211,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Role'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Role'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Role'
       responses:
         '200':
           content:
@@ -94,8 +225,9 @@ paths:
                 $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role
     patch:
+      summary: "Partially update the specific employee role"
       operationId: partialUpdateEmployeeRole
       description: ''
       parameters:
@@ -110,6 +242,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Role'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Role'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Role'
       responses:
         '200':
           content:
@@ -118,8 +256,9 @@ paths:
                 $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role
     delete:
+      summary: "Delete the specific employee role"
       operationId: destroyEmployeeRole
       description: ''
       parameters:
@@ -133,9 +272,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Role
   /v1/user/:
     get:
+      summary: "List the registered user details"
       operationId: listBaseUsers
       description: ''
       parameters: []
@@ -149,14 +289,21 @@ paths:
                   $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - User
     post:
+      summary: "Create the new user"
       operationId: createBaseUser
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/User'
       responses:
@@ -167,9 +314,10 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - User
   /v1/user/{id}/:
     get:
+      summary: "Retrieve the specific user details"
       operationId: retrieveBaseUser
       description: ''
       parameters:
@@ -187,8 +335,9 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - User
     put:
+      summary: "update the specific user details"
       operationId: updateBaseUser
       description: ''
       parameters:
@@ -203,6 +352,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           content:
@@ -211,8 +366,9 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - User
     patch:
+      summary: "Partially update the specific user details"
       operationId: partialUpdateBaseUser
       description: ''
       parameters:
@@ -227,6 +383,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           content:
@@ -235,8 +397,9 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - User
     delete:
+      summary: "Delete the specific user"
       operationId: destroyBaseUser
       description: ''
       parameters:
@@ -250,9 +413,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - User
   /v1/store/:
     get:
+      summary: "list the store details"
       operationId: listStores
       description: ''
       parameters: []
@@ -266,14 +430,21 @@ paths:
                   $ref: '#/components/schemas/Store'
           description: ''
       tags:
-      - v1
+      - Store
     post:
+      summary: "create the new store"
       operationId: createStore
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Store'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Store'
       responses:
@@ -284,9 +455,10 @@ paths:
                 $ref: '#/components/schemas/Store'
           description: ''
       tags:
-      - v1
+      - Store
   /v1/store/{id}/:
     get:
+      summary: "update the specific store details"
       operationId: retrieveStore
       description: ''
       parameters:
@@ -304,8 +476,9 @@ paths:
                 $ref: '#/components/schemas/Store'
           description: ''
       tags:
-      - v1
+      - Store
     put:
+      summary: "Update the specific store details"
       operationId: updateStore
       description: ''
       parameters:
@@ -320,6 +493,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Store'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Store'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Store'
       responses:
         '200':
           content:
@@ -328,8 +507,9 @@ paths:
                 $ref: '#/components/schemas/Store'
           description: ''
       tags:
-      - v1
+      - Store
     patch:
+      summary: "Partially update the specific store details"
       operationId: partialUpdateStore
       description: ''
       parameters:
@@ -344,6 +524,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Store'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Store'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Store'
       responses:
         '200':
           content:
@@ -352,8 +538,9 @@ paths:
                 $ref: '#/components/schemas/Store'
           description: ''
       tags:
-      - v1
+      - Store
     delete:
+      summary: "Delete the specific store"
       operationId: destroyStore
       description: ''
       parameters:
@@ -367,9 +554,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Store
   /v1/user_salary/:
     get:
+      summary: "list the users salary details"
       operationId: listUserSalarys
       description: ''
       parameters: []
@@ -383,14 +571,21 @@ paths:
                   $ref: '#/components/schemas/UserSalary'
           description: ''
       tags:
-      - v1
+      - User Salary
     post:
+      summary: "add the salary for user"
       operationId: createUserSalary
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/UserSalary'
       responses:
@@ -401,9 +596,10 @@ paths:
                 $ref: '#/components/schemas/UserSalary'
           description: ''
       tags:
-      - v1
+      - User Salary
   /v1/user_salary/{id}/:
     get:
+      summary: "Retrieve the specific user salary details"
       operationId: retrieveUserSalary
       description: ''
       parameters:
@@ -421,8 +617,9 @@ paths:
                 $ref: '#/components/schemas/UserSalary'
           description: ''
       tags:
-      - v1
+      - User Salary
     put:
+      summary: "Update the specific user salary"
       operationId: updateUserSalary
       description: ''
       parameters:
@@ -437,6 +634,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserSalary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
       responses:
         '200':
           content:
@@ -445,8 +648,9 @@ paths:
                 $ref: '#/components/schemas/UserSalary'
           description: ''
       tags:
-      - v1
+      - User Salary
     patch:
+      summary: "Partially update the specific user salary"
       operationId: partialUpdateUserSalary
       description: ''
       parameters:
@@ -461,6 +665,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserSalary'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSalary'
       responses:
         '200':
           content:
@@ -469,8 +679,9 @@ paths:
                 $ref: '#/components/schemas/UserSalary'
           description: ''
       tags:
-      - v1
+      - User Salary
     delete:
+      summary: "Delete the specific user salary"
       operationId: destroyUserSalary
       description: ''
       parameters:
@@ -484,9 +695,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - User Salary
   /v1/gst/:
     get:
+      summary: "list the gst details"
       operationId: listGSTs
       description: ''
       parameters: []
@@ -500,14 +712,21 @@ paths:
                   $ref: '#/components/schemas/GST'
           description: ''
       tags:
-      - v1
+      - GST
     post:
+      summary: "Create the new gst details"
       operationId: createGST
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/GST'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GST'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/GST'
       responses:
@@ -518,9 +737,10 @@ paths:
                 $ref: '#/components/schemas/GST'
           description: ''
       tags:
-      - v1
+      - GST
   /v1/gst/{id}/:
     get:
+      summary: "Retrieve the specific gst details"
       operationId: retrieveGST
       description: ''
       parameters:
@@ -538,8 +758,9 @@ paths:
                 $ref: '#/components/schemas/GST'
           description: ''
       tags:
-      - v1
+      - GST
     put:
+      summary: "Update the specific gst details"
       operationId: updateGST
       description: ''
       parameters:
@@ -554,6 +775,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GST'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GST'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GST'
       responses:
         '200':
           content:
@@ -562,8 +789,9 @@ paths:
                 $ref: '#/components/schemas/GST'
           description: ''
       tags:
-      - v1
+      - GST
     patch:
+      summary: "Partially update the specific gst details"
       operationId: partialUpdateGST
       description: ''
       parameters:
@@ -578,6 +806,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GST'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GST'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GST'
       responses:
         '200':
           content:
@@ -586,8 +820,9 @@ paths:
                 $ref: '#/components/schemas/GST'
           description: ''
       tags:
-      - v1
+      - GST
     delete:
+      summary: "Delete the specific gst details"
       operationId: destroyGST
       description: ''
       parameters:
@@ -601,9 +836,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - GST
   /v1/unit/:
     get:
+      summary: "list the available units"
       operationId: listUnits
       description: ''
       parameters: []
@@ -617,14 +853,21 @@ paths:
                   $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Units
     post:
+      summary: "Create the new uinits"
       operationId: createUnit
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/Unit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Unit'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Unit'
       responses:
@@ -635,9 +878,10 @@ paths:
                 $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Units
   /v1/unit/{id}/:
     get:
+      summary: "Retrieve the specific unit details"
       operationId: retrieveUnit
       description: ''
       parameters:
@@ -655,8 +899,9 @@ paths:
                 $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Units
     put:
+      summary: "Update the specific units"
       operationId: updateUnit
       description: ''
       parameters:
@@ -671,6 +916,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Unit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Unit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Unit'
       responses:
         '200':
           content:
@@ -679,8 +930,9 @@ paths:
                 $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Units
     patch:
+      summary: "Partially update the specific units details"
       operationId: partialUpdateUnit
       description: ''
       parameters:
@@ -695,6 +947,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Unit'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Unit'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Unit'
       responses:
         '200':
           content:
@@ -703,8 +961,9 @@ paths:
                 $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Units
     delete:
+      summary: "Delete the specific units"
       operationId: destroyUnit
       description: ''
       parameters:
@@ -718,9 +977,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Units
   /v1/product_category/:
     get:
+      summary: "List the store product category"
       operationId: listStoreProductCategorys
       description: ''
       parameters: []
@@ -734,14 +994,21 @@ paths:
                   $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
     post:
+      summary: "create the new store product category"
       operationId: createStoreProductCategory
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/StoreProductCategory'
       responses:
@@ -752,9 +1019,10 @@ paths:
                 $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
   /v1/product_category/{id}/:
     get:
+      summary: "Retrieve the specific store product_category details"
       operationId: retrieveStoreProductCategory
       description: ''
       parameters:
@@ -772,8 +1040,9 @@ paths:
                 $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
     put:
+      summary: "Update the specific store product categories"
       operationId: updateStoreProductCategory
       description: ''
       parameters:
@@ -788,6 +1057,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProductCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
       responses:
         '200':
           content:
@@ -796,8 +1071,9 @@ paths:
                 $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
     patch:
+      summary: "Partially update the specific store product category"
       operationId: partialUpdateStoreProductCategory
       description: ''
       parameters:
@@ -812,6 +1088,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProductCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProductCategory'
       responses:
         '200':
           content:
@@ -820,8 +1102,9 @@ paths:
                 $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
     delete:
+      summary: "Delete the specific store product category"
       operationId: destroyStoreProductCategory
       description: ''
       parameters:
@@ -835,9 +1118,10 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Store Product Categorys
   /v1/product_type/:
     get:
+      summary: "List the store product types"
       operationId: listStoreProductTypes
       description: ''
       parameters: []
@@ -851,14 +1135,21 @@ paths:
                   $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Store Product Types
     post:
+      summary: "Create the new store product type"
       operationId: createStoreProductType
       description: ''
       parameters: []
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/StoreProductType'
       responses:
@@ -869,9 +1160,10 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Store Product Types
   /v1/product_type/{id}/:
     get:
+      summary: "Retrieve the specific store product_type details"
       operationId: retrieveStoreProductType
       description: ''
       parameters:
@@ -889,8 +1181,9 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Store Product Types
     put:
+      summary: "Update the specific store product type details"
       operationId: updateStoreProductType
       description: ''
       parameters:
@@ -905,6 +1198,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProductType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
       responses:
         '200':
           content:
@@ -913,8 +1212,9 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Store Product Types
     patch:
+      summary: "Partially update the store product type details"
       operationId: partialUpdateStoreProductType
       description: ''
       parameters:
@@ -929,6 +1229,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProductType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProductType'
       responses:
         '200':
           content:
@@ -937,22 +1243,23 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Store Product Types
     delete:
+      summary: "Delete the specific store product type"
       operationId: destroyStoreProductType
       description: ''
       parameters:
       - name: id
         in: path
         required: true
-        description: A unique integer value identifying this store product type.
+        description: A un  ique integer value identifying this store product type.
         schema:
           type: string
       responses:
         '204':
           description: ''
       tags:
-      - v1
+      - Store Product Types
   /v1/recipe_item/:
     get:
       operationId: listProductRecipeItems
@@ -968,7 +1275,7 @@ paths:
                   $ref: '#/components/schemas/ProductRecipeItem'
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
     post:
       operationId: createProductRecipeItem
       description: ''
@@ -976,6 +1283,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/ProductRecipeItem'
       responses:
@@ -986,7 +1299,7 @@ paths:
                 $ref: '#/components/schemas/ProductRecipeItem'
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
   /v1/recipe_item/{id}/:
     get:
       operationId: retrieveProductRecipeItem
@@ -1006,7 +1319,7 @@ paths:
                 $ref: '#/components/schemas/ProductRecipeItem'
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
     put:
       operationId: updateProductRecipeItem
       description: ''
@@ -1022,6 +1335,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductRecipeItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
       responses:
         '200':
           content:
@@ -1030,7 +1349,7 @@ paths:
                 $ref: '#/components/schemas/ProductRecipeItem'
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
     patch:
       operationId: partialUpdateProductRecipeItem
       description: ''
@@ -1046,6 +1365,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductRecipeItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductRecipeItem'
       responses:
         '200':
           content:
@@ -1054,7 +1379,7 @@ paths:
                 $ref: '#/components/schemas/ProductRecipeItem'
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
     delete:
       operationId: destroyProductRecipeItem
       description: ''
@@ -1069,7 +1394,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Product Recipe Items
   /v1/store_product/:
     get:
       operationId: listProducts
@@ -1085,7 +1410,7 @@ paths:
                   $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Products
     post:
       operationId: createProduct
       description: ''
@@ -1093,6 +1418,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/StoreProduct'
       responses:
@@ -1103,7 +1434,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Products
   /v1/store_product/{id}/:
     get:
       operationId: retrieveProduct
@@ -1123,7 +1454,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Products
     put:
       operationId: updateProduct
       description: ''
@@ -1139,6 +1470,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
       responses:
         '200':
           content:
@@ -1147,7 +1484,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Products
     patch:
       operationId: partialUpdateProduct
       description: ''
@@ -1163,6 +1500,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreProduct'
       responses:
         '200':
           content:
@@ -1171,7 +1514,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Products
     delete:
       operationId: destroyProduct
       description: ''
@@ -1186,7 +1529,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Products
   /v1/wrong_bill/:
     get:
       operationId: listWrongBills
@@ -1202,7 +1545,7 @@ paths:
                   $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bills
     post:
       operationId: createWrongBill
       description: ''
@@ -1210,6 +1553,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/WrongBill'
       responses:
@@ -1220,7 +1569,7 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bills
   /v1/wrong_bill/{id}/:
     get:
       operationId: retrieveWrongBill
@@ -1240,7 +1589,7 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bills
     put:
       operationId: updateWrongBill
       description: ''
@@ -1256,6 +1605,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WrongBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
       responses:
         '200':
           content:
@@ -1264,7 +1619,7 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bills
     patch:
       operationId: partialUpdateWrongBill
       description: ''
@@ -1280,6 +1635,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WrongBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WrongBill'
       responses:
         '200':
           content:
@@ -1288,7 +1649,7 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bills
     delete:
       operationId: destroyWrongBill
       description: ''
@@ -1303,7 +1664,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Wrong Bills
   /v1/free_bill/:
     get:
       operationId: listFreeBills
@@ -1319,7 +1680,7 @@ paths:
                   $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bills
     post:
       operationId: createFreeBill
       description: ''
@@ -1327,6 +1688,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/FreeBill'
       responses:
@@ -1337,7 +1704,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bills
   /v1/free_bill/{id}/:
     get:
       operationId: retrieveFreeBill
@@ -1357,7 +1724,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bills
     put:
       operationId: updateFreeBill
       description: ''
@@ -1373,6 +1740,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/FreeBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
       responses:
         '200':
           content:
@@ -1381,7 +1754,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bills
     patch:
       operationId: partialUpdateFreeBill
       description: ''
@@ -1397,6 +1770,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/FreeBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FreeBill'
       responses:
         '200':
           content:
@@ -1405,7 +1784,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bills
     delete:
       operationId: destroyFreeBill
       description: ''
@@ -1420,7 +1799,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Free Bills
   /v1/electric_bill/:
     get:
       operationId: listElectricBills
@@ -1436,7 +1815,7 @@ paths:
                   $ref: '#/components/schemas/ElectricBill'
           description: ''
       tags:
-      - v1
+      - Electric Bills
     post:
       operationId: createElectricBill
       description: ''
@@ -1444,6 +1823,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/ElectricBill'
       responses:
@@ -1454,7 +1839,7 @@ paths:
                 $ref: '#/components/schemas/ElectricBill'
           description: ''
       tags:
-      - v1
+      - Electric Bills
   /v1/electric_bill/{id}/:
     get:
       operationId: retrieveElectricBill
@@ -1474,7 +1859,7 @@ paths:
                 $ref: '#/components/schemas/ElectricBill'
           description: ''
       tags:
-      - v1
+      - Electric Bills
     put:
       operationId: updateElectricBill
       description: ''
@@ -1490,6 +1875,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ElectricBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
       responses:
         '200':
           content:
@@ -1498,7 +1889,7 @@ paths:
                 $ref: '#/components/schemas/ElectricBill'
           description: ''
       tags:
-      - v1
+      - Electric Bills
     patch:
       operationId: partialUpdateElectricBill
       description: ''
@@ -1514,6 +1905,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ElectricBill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ElectricBill'
       responses:
         '200':
           content:
@@ -1522,7 +1919,7 @@ paths:
                 $ref: '#/components/schemas/ElectricBill'
           description: ''
       tags:
-      - v1
+      - Electric Bills
     delete:
       operationId: destroyElectricBill
       description: ''
@@ -1537,7 +1934,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Electric Bills
   /v1/product_price_batch/:
     get:
       operationId: listProductPricingBatchs
@@ -1553,7 +1950,7 @@ paths:
                   $ref: '#/components/schemas/ProductPricingBatch'
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
     post:
       operationId: createProductPricingBatch
       description: ''
@@ -1561,6 +1958,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/ProductPricingBatch'
       responses:
@@ -1571,7 +1974,7 @@ paths:
                 $ref: '#/components/schemas/ProductPricingBatch'
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
   /v1/product_price_batch/{id}/:
     get:
       operationId: retrieveProductPricingBatch
@@ -1591,7 +1994,7 @@ paths:
                 $ref: '#/components/schemas/ProductPricingBatch'
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
     put:
       operationId: updateProductPricingBatch
       description: ''
@@ -1607,6 +2010,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductPricingBatch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
       responses:
         '200':
           content:
@@ -1615,7 +2024,7 @@ paths:
                 $ref: '#/components/schemas/ProductPricingBatch'
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
     patch:
       operationId: partialUpdateProductPricingBatch
       description: ''
@@ -1631,6 +2040,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductPricingBatch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductPricingBatch'
       responses:
         '200':
           content:
@@ -1639,7 +2054,7 @@ paths:
                 $ref: '#/components/schemas/ProductPricingBatch'
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
     delete:
       operationId: destroyProductPricingBatch
       description: ''
@@ -1654,7 +2069,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Product Pricing Batchs
   /v1/product_inventory/:
     get:
       operationId: listProductInventorys
@@ -1670,7 +2085,7 @@ paths:
                   $ref: '#/components/schemas/ProductInventory'
           description: ''
       tags:
-      - v1
+      - Product Inventorys
     post:
       operationId: createProductInventory
       description: ''
@@ -1678,6 +2093,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/ProductInventory'
       responses:
@@ -1688,7 +2109,7 @@ paths:
                 $ref: '#/components/schemas/ProductInventory'
           description: ''
       tags:
-      - v1
+      - Product Inventorys
   /v1/product_inventory/{id}/:
     get:
       operationId: retrieveProductInventory
@@ -1708,7 +2129,7 @@ paths:
                 $ref: '#/components/schemas/ProductInventory'
           description: ''
       tags:
-      - v1
+      - Product Inventorys
     put:
       operationId: updateProductInventory
       description: ''
@@ -1724,6 +2145,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductInventory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
       responses:
         '200':
           content:
@@ -1732,7 +2159,7 @@ paths:
                 $ref: '#/components/schemas/ProductInventory'
           description: ''
       tags:
-      - v1
+      - Product Inventorys
     patch:
       operationId: partialUpdateProductInventory
       description: ''
@@ -1748,6 +2175,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductInventory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductInventory'
       responses:
         '200':
           content:
@@ -1756,7 +2189,7 @@ paths:
                 $ref: '#/components/schemas/ProductInventory'
           description: ''
       tags:
-      - v1
+      - Product Inventorys
     delete:
       operationId: destroyProductInventory
       description: ''
@@ -1771,7 +2204,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Product Inventorys
   /v1/states/:
     get:
       operationId: listStates
@@ -1787,7 +2220,7 @@ paths:
                   $ref: '#/components/schemas/State'
           description: ''
       tags:
-      - v1
+      - States
   /v1/cities/{state_id}/:
     get:
       operationId: retrieveCity
@@ -1807,7 +2240,7 @@ paths:
                 $ref: '#/components/schemas/City'
           description: ''
       tags:
-      - v1
+      - City
   /v1/store_specific_wrongbill/{id}/:
     get:
       operationId: retrieveWrongBill
@@ -1827,7 +2260,8 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - v1
+      - Wrong Bill
+
   /v1/store_specific_freebill/{id}/:
     get:
       operationId: retrieveFreeBill
@@ -1847,7 +2281,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - v1
+      - Free Bill
   /v1/attendance_list/{date}/:
     get:
       operationId: retrieveBaseUser
@@ -1867,7 +2301,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceList'
           description: ''
       tags:
-      - v1
+      - Attendance List
   /v1/attendance_report/{id}/:
     get:
       operationId: retrieveUserAttendance
@@ -1887,7 +2321,7 @@ paths:
                 $ref: '#/components/schemas/BulkAttendance'
           description: ''
       tags:
-      - v1
+      - Attendance Report
   /v1/attendance_user_list/{id}/{date}/:
     get:
       operationId: retrieveUserList
@@ -1913,7 +2347,7 @@ paths:
                 $ref: '#/components/schemas/UserList'
           description: ''
       tags:
-      - v1
+      - Attendance User List
   /v1/store_user/:
     get:
       operationId: listStoreUserLists
@@ -1929,7 +2363,7 @@ paths:
                   $ref: '#/components/schemas/StoreUserList'
           description: ''
       tags:
-      - v1
+      - Store User Lists
   /v1/order_status/:
     get:
       operationId: listOrderStatus
@@ -1945,7 +2379,7 @@ paths:
                   $ref: '#/components/schemas/OrderStatus'
           description: ''
       tags:
-      - v1
+      - Order Status
   /v1/bulk_order/:
     get:
       operationId: listBulkOrders
@@ -1961,7 +2395,7 @@ paths:
                   $ref: '#/components/schemas/BulkOrder'
           description: ''
       tags:
-      - v1
+      - Bulk Orders
     post:
       operationId: createBulkOrder
       description: ''
@@ -1969,6 +2403,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/BulkOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BulkOrder'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/BulkOrder'
       responses:
@@ -1979,7 +2419,7 @@ paths:
                 $ref: '#/components/schemas/BulkOrder'
           description: ''
       tags:
-      - v1
+      - Bulk Orders
   /v1/free_bill_customer/:
     get:
       operationId: listFreeBillCustomers
@@ -1995,7 +2435,7 @@ paths:
                   $ref: '#/components/schemas/FreeBillCustomer'
           description: ''
       tags:
-      - v1
+      - Free Bill Customers
   /v1/customer/:
     get:
       operationId: listCustomers
@@ -2011,7 +2451,7 @@ paths:
                   $ref: '#/components/schemas/Customer'
           description: ''
       tags:
-      - v1
+      - Customers
   /v1/product_list_mapping/{store_id}:
     get:
       operationId: retrieveStoreProduct
@@ -2031,7 +2471,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - v1
+      - Product List Mapping
   /v1/complaint/:
     get:
       operationId: listComplaints
@@ -2047,7 +2487,7 @@ paths:
                   $ref: '#/components/schemas/Complaint'
           description: ''
       tags:
-      - v1
+      - Complaints
     post:
       operationId: createComplaint
       description: ''
@@ -2055,6 +2495,12 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/Complaint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Complaint'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Complaint'
       responses:
@@ -2065,7 +2511,7 @@ paths:
                 $ref: '#/components/schemas/Complaint'
           description: ''
       tags:
-      - v1
+      - Complaints
   /v1/complaint_type/:
     get:
       operationId: listComplaintTypes
@@ -2081,7 +2527,7 @@ paths:
                   $ref: '#/components/schemas/ComplaintType'
           description: ''
       tags:
-      - v1
+      - Complaint Types
   /v1/complaint_status/:
     get:
       operationId: listComplaintStatus
@@ -2097,7 +2543,7 @@ paths:
                   $ref: '#/components/schemas/ComplaintStatus'
           description: ''
       tags:
-      - v1
+      - Complaint Status
   /v1/role_list/:
     get:
       operationId: listEmployeeRoles
@@ -2113,7 +2559,7 @@ paths:
                   $ref: '#/components/schemas/Role'
           description: ''
       tags:
-      - v1
+      - Role List
   /v1/unit_list/:
     get:
       operationId: listUnits
@@ -2129,7 +2575,7 @@ paths:
                   $ref: '#/components/schemas/Unit'
           description: ''
       tags:
-      - v1
+      - Unit List
   /v1/category_list/:
     get:
       operationId: listStoreProductCategorys
@@ -2145,7 +2591,7 @@ paths:
                   $ref: '#/components/schemas/StoreProductCategory'
           description: ''
       tags:
-      - v1
+      - Category List
   /v1/type_list/:
     get:
       operationId: listStoreProductTypes
@@ -2161,7 +2607,7 @@ paths:
                   $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - v1
+      - Type List
   /v1/store_branch/{id}/:
     get:
       operationId: retrieveBranch
@@ -2181,7 +2627,7 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch
     put:
       operationId: updateBranch
       description: ''
@@ -2197,6 +2643,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2205,7 +2657,7 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch
     patch:
       operationId: partialUpdateBranch
       description: ''
@@ -2221,6 +2673,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2229,7 +2687,7 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch
     delete:
       operationId: destroyBranch
       description: ''
@@ -2244,7 +2702,7 @@ paths:
         '204':
           description: ''
       tags:
-      - v1
+      - Store Branch
   /v1/store_specific_user/{store_id}/:
     get:
       operationId: retrieveBaseUser
@@ -2264,7 +2722,23 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - v1
+      - Store Specific User
+  /v1/generate_pay_role:
+    get:
+      operationId: listUserAttendances
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GeneratePayRoleList'
+          description: ''
+      tags:
+      - Generate Pay Role
   /v1/login/:
     post:
       operationId: createUserToken
@@ -2275,6 +2749,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserToken'
       responses:
         '201':
           content:
@@ -2283,7 +2763,7 @@ paths:
                 $ref: '#/components/schemas/UserToken'
           description: ''
       tags:
-      - v1
+      - Login
   /v1/user_in_attendance/:
     post:
       operationId: createUserAttendanceIn
@@ -2294,6 +2774,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceIn'
       responses:
         '201':
           content:
@@ -2302,7 +2788,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceIn'
           description: ''
       tags:
-      - v1
+      - User In Attendance
   /v1/user_in_attendance_break/:
     post:
       operationId: createUserAttendanceBreak
@@ -2313,6 +2799,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceBreakIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakIn'
       responses:
         '201':
           content:
@@ -2321,7 +2813,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceBreakIn'
           description: ''
       tags:
-      - v1
+      - User In Attendance Break
   /v1/product_mapping/{store_id}:
     post:
       operationId: createProductStoreMapping
@@ -2338,6 +2830,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductStoreMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
       responses:
         '201':
           content:
@@ -2346,7 +2844,7 @@ paths:
                 $ref: '#/components/schemas/ProductStoreMapping'
           description: ''
       tags:
-      - v1
+      - Product Mapping
   /v1/attendance_bulk_create/:
     post:
       operationId: createUserAttendance
@@ -2357,6 +2855,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/BulkAttendance'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BulkAttendance'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BulkAttendance'
       responses:
         '201':
           content:
@@ -2365,7 +2869,7 @@ paths:
                 $ref: '#/components/schemas/BulkAttendance'
           description: ''
       tags:
-      - v1
+      - Attendance Bulk Create
   /v1/user_out_attendance/{id}/:
     put:
       operationId: updateUserAttendance
@@ -2382,6 +2886,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceOut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
       responses:
         '200':
           content:
@@ -2390,7 +2900,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceOut'
           description: ''
       tags:
-      - v1
+      - User Out Attendance
     patch:
       operationId: partialUpdateUserAttendance
       description: ''
@@ -2406,6 +2916,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceOut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceOut'
       responses:
         '200':
           content:
@@ -2414,7 +2930,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceOut'
           description: ''
       tags:
-      - v1
+      - User Out Attendance
   /v1/user_out_attendance_break/{id}/:
     put:
       operationId: updateUserAttendanceBreak
@@ -2431,6 +2947,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceBreakOut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
       responses:
         '200':
           content:
@@ -2439,7 +2961,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceBreakOut'
           description: ''
       tags:
-      - v1
+      - User Out Attendance Break
     patch:
       operationId: partialUpdateUserAttendanceBreak
       description: ''
@@ -2455,6 +2977,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserAttendanceBreakOut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAttendanceBreakOut'
       responses:
         '200':
           content:
@@ -2463,7 +2991,7 @@ paths:
                 $ref: '#/components/schemas/UserAttendanceBreakOut'
           description: ''
       tags:
-      - v1
+      - User Out Attendance Break
   /v1/product_mapping_update/{store_id}:
     put:
       operationId: updateProductStoreMapping
@@ -2480,6 +3008,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductStoreMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
       responses:
         '200':
           content:
@@ -2488,7 +3022,7 @@ paths:
                 $ref: '#/components/schemas/ProductStoreMapping'
           description: ''
       tags:
-      - v1
+      - Product Mapping Update
     patch:
       operationId: partialUpdateProductStoreMapping
       description: ''
@@ -2504,6 +3038,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductStoreMapping'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductStoreMapping'
       responses:
         '200':
           content:
@@ -2512,7 +3052,7 @@ paths:
                 $ref: '#/components/schemas/ProductStoreMapping'
           description: ''
       tags:
-      - v1
+      - Product Mapping Update
   /v1/store_branch_update/{id}/:
     put:
       operationId: updateBranch
@@ -2529,6 +3069,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2537,7 +3083,7 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch Update
     patch:
       operationId: partialUpdateBranch
       description: ''
@@ -2553,6 +3099,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2561,12 +3113,12 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch Update
   /v1/store_branch_create/{store_id}/:
     put:
       operationId: updateStore
       description: ''
-      parameters:
+      parameters: 
       - name: store_id
         in: path
         required: true
@@ -2578,6 +3130,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2586,7 +3144,7 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch Create
     patch:
       operationId: partialUpdateStore
       description: ''
@@ -2602,6 +3160,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StoreBranch'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StoreBranch'
       responses:
         '200':
           content:
@@ -2610,14 +3174,14 @@ paths:
                 $ref: '#/components/schemas/StoreBranch'
           description: ''
       tags:
-      - v1
+      - Store Branch Create
 security:
   - ApiKeyAuth: []
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
-      in: header
+      in: header 
       name: Authorization
   schemas:
     BaseUser:
@@ -3574,9 +4138,12 @@ components:
           type: string
         complaint_type:
           type: integer
+        status:
+          type: integer
       required:
       - title
       - complaint_type
+      - status
     ComplaintType:
       type: object
       properties: {}
@@ -3592,6 +4159,9 @@ components:
           type: string
       required:
       - name
+    GeneratePayRoleList:
+      type: object
+      properties: {}
     UserToken:
       type: object
       properties:
