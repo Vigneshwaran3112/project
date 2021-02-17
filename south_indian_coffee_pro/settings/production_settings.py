@@ -63,6 +63,7 @@ WSGI_APPLICATION = 'south_indian_coffee_pro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'OPTIONS': {'options': '-c search_path=production'},
         'NAME': 'south_indian_coffee_test',
         'USER': 'dbmasteruser',
         'PASSWORD': 'S0S-GfhoBlIrIm.#-L97.z-R7I9J-8I%',

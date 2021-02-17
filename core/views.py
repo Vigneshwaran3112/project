@@ -68,14 +68,14 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class RoleAPIViewset(viewsets.ModelViewSet):
-    queryset = EmployeeRole.objects.exclude(delete=True)
-    serializer_class = RoleSerializer
-    # permission_class = (IsAdminUser, )
+# class RoleAPIViewset(viewsets.ModelViewSet):
+#     queryset = EmployeeRole.objects.exclude(delete=True)
+#     serializer_class = RoleSerializer
+#     # permission_class = (IsAdminUser, )
 
-    def destroy(self, request, *args, **kwargs):
-        destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+#     def destroy(self, request, *args, **kwargs):
+#         destroy = EmployeeRole.objects.filter(pk=kwargs['pk']).update(delete=True)
+#         return Response({'message':'EmployeeRole deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class RoleListAPIView(generics.ListAPIView):

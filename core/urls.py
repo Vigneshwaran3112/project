@@ -7,7 +7,7 @@ from . import views
 
 router = DefaultRouter()
 
-router.register(r'role', views.RoleAPIViewset, basename='role')
+# router.register(r'role', views.RoleAPIViewset, basename='role')
 router.register(r'user', views.UserAPIView, basename='user')
 router.register(r'store', views.StoreAPIViewset, basename='store')
 # router.register(r'store_branch', views.StoreBranchAPIViewset, basename='store_branch')
