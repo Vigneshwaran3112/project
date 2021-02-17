@@ -32,8 +32,8 @@ tags:
     description: "store product type details"
   - name: "Product Recipe Items"
     description: "product recipe item details"
-  - name: "Products"
-    description: "products details"
+  - name: "Store Products"
+    description: "Store Products details"
   - name: "Wrong Bills"
     description: "wrond bill details"
   - name: "Free Bills"
@@ -1135,7 +1135,7 @@ paths:
                   $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
     post:
       summary: "Create the new store product type"
       operationId: createStoreProductType
@@ -1160,7 +1160,7 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
   /v1/product_type/{id}/:
     get:
       summary: "Retrieve the specific store product_type details"
@@ -1181,7 +1181,7 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
     put:
       summary: "Update the specific store product type details"
       operationId: updateStoreProductType
@@ -1212,7 +1212,7 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
     patch:
       summary: "Partially update the store product type details"
       operationId: partialUpdateStoreProductType
@@ -1243,7 +1243,7 @@ paths:
                 $ref: '#/components/schemas/StoreProductType'
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
     delete:
       summary: "Delete the specific store product type"
       operationId: destroyStoreProductType
@@ -1259,7 +1259,7 @@ paths:
         '204':
           description: ''
       tags:
-      - Store Product Types
+      - Store Product Type
   /v1/recipe_item/:
     get:
       operationId: listProductRecipeItems
@@ -1410,7 +1410,7 @@ paths:
                   $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Products
+      - Store Products
     post:
       operationId: createProduct
       description: ''
@@ -1434,7 +1434,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Products
+      - Store Products
   /v1/store_product/{id}/:
     get:
       operationId: retrieveProduct
@@ -1454,7 +1454,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Products
+      - Store Products
     put:
       operationId: updateProduct
       description: ''
@@ -1484,7 +1484,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Products
+      - Store Products
     patch:
       operationId: partialUpdateProduct
       description: ''
@@ -1514,7 +1514,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Products
+      - Store Products
     delete:
       operationId: destroyProduct
       description: ''
@@ -1529,7 +1529,7 @@ paths:
         '204':
           description: ''
       tags:
-      - Products
+      - Store Products
   /v1/wrong_bill/:
     get:
       operationId: listWrongBills
@@ -2260,7 +2260,7 @@ paths:
                 $ref: '#/components/schemas/WrongBill'
           description: ''
       tags:
-      - Wrong Bill
+      - Store Specific Wrong Bill
 
   /v1/store_specific_freebill/{id}/:
     get:
@@ -2281,7 +2281,7 @@ paths:
                 $ref: '#/components/schemas/FreeBill'
           description: ''
       tags:
-      - Free Bill
+      - Store Specific Free Bill
   /v1/attendance_list/{date}/:
     get:
       operationId: retrieveBaseUser
