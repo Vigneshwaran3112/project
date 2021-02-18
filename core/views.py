@@ -412,6 +412,20 @@ class ComplaintTypeViewSet(viewsets.ModelViewSet):
         return Response({'message':'ComplaintType deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class BranchExpensesViewSet(viewsets.ModelViewSet):
+    queryset = BranchExpenses.objects.exclude(delete=True)
+    serializer_class = BranchExpensesSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = BranchExpenses.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'BranchExpensesdeleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class PaymentModeListAPI(generics.ListAPIView):
+    queryset = PaymentMode.objects.exclude(delete=True)
+    serializer_class = PaymentModeSerializer
+
+
 class ProductForMappingList(generics.ListAPIView):
     serializer_class = BranchProductSerializer
 

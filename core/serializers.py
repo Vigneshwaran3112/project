@@ -271,6 +271,7 @@ class SubBranchSerializer(serializers.ModelSerializer):
         }
 
 
+
 class BaseUserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -763,6 +764,36 @@ class ComplaintTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ComplaintType
+        exclude = ['delete', 'code']
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description
+        }
+
+
+class BranchExpensesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = BranchExpenses
+        exclude = ['delete', 'code']
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.description
+        }
+
+
+class PaymentModeSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = PaymentMode
         exclude = ['delete', 'code']
 
     def to_representation(self, instance):
