@@ -71,7 +71,6 @@ urlpatterns = [
 
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
 
-    path('role_list/', views.RoleListAPIView.as_view()),
 
     path('classification_list/', views.ProductClassificationListAPIView.as_view()),
     path('department_list/', views.ProductDepartmentListAPIView.as_view()),
@@ -85,5 +84,8 @@ urlpatterns = [
     path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
     path('gst/', views.GSTListAPIView.as_view()),
     path('payment_mode/', views.PaymentModeListAPI.as_view()),
+    
+    path('role_list/', views.RoleListAPIView.as_view()),    
+    path('role_update/<int:pk>/', views.RoleUpdateAPIView.as_view()),
 
 ]

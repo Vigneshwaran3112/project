@@ -176,14 +176,20 @@ class GSTListAPIView(generics.ListAPIView):
 
 
 class UnitListAPIView(generics.ListAPIView):
-    queryset = GST.objects.filter(delete=False)
-    serializer_class = GSTSerializer
+    queryset = Unit.objects.filter(delete=False)
+    serializer_class = UnitSerializer
     # permission_classes = (IsAdminUser, )
 
 
 class UnitUpdateAPIView(generics.UpdateAPIView):
-    queryset = GST.objects.filter(delete=False)
-    serializer_class = GSTSerializer
+    queryset = Unit.objects.filter(delete=False)
+    serializer_class = UnitSerializer
+    # permission_classes = (IsAdminUser, )
+
+
+class RoleUpdateAPIView(generics.UpdateAPIView):
+    queryset = EmployeeRole.objects.filter(delete=False)
+    serializer_class = RoleSerializer
     # permission_classes = (IsAdminUser, )
 
 
