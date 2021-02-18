@@ -109,7 +109,7 @@ class SubBranchCreate(generics.UpdateAPIView):
 
 class SubBranchUpdateApiView(generics.UpdateAPIView):
     queryset = SubBranch.objects.filter(delete=False)
-    serializer_class = SubBranchSerializer
+    serializer_class = SubBranchUpdateSerializer
     # permission_class = (IsAdminUser, )
 
 
@@ -124,7 +124,7 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
     def partial_update(self, request, pk):
         instance = self.get_object()
         destroy = Branch.objects.filter(pk=pk).update(status=not instance.status)
-        return Response({'message':'branch status update successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message':'branch status update successfully'})
 
     def destroy(self, request, pk):
         destroy = Branch.objects.filter(pk=pk).update(delete=True)

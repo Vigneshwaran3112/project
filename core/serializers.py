@@ -271,6 +271,23 @@ class SubBranchSerializer(serializers.ModelSerializer):
         }
 
 
+class SubBranchUpdateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
+
+    class Meta:
+        model = SubBranch
+        fields = ('status', 'name', )
+
+    def to_representation(self, instance):
+        # branch = Branch.objects.get(branch__pk=instance.pk).name
+        return {
+            'id': instance.pk,
+            # 'branch' :branch,
+            'name': instance.name,
+            'status': instance.status,
+            'created': instance.created
+        }
+
 
 class BaseUserSerializer(serializers.ModelSerializer):
 

@@ -117,7 +117,11 @@ admin.site.register(ProductBranchMapping)
 
 admin.site.register(FreeBillCustomer)
 
-admin.site.register(SubBranch)
+# admin.site.register(SubBranch)
+
+@admin.register(SubBranch)
+class SubBranchAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name' )
 
 admin.site.register(Country)
 admin.site.register(State)
