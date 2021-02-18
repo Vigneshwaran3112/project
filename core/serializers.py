@@ -261,7 +261,7 @@ class SubBranchSerializer(serializers.ModelSerializer):
         fields = ('status', 'name', )
 
     def to_representation(self, instance):
-        branch = Branch.objects.get(branch__pk=instance.pk).name
+        branch = Branch.objects.get(sub_branch__pk=instance.pk).name
         return {
             'id': instance.pk,
             'branch' :branch,
@@ -279,10 +279,8 @@ class SubBranchUpdateSerializer(serializers.ModelSerializer):
         fields = ('status', 'name', )
 
     def to_representation(self, instance):
-        # branch = Branch.objects.get(branch__pk=instance.pk).name
         return {
             'id': instance.pk,
-            # 'branch' :branch,
             'name': instance.name,
             'status': instance.status,
             'created': instance.created

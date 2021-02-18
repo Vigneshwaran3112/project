@@ -118,16 +118,16 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SubBranchSerializer
 
     def retrieve(self, request, pk):
-        sub_branch = SubBranchSerializer(Branch.objects.get(pk=pk).branch.filter(delete=False), many=True)
+        sub_branch = SubBranchSerializer(Branch.objects.get(pk=pk).sub_branch.filter(delete=False), many=True)
         return Response(sub_branch.data)
 
     def partial_update(self, request, pk):
         instance = self.get_object()
-        destroy = Branch.objects.filter(pk=pk).update(status=not instance.status)
+        destroy = SubBranch.objects.filter(pk=pk).update(status=not instance.status)
         return Response({'message':'branch status update successfully'})
 
     def destroy(self, request, pk):
-        destroy = Branch.objects.filter(pk=pk).update(delete=True)
+        destroy = SubBranch.objects.filter(pk=pk).update(delete=True)
         return Response({'message':'branch deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
