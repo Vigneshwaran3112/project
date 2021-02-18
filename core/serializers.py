@@ -746,7 +746,11 @@ class ProductStoreMappingSerializer(serializers.ModelSerializer):
         }
     
 
-class ComplaintStatusSerializer(serializers.Serializer):
+class ComplaintStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ComplaintStatus
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return{
@@ -756,7 +760,11 @@ class ComplaintStatusSerializer(serializers.Serializer):
         }
 
 
-class ComplaintTypeSerializer(serializers.Serializer):
+class ComplaintTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ComplaintType
+        exclude = ['delete', 'code']
 
     def to_representation(self, instance):
         return{

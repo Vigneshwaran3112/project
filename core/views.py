@@ -169,14 +169,10 @@ class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
     # permission_class = (IsAuthenticated,)
 
 
-class GSTAPIViewset(viewsets.ModelViewSet):
+class GSTAPIViewset(generics.ListAPIView):
     queryset = GST.objects.filter(delete=False)
     serializer_class = GSTSerializer
     # permission_classes = (IsAdminUser, )
-
-    def destroy(self, request, *args, **kwargs):
-        destroy = GST.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'GST deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class UnitAPIViewset(viewsets.ModelViewSet):
@@ -400,16 +396,24 @@ class StoreProductMappingUpdate(generics.UpdateAPIView):
         return Response(serializer_data, status=status.HTTP_201_CREATED)
 
 
-class ComplaintStatusListAPIView(generics.ListAPIView):
+class ComplaintStatusViewSet(viewsets.ModelViewSet):
     queryset = ComplaintStatus.objects.exclude(delete=True)
     serializer_class = ComplaintStatusSerializer
     # permission_classes = (IsAdmin,)1
 
+    def destroy(self, request, *args, **kwargs):
+        destroy = ComplaintStatus.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'ComplaintStatus deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class ComplaintTypeListAPIView(generics.ListAPIView):
+
+class ComplaintTypeViewSet(viewsets.ModelViewSet):
     queryset = ComplaintType.objects.exclude(delete=True)
     serializer_class = ComplaintTypeSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ComplaintType.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'ComplaintType deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ProductForMappingList(generics.ListAPIView):

@@ -12,7 +12,6 @@ router.register(r'user', views.UserAPIView, basename='user')
 router.register(r'store', views.StoreAPIViewset, basename='store')
 # router.register(r'store_branch', views.StoreBranchAPIViewset, basename='store_branch')
 router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salary')
-router.register(r'gst', views.GSTAPIViewset, basename='gst')
 router.register(r'unit', views.UnitAPIViewset, basename='unit')
 router.register(r'product_category', views.StoreProductCategoryViewset, basename='product_category')
 router.register(r'product_type', views.StoreProductTypeViewset, basename='product_type')
@@ -23,6 +22,8 @@ router.register(r'free_bill', views.FreeBillAPIView, basename='free_bill')
 router.register(r'electric_bill', views.ElectricBillAPIView, basename='electric_bill')
 router.register(r'product_price_batch', views.ProductPricingBatchAPIView, basename='product_price_batch')
 router.register(r'product_inventory', views.ProductInventoryAPIView, basename='product_inventory')
+router.register(r'complaint_category', views.ComplaintTypeViewSet, basename='complaint_type')
+router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='complaint_status')
 
 
 
@@ -66,8 +67,6 @@ urlpatterns = [
     path('product_list_mapping/<int:store_id>', views.ProductForMappingList.as_view()),
 
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
-    path('complaint_type/', views.ComplaintTypeListAPIView.as_view()),
-    path('complaint_status/', views.ComplaintStatusListAPIView.as_view()),
 
     path('role_list/', views.RoleListAPIView.as_view()),
     path('unit_list/', views.UnitListAPIView.as_view()),
@@ -81,5 +80,6 @@ urlpatterns = [
     path('store_specific_user/<int:store_id>/', views.StoreSpecificUserListAPIView.as_view()),
 
     path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
+    path('gst/', views.GSTAPIViewset.as_view())
 
 ]
