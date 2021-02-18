@@ -23,6 +23,7 @@ router.register(r'product_price_batch', views.ProductPricingBatchAPIView, basena
 router.register(r'product_inventory', views.ProductInventoryAPIView, basename='product_inventory')
 router.register(r'complaint_category', views.ComplaintTypeViewSet, basename='complaint_type')
 router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='complaint_status')
+router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses',)
 
 
 
@@ -79,6 +80,7 @@ urlpatterns = [
     path('branch_specific_user/<int:branch_id>/', views.BranchSpecificUserListAPIView.as_view()),
 
     path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
-    path('gst/', views.GSTListAPIView.as_view())
+    path('gst/', views.GSTListAPIView.as_view()),
+    path('payment_mode/', views.PaymentModeListAPI.as_view()),
 
 ]
