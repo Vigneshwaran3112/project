@@ -214,6 +214,24 @@ class Product(BaseModel):
         return self.name
 
 
+class BranchExpenses(BaseModel):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class PaymentMode(BaseModel):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class ProductBranchMapping(BaseModel):
     branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
     product = models.ManyToManyField(Product)
