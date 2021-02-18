@@ -11,7 +11,7 @@ router = DefaultRouter()
 router.register(r'user', views.UserAPIView, basename='user')
 router.register(r'branch', views.BranchAPIViewset, basename='branch')
 router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salary')
-# router.register(r'unit', views.UnitAPIViewset, basename='unit')
+router.register(r'unit', views.UnitAPIViewset, basename='unit')
 router.register(r'product_category', views.BranchProductClassificationViewset, basename='product_category')
 router.register(r'product_department', views.BranchProductDepartmentViewset, basename='product_type')
 router.register(r'recipe_item', views.ProductRecipeItemViewset, basename='recipe_item')
@@ -68,7 +68,7 @@ urlpatterns = [
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
 
     path('role_list/', views.RoleListAPIView.as_view()),
-    path('unit_list/', views.UnitListAPIView.as_view()),
+
     path('classification_list/', views.ProductClassificationListAPIView.as_view()),
     path('department_list/', views.ProductDepartmentListAPIView.as_view()),
     
