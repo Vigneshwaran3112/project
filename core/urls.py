@@ -9,14 +9,13 @@ router = DefaultRouter()
 
 # router.register(r'role', views.RoleAPIViewset, basename='role')
 router.register(r'user', views.UserAPIView, basename='user')
-router.register(r'store', views.StoreAPIViewset, basename='store')
-# router.register(r'store_branch', views.StoreBranchAPIViewset, basename='store_branch')
+router.register(r'branch', views.BranchAPIViewset, basename='branch')
 router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salary')
 router.register(r'unit', views.UnitAPIViewset, basename='unit')
-router.register(r'product_category', views.StoreProductCategoryViewset, basename='product_category')
-router.register(r'product_type', views.StoreProductTypeViewset, basename='product_type')
+router.register(r'product_category', views.BranchProductClassificationViewset, basename='product_category')
+router.register(r'product_department', views.BranchProductDepartmentViewset, basename='product_type')
 router.register(r'recipe_item', views.ProductRecipeItemViewset, basename='recipe_item')
-router.register(r'store_product', views.StoreProductViewset, basename='store_product')
+router.register(r'branch_product', views.BranchProductViewset, basename='branch_product')
 router.register(r'wrong_bill', views.WrongBillAPIView, basename='wrong_bill')
 router.register(r'free_bill', views.FreeBillAPIView, basename='free_bill')
 router.register(r'electric_bill', views.ElectricBillAPIView, basename='electric_bill')
@@ -41,8 +40,8 @@ urlpatterns = [
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
 
-    path('store_specific_wrongbill/<int:pk>/', views.StoreSpecificWrongBillAPIView.as_view()),
-    path('store_specific_freebill/<int:pk>/', views.StoreSpecificFreeBillAPIView.as_view()),
+    path('branch_specific_wrongbill/<int:pk>/', views.BranchSpecificWrongBillAPIView.as_view()),
+    path('branch_specific_freebill/<int:pk>/', views.BranchSpecificFreeBillAPIView.as_view()),
 
 
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
@@ -53,7 +52,7 @@ urlpatterns = [
     path('attendance_report/<int:pk>/', views.AttendanceReportListAPIView.as_view()),
     path('attendance_user_list/<int:pk>/<str:date>/', views.AttendanceUserListAPIView.as_view()),
 
-    path('store_user/', views.UserListAPIView.as_view()),
+    path('branch_user/', views.UserListAPIView.as_view()),
 
     
     path('order_status/', views.OrderStatusListAPIView.as_view()),
@@ -62,24 +61,24 @@ urlpatterns = [
     path('free_bill_customer/', views.FreeBillCustomerListAPIView.as_view()),
     path('customer/', views.CustomerListAPIView.as_view()),
     
-    path('product_mapping/<int:store_id>', views.StoreProductMappingListCreate.as_view()),
-    path('product_mapping_update/<int:store_id>', views.StoreProductMappingUpdate.as_view()),
-    path('product_list_mapping/<int:store_id>', views.ProductForMappingList.as_view()),
+    path('product_mapping/<int:branch_id>', views.BranchProductMappingListCreate.as_view()),
+    path('product_mapping_update/<int:branch_id>', views.BranchProductMappingUpdate.as_view()),
+    path('product_list_mapping/<int:branch_id>', views.ProductForMappingList.as_view()),
 
     path('complaint/', views.ComplaintListCreateAPIView.as_view()),
 
     path('role_list/', views.RoleListAPIView.as_view()),
     path('unit_list/', views.UnitListAPIView.as_view()),
-    path('category_list/', views.ProductCategoryListAPIView.as_view()),
-    path('type_list/', views.ProductTypeListAPIView.as_view()),
+    path('classification_list/', views.ProductClassificationListAPIView.as_view()),
+    path('department_list/', views.ProductDepartmentListAPIView.as_view()),
     
-    path('store_branch/<int:pk>/', views.StoreBranchRetUpdDelAPIView.as_view()),
-    path('store_branch_update/<int:pk>/', views.StoreBranchUpdateApiView.as_view()),
-    path('store_branch_create/<int:store_id>/', views.StoreBranchCreate.as_view()),
+    path('sub_branch/<int:pk>/', views.SubBranchRetUpdDelAPIView.as_view()),
+    path('sub_branch_update/<int:pk>/', views.SubBranchUpdateApiView.as_view()),
+    path('sub_branch_create/<int:pk>/', views.SubBranchCreate.as_view()),
     
-    path('store_specific_user/<int:store_id>/', views.StoreSpecificUserListAPIView.as_view()),
+    path('branch_specific_user/<int:branch_id>/', views.BranchSpecificUserListAPIView.as_view()),
 
     path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
-    path('gst/', views.GSTAPIViewset.as_view())
+    path('gst/', views.GSTListAPIView.as_view())
 
 ]

@@ -130,7 +130,7 @@ class UserSerializer(serializers.ModelSerializer):
             email = validated_data['email'],
             first_name = validated_data['first_name'],
             date_of_joining = validated_data['date_of_joining'],
-            store = validated_data.get('store', None),
+            branch = validated_data.get('branch', None),
             phone = validated_data['phone'],
             is_superuser = True if validated_data['user_role']==0 else False,
             is_staff = True if validated_data['user_role']==1 else False,
@@ -158,7 +158,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.first_name = validated_data.get('first_name', instance.first_name)
         user.phone = validated_data.get('phone', instance.phone) 
         date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining),
-        store = validated_data.get('store', instance.store),
+        branch = validated_data.get('branch', instance.branch),
         is_superuser = True if validated_data['user_role']==0 else False,
         is_staff = True if validated_data['user_role']==1 else False,
         is_employee = True if validated_data['user_role']==2 else False,
@@ -191,8 +191,8 @@ class UserSerializer(serializers.ModelSerializer):
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
-            'store': instance.store.pk if instance.store else None,
-            'store_name': instance.store.name if instance.store else None,
+            'branch': instance.branch.pk if instance.branch else None,
+            'branch_name': instance.branch.name if instance.branch else None,
             'aadhaar_number': instance.aadhaar_number,
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
@@ -227,10 +227,10 @@ class RoleSerializer(serializers.ModelSerializer):
         }
 
 
-class StoreSerializer(serializers.ModelSerializer):
+class BranchSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Store
+        model = Branch
         fields = '__all__'
 
     def to_representation(self, instance):
@@ -253,18 +253,18 @@ class StoreSerializer(serializers.ModelSerializer):
         }
 
 
-class StoreBranchSerializer(serializers.ModelSerializer):
+class SubBranchSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
 
     class Meta:
-        model = Store
+        model = Branch
         fields = ('status', 'name', )
 
     def to_representation(self, instance):
-        store = Store.objects.get(branch__pk=instance.pk).name
+        branch = Branch.objects.get(branch__pk=instance.pk).name
         return {
             'id': instance.pk,
-            'store' :store,
+            'branch' :branch,
             'name': instance.name,
             'status': instance.status,
             'created': instance.created
@@ -293,7 +293,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
             'role': RoleSerializer(instance.employee_role, many=True).data,
-            'store': StoreSerializer(instance.store).data
+            'branch': BranchSerializer(instance.branch).data
         }
 
 
@@ -442,7 +442,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'last_name': instance.last_name,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
-            'store': instance.store.name if instance.store else None,
+            'branch': instance.branch.name if instance.branch else None,
             'aadhaar_number': instance.aadhaar_number,
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
@@ -487,10 +487,10 @@ class UnitSerializer(serializers.ModelSerializer):
         }
 
 
-class StoreProductCategorySerializer(serializers.ModelSerializer):
+class BranchProductClassificationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = StoreProductCategory
+        model = BranchProductClassification
         exclude = ['delete', 'code']
 
     def to_representation(self, instance):
@@ -502,10 +502,10 @@ class StoreProductCategorySerializer(serializers.ModelSerializer):
         }
 
 
-class StoreProductTypeSerializer(serializers.ModelSerializer):
+class BranchProductDepartmentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = StoreProductType
+        model = BranchProductDepartment
         exclude = ['delete', 'code']
 
     def to_representation(self, instance):
@@ -533,7 +533,7 @@ class ProductRecipeItemSerializer(serializers.ModelSerializer):
         }
 
 
-class StoreProductSerializer(serializers.ModelSerializer):
+class BranchProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
@@ -543,11 +543,10 @@ class StoreProductSerializer(serializers.ModelSerializer):
         return{
             'id': instance.pk,
             'key': instance.pk,
-            # 'store': instance.store.name,
             # BaseUserSerializer(instance.user).data,
-            'product_unit': UnitSerializer(instance.product_unit).data,
-            'product_type': StoreProductTypeSerializer(instance.product_type).data,
-            'category': StoreProductCategorySerializer(instance.category).data,
+            'unit': UnitSerializer(instance.unit).data,
+            'department': BranchProductDepartmentSerializer(instance.department).data,
+            'classification': BranchProductClassificationSerializer(instance.classification).data,
             # 'recipe_item': instance.recipe_item.name,
             'name': instance.name,
             # 'code': instance.code,
@@ -563,12 +562,12 @@ class WrongBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WrongBill
-        exclude = ['delete', 'store']
+        exclude = ['delete', 'branch']
 
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'store': instance.store.name,
+            'branch': instance.branch.name,
             'bill_no': instance.bill_no,
             'wrong_amount': instance.wrong_amount,
             'correct_amount': instance.correct_amount,
@@ -597,12 +596,12 @@ class FreeBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FreeBill
-        exclude = ['delete', 'store']
+        exclude = ['delete', 'branch']
 
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'store': instance.store.name,
+            'branch': instance.branch.name,
             'bill_no': instance.bill_no,
             'amount': instance.amount,
             'billed_by': instance.billed_by.pk,
@@ -671,7 +670,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BulkOrder
-        exclude = ['order_unique_id', 'store']
+        exclude = ['order_unique_id', 'branch']
 
     @transaction.atomic
     def create(self, validated_data):
@@ -688,7 +687,7 @@ class BulkOrderSerializer(serializers.ModelSerializer):
 
         bulk_order = BulkOrder.objects.create(
                 customer = create_customer,
-                store = self.context['request'].user.store,
+                branch = self.context['request'].user.branch,
                 order_status = validated_data['order_status'],
                 delivery_date = validated_data['delivery_date'],
                 order_notes = validated_data['order_notes'],
@@ -713,8 +712,8 @@ class BulkOrderSerializer(serializers.ModelSerializer):
         return{
             'id': instance.pk,
             'customer': instance.customer.name,
-            'store': instance.store.pk,
-            'store_name': instance.store.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
             'order_status': instance.order_status.name,
             'order_unique_id': instance.order_unique_id,
             'delivery_date': instance.delivery_date,
@@ -734,15 +733,15 @@ class OrderStatusSerializer(serializers.Serializer):
             'description': instance.description,
         }
 
-class ProductStoreMappingSerializer(serializers.ModelSerializer):
+class ProductBranchMappingSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ProductStoreMapping
-        exclude = ['delete', 'store']
+        model = ProductBranchMapping
+        exclude = ['delete', 'branch']
 
     def to_representation(self, instance):
         return{
-            'product': StoreProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
+            'product': BranchProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
         }
     
 
@@ -825,7 +824,7 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return{
             'id': instance.pk,
-            'store': instance.store,
+            'branch': instance.branch,
             'name': instance.name,
             'phone1': instance.phone1,
             'phone2': instance.phone2,
@@ -843,8 +842,8 @@ class ElectricBillSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'store': instance.store.pk,
-            'store_name': instance.store.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
             'date': instance.date,
@@ -857,13 +856,13 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
-        exclude = ['delete', 'store', 'status']
+        exclude = ['delete', 'branch', 'status']
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'store': instance.store.pk,
-            'store_name': instance.store.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
             'product': instance.product.pk,
             'product_name': instance.product.name,
             'mrp_price': instance.mrp_price,
@@ -878,13 +877,13 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductInventory
-        exclude = ['delete', 'store', 'status', 'on_hand']
+        exclude = ['delete', 'branch', 'status', 'on_hand']
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'store': instance.store.pk,
-            'store_name': instance.store.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
             'product': instance.product.pk,
             'product_name': instance.product.name,
             'product_batch':ProductPricingBatchSerializer(instance.product_batch, many=True).data,
@@ -938,7 +937,7 @@ class UserListSerializer(serializers.Serializer):
         }
 
 
-class StoreUserListSerializer(serializers.Serializer):
+class BranchUserListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return {

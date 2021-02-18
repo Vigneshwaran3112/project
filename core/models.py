@@ -59,18 +59,18 @@ class EmployeeRole(BaseModel):
         return f'{self.name} - {self.code}'
 
 
-class Branch(BaseModel):
+class SubBranch(BaseModel):
     name = models.CharField(max_length=200)
     
     def __str__(self): 
         return f'{self.name}'
 
 
-class Store(BaseModel):
+class Branch(BaseModel):
     name = models.CharField(max_length=200)
     address = models.TextField()
-    branch = models.ManyToManyField(Branch, blank=True, related_name='branch_store')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_stores', help_text='City foreign key')
+    sub_branch = models.ManyToManyField(SubBranch, blank=True, related_name='branch_sub_branch')
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_branch', help_text='City foreign key')
     pincode = models.CharField(max_length=6)
     latitude = models.CharField(max_length=30)
     longitude = models.CharField(max_length=30)
@@ -82,7 +82,7 @@ class Store(BaseModel):
 class BaseUser(AbstractUser):
     phone = models.CharField(max_length=20, db_index=True)
     date_of_joining = models.DateTimeField(blank=True, null=True)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_users', blank=True, null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_users', blank=True, null=True)
     is_employee = models.BooleanField(default=False)
     employee_role = models.ManyToManyField(EmployeeRole, blank=True, related_name='role_user')
     aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
@@ -175,7 +175,7 @@ class Unit(BaseModel):
         return self.name
 
 
-class StoreProductCategory(BaseModel):
+class BranchProductClassification(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     code = models.CharField(max_length=100)
@@ -184,7 +184,7 @@ class StoreProductCategory(BaseModel):
         return self.name
 
 
-class StoreProductType(BaseModel): 
+class BranchProductDepartment(BaseModel): 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     code = models.CharField(max_length=100)
@@ -204,9 +204,9 @@ class ProductRecipeItem(BaseModel):
 
 
 class Product(BaseModel):
-    product_unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
-    product_type = models.ForeignKey(StoreProductType, on_delete=models.CASCADE, related_name='type_product')
-    category = models.ForeignKey(StoreProductCategory, on_delete=models.CASCADE, null=True, blank=True, related_name='category_product')
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
+    department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, related_name='department_product')
+    classification = models.ForeignKey(BranchProductClassification, on_delete=models.CASCADE, null=True, blank=True, related_name='classification_product')
     name = models.CharField(max_length=100)   
     sort_order = models.PositiveIntegerField()
 
@@ -214,16 +214,16 @@ class Product(BaseModel):
         return self.name
 
 
-class ProductStoreMapping(BaseModel):
-    store = models.OneToOneField(Store, on_delete=models.CASCADE)
+class ProductBranchMapping(BaseModel):
+    branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
     product = models.ManyToManyField(Product)
 
     def __str__(self):
-        return f'{self.store.name} - {self.product.name}'
+        return f'{self.branch.name} - {self.product.name}'
 
 
 class ProductPricingBatch(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -231,11 +231,11 @@ class ProductPricingBatch(BaseModel):
     date = models.DateTimeField()
 
     def __str__(self):
-        return f'{self.store.name} - {self.product.name}'
+        return f'{self.branch.name} - {self.product.name}'
 
 
 class ProductInventory(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_batch = models.ManyToManyField(ProductPricingBatch)
     date = models.DateTimeField()
@@ -249,7 +249,7 @@ class ProductInventory(BaseModel):
         super(ProductInventory, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.store.name} - {self.product.name}'
+        return f'{self.branch.name} - {self.product.name}'
 
 
 
@@ -301,7 +301,7 @@ class Customer(BaseModel):
 
 class BulkOrder(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_bulk_order')
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_bulk_order')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_bulk_order')
     order_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, related_name='order_status_bulk_order')
     order_unique_id = models.CharField(max_length=100, db_index=True)
     delivery_date = models.DateTimeField()
@@ -331,7 +331,7 @@ class BulkOrderItem(BaseModel):
 
 
 class WrongBill(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_wrong_bill')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_wrong_bill')
     bill_no = models.CharField(max_length=100, unique=True, db_index=True)
     wrong_amount = models.DecimalField(max_digits=10, decimal_places=2)
     correct_amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -349,7 +349,7 @@ class FreeBillCustomer(BaseModel):
     
 
 class FreeBill(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_free_bill')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_free_bill')
     bill_no = models.CharField(max_length=100, unique=True, db_index=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
@@ -359,7 +359,7 @@ class FreeBill(BaseModel):
 
 
 class CreditSaleCustomer(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_credit_sale_customer')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_sale_customer')
     name = models.CharField(max_length=100)
     phone1 = models.CharField(max_length=20, db_index=True)
     phone2 = models.CharField(max_length=20, null=True, blank=True)
@@ -371,7 +371,7 @@ class CreditSaleCustomer(BaseModel):
 
 
 class CreditSales(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_credit_sale')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_sale')
     customer = models.ForeignKey(CreditSaleCustomer, on_delete=models.CASCADE, related_name='customer_credit_sale')
     bill_no = models.CharField(max_length=100, unique=True, db_index=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -380,11 +380,11 @@ class CreditSales(BaseModel):
 
 
 class ElectricBill(BaseModel):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_electric_bill')
-    branch = models.ForeignKey(Branch, blank=True, on_delete=models.CASCADE, related_name='branch_electric_bill')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_electric_bill')
+    sub_branch = models.ForeignKey(SubBranch, blank=True, on_delete=models.CASCADE, related_name='sub_branch_electric_bill')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
 
     def __str__(self):
-        return f'{self.store.name} - {self.date}'
+        return f'{self.branch.name} - {self.date}'

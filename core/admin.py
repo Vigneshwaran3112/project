@@ -12,8 +12,8 @@ class BaseRoleAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'code', 'description', 'status', 'created', 'updated')
 
 
-@admin.register(Store)
-class StoreAdmin(admin.ModelAdmin):
+@admin.register(Branch)
+class BranchAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'address', 'latitude', 'longitude', 'status', 'delete', 'created', 'updated')
 
 
@@ -24,7 +24,7 @@ class UserSalaryAdmin(admin.ModelAdmin):
 
 @admin.register(BaseUser)
 class BaseUserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'date_joined', 'store')
+    list_display = ('pk', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'date_joined', 'branch')
 
     def roles(self, obj):
         return "\n".join([r.name for r in obj.employee_role.all()])
@@ -44,13 +44,13 @@ class GSTAdmin(admin.ModelAdmin):
 class UnitAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'symbol', 'code', )
 
-@admin.register(StoreProductCategory)
-class StoreProductCategoryAdmin(admin.ModelAdmin):
+@admin.register(BranchProductClassification)
+class BranchProductClassificationAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code', )
 
 
-@admin.register(StoreProductType)
-class StoreProductTypeAdmin(admin.ModelAdmin):
+@admin.register(BranchProductDepartment)
+class BranchProductDepartmentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code', )
 
 
@@ -96,28 +96,28 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(BulkOrder)
 class BulkOrderAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'customer', 'store', 'order_status', 'order_unique_id', 'delivery_date', 'order_notes', 'grand_total', 'completed', )
+    list_display = ('pk', 'customer', 'branch', 'order_status', 'order_unique_id', 'delivery_date', 'order_notes', 'grand_total', 'completed', )
 
 
 @admin.register(BulkOrderItem)
 class BulkOrderItemAdmin(admin.ModelAdmin):
     list_display = ('pk', 'order', 'item', 'quantity', 'price', 'gst_price', 'total', 'total_item_price', )
 
-# @admin.register(ProductStoreMapping)
-# class ProductStoreMappingAdmin(admin.ModelAdmin):
+# @admin.register(ProductBranchMapping)
+# class ProductBranchMappingAdmin(admin.ModelAdmin):
 #     list_display = ('pk' )
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
 
-admin.site.register(ProductStoreMapping)
+admin.site.register(ProductBranchMapping)
 
 # admin.site.register(Product)
 
 admin.site.register(FreeBillCustomer)
 
-admin.site.register(Branch)
+admin.site.register(SubBranch)
 
 admin.site.register(Country)
 admin.site.register(State)
@@ -131,9 +131,9 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin.register(CreditSaleCustomer)
 class CreditSaleCustomerAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'store' )
+    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'branch' )
 
 
 @admin.register(CreditSales)
 class CreditSalesAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'bill_no', 'amount', 'store', 'customer', 'description', 'date')
+    list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
