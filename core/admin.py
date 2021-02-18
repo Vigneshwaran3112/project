@@ -137,3 +137,7 @@ class CreditSaleCustomerAdmin(admin.ModelAdmin):
 @admin.register(CreditSales)
 class CreditSalesAdmin(admin.ModelAdmin):
     list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
+
+admin.site.register(BranchExpenses)
+
+admin.site.register(PaymentMode)
