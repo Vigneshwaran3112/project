@@ -44,6 +44,9 @@ urlpatterns = [
     path('branch_specific_wrongbill/<int:pk>/', views.BranchSpecificWrongBillAPIView.as_view()),
     path('branch_specific_freebill/<int:pk>/', views.BranchSpecificFreeBillAPIView.as_view()),
 
+    path('unit_list/', views.UnitListAPIView.as_view()),
+    path('unit_update/<int:pk>/', views.UnitUpdateAPIView.as_view()),
+
 
     path('attendance_list/<str:date>/', views.UserAttendanceListAPIView.as_view()),
     path('user_in_attendance/', views.UserInAttendanceCreateAPIView.as_view()),
