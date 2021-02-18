@@ -88,4 +88,5 @@ urlpatterns = [
     path('role_list/', views.RoleListAPIView.as_view()),    
     path('role_update/<int:pk>/', views.RoleUpdateAPIView.as_view()),
 
+
 ]
