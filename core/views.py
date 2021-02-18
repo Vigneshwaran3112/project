@@ -175,14 +175,14 @@ class GSTListAPIView(generics.ListAPIView):
     # permission_classes = (IsAdminUser, )
 
 
-class UnitAPIViewset(viewsets.ModelViewSet):
-    queryset = Unit.objects.exclude(delete=True)
-    serializer_class = UnitSerializer
-    # permission_classes = (IsAdminUser, )
+# class UnitAPIViewset(viewsets.ModelViewSet):
+#     queryset = Unit.objects.exclude(delete=True)
+#     serializer_class = UnitSerializer
+#     # permission_classes = (IsAdminUser, )
 
-    def destroy(self, request, *args, **kwargs):
-        destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+#     def destroy(self, request, *args, **kwargs):
+#         destroy = Unit.objects.filter(pk=kwargs['pk']).update(delete=True)
+#         return Response({'message':'unit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class UnitListAPIView(generics.ListAPIView):
