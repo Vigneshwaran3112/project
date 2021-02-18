@@ -86,4 +86,5 @@ urlpatterns = [
     path('gst/', views.GSTListAPIView.as_view()),
     path('payment_mode/', views.PaymentModeListAPI.as_view()),
 
+
 ]
