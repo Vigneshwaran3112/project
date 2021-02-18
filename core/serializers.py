@@ -991,3 +991,19 @@ class BranchUserListSerializer(serializers.Serializer):
             'username': instance.first_name,
             'phone': instance.phone
         }
+
+
+class BranchIncentiveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BranchIncentive
+        exclude = ['delete']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'branch': instance.branch,
+            'department': instance.department,
+            'employee_role': instance.employee_role,
+            'incentive': instance.incentive
+        }

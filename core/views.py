@@ -124,7 +124,7 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
     def partial_update(self, request, pk):
         instance = self.get_object()
         destroy = SubBranch.objects.filter(pk=pk).update(status=not instance.status)
-        return Response({'message':'branch status update successfully'})
+        return Response({'message':'branch status update successfully'}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk):
         destroy = SubBranch.objects.filter(pk=pk).update(delete=True)
@@ -570,4 +570,8 @@ class UserListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_superuser=False)
 
-# class EmployeePayRoleRetrieveAPIView(generics.RetrieveAPIView):
+
+
+class BranchIncentiveViewSet(viewsets.ModelViewSet):
+    queryset = BranchIncentive.objects.filter(delete=False)
+    serializer_class = BranchIncentiveSerializer
