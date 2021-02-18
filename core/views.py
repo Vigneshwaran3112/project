@@ -94,18 +94,17 @@ class BranchAPIViewset(viewsets.ModelViewSet):
 
 
 class SubBranchCreate(generics.UpdateAPIView):
-    queryset = Branch.objects.filter(delete=False)
-    serializer_class = BranchSerializer
+    queryset = SubBranch.objects.filter(delete=False)
+    serializer_class = SubBranchSerializer
     # permission_class = (IsAdminUser, )
 
     def partial_update(self, request, pk):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data['name'])
-        branch = Branch.objects.create(name = serializer.validated_data['name'])
+        sub_branch_data = SubBranch.objects.create(name = serializer.validated_data['name'])
         branch = Branch.objects.get(pk=pk, delete=False)
-        branch.branch.add(branch)
-        return Response({'message':'branch created sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+        branch.sub_branch.add(sub_branch_data)
+        return Response({'message':'SubBranch created sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class SubBranchUpdateApiView(generics.UpdateAPIView):

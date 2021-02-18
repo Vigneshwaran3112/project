@@ -257,7 +257,7 @@ class SubBranchSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
 
     class Meta:
-        model = Branch
+        model = SubBranch
         fields = ('status', 'name', )
 
     def to_representation(self, instance):

@@ -491,7 +491,14 @@ Content-Type: {{ CONTENT_TYPE }}
 ]
 
 
+###
+# @name sub_branch_create
+PUT  {{ BASE_URL }}sub_branch_create/2/ HTTP/1.1
+Content-Type: {{ CONTENT_TYPE }}
 
+{
+  "name": "sbranch"
+}
 
 
 

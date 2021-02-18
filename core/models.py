@@ -406,3 +406,13 @@ class ElectricBill(BaseModel):
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'
+
+
+# class BranchIncentive(BaseModel):
+#     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+#     department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE)
+#     employee_role = models.ForeignKey(EmployeeRole,  on_delete=models.CASCADE)
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+#     def __str__(self):
+#         return f'{self.branch.name} - {self.department.name}'
