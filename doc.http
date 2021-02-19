@@ -1,6 +1,6 @@
 @BASE_URL = http://127.0.0.1:8000/v1/
 @CONTENT_TYPE = application/json
-@TOKEN = Token 75f3f590cb5cf03f0086cbcfa360aa5b3e46ffc2
+@TOKEN = Token fd7b6866b362f97be80f5ea5fd4002cde2def401
 
 # @name user_onboarding
 POST  {{ BASE_URL }}user/ HTTP/1.1
@@ -23,6 +23,26 @@ Authorization: {{ TOKEN }}
 }
 
 ###
+
+# @name user_onboarding
+PUT  {{ BASE_URL }}branch_incentive_update/18/ HTTP/1.1
+Content-Type: {{ CONTENT_TYPE }}
+Authorization: {{ TOKEN }}
+
+[{
+"id": 1,
+"incentive": 100
+},
+{
+"id": 2,
+"incentive": 100
+},
+{
+"id": 3,
+"incentive": 100
+}]
+
+
 
 # @name user_onboarding
 GET  {{ BASE_URL }}attendance_user_list/17/2021-02-02/ HTTP/1.1

@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
 from django.db.models.fields import NullBooleanField
-from django.db.models import Sum ,Value as V, Prefetch, Q
+from django.db.models import Sum ,Value as V, Prefetch, Q, query
 
 from rest_framework import fields, serializers
 
@@ -1019,3 +1019,12 @@ class BranchDepartmentIncentiveSerializer(serializers.ModelSerializer):
             'department_name': instance.department.name,
             'incentive': instance.incentive
         }
+
+
+class BranchDepartmentIncentiveUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(queryset=BranchDepartmentIncentive.objects.filter(status=True, delete=False))
+    incentive = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        model = BranchDepartmentIncentive
+        fields = ['id', 'incentive']

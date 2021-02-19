@@ -11,6 +11,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.serializers import Serializer
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from .models import *
@@ -586,14 +587,17 @@ class BranchIncentiveListAPIView(generics.ListAPIView):
     # permission_classes = (IsAdminUser, )
 
     def get_queryset(self):
-    #     query = BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False).query
-    #     query.group_by = ['employee_role']
-    #     results = QuerySet(query=query, model=BranchIncentive)
-    #     print(results)
         return BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False)
 
 
 class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
-    queryset = BranchEmployeeIncentive.objects.filter(delete=False)
-    serializer_class = BranchEmployeeIncentiveSerializer
+    serializer_class = BranchDepartmentIncentiveUpdateSerializer
     # permission_classes = (IsAdminUser, )
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        for data in serializer.validated_data:
+            formated_data = dict(data)
+            BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(incentive=formated_data['incentive'])
+        return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False), many=True).data)
