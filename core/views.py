@@ -81,16 +81,24 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
 class RoleListAPIView(generics.ListAPIView):
     queryset = EmployeeRole.objects.filter(status=True, delete=False)
     serializer_class = RoleSerializer
-
+0
 
 class BranchAPIViewset(viewsets.ModelViewSet):
     queryset = Branch.objects.filter(delete=False).order_by('-pk')
     serializer_class = BranchSerializer
     # permission_class = (IsAdminUser, )
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        codes, branch_incentive = [1, 2, 3, 4], []
+        for role in codes:
+            for department in codes:
+                branch_incentive.append(BranchIncentive(branch=instance, department=BranchProductDepartment.objects.get(code=department), employee_role=EmployeeRole.objects.get(code=role), incentive=0))
+        BranchIncentive.objects.bulk_create(branch_incentive)
+
     def destroy(self, request, *args, **kwargs):
         destroy = Branch.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'Branch deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message':'Branch deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class SubBranchCreate(generics.UpdateAPIView):
