@@ -571,7 +571,16 @@ class UserListAPIView(generics.ListAPIView):
         return BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_superuser=False)
 
 
-
-class BranchIncentiveViewSet(viewsets.ModelViewSet):
+class BranchIncentiveListAPIView(generics.ListAPIView):
     queryset = BranchIncentive.objects.filter(delete=False)
     serializer_class = BranchIncentiveSerializer
+    # permission_classes = (IsAdminUser, )
+
+    def get_queryset(self):
+        return BranchIncentive.objects.filter(branch=self.kwargs['branch'], status=True, delete=False)
+
+
+class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
+    queryset = BranchIncentive.objects.filter(delete=False)
+    serializer_class = BranchIncentiveSerializer
+    # permission_classes = (IsAdminUser, )
