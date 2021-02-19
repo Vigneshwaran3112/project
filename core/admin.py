@@ -145,3 +145,7 @@ class CreditSalesAdmin(admin.ModelAdmin):
 admin.site.register(BranchExpenses)
 
 admin.site.register(PaymentMode)
+
+admin.site.register(BranchIncentive)
+
+

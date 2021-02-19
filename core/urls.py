@@ -23,8 +23,8 @@ router.register(r'product_price_batch', views.ProductPricingBatchAPIView, basena
 router.register(r'product_inventory', views.ProductInventoryAPIView, basename='product_inventory')
 router.register(r'complaint_category', views.ComplaintTypeViewSet, basename='complaint_type')
 router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='complaint_status')
-router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses',)
-router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
+router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses')
+# router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
 
 
 
@@ -86,5 +86,8 @@ urlpatterns = [
     
     path('role_list/', views.RoleListAPIView.as_view()),    
     path('role_update/<int:pk>/', views.RoleUpdateAPIView.as_view()),
+
+    path('branch_incentive_list/<int:pk>/', views.BranchIncentiveListAPIView.as_view()),    
+    path('branch_incentive_update/<int:pk>/', views.BranchIncentiveUpdateAPIView.as_view()),
 
 ]

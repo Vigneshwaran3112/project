@@ -559,18 +559,14 @@ class BranchProductSerializer(serializers.ModelSerializer):
         return{
             'id': instance.pk,
             'key': instance.pk,
-            # BaseUserSerializer(instance.user).data,
             'unit': UnitSerializer(instance.unit).data,
             'department': BranchProductDepartmentSerializer(instance.department).data,
             'classification': BranchProductClassificationSerializer(instance.classification).data,
-            # 'recipe_item': instance.recipe_item.name,
+            'product_code': instance.product_code,
             'name': instance.name,
-            # 'code': instance.code,
+            'reorder_level': instance.reorder_level,
             'sort_order': instance.sort_order,
             'status': instance.status,
-            # 'price': instance.price,
-            # 'packing_price': instance.packing_price,
-            # 'image': instance.image
         }
 
 
@@ -1002,8 +998,11 @@ class BranchIncentiveSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'branch': instance.branch,
-            'department': instance.department,
-            'employee_role': instance.employee_role,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'department': instance.department.pk,
+            'department_name': instance.department.name,
+            'employee_role': instance.employee_role.pk,
+            'employee_role_name': instance.employee_role.name,
             'incentive': instance.incentive
         }

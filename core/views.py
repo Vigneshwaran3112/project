@@ -577,7 +577,7 @@ class BranchIncentiveListAPIView(generics.ListAPIView):
     # permission_classes = (IsAdminUser, )
 
     def get_queryset(self):
-        return BranchIncentive.objects.filter(branch=self.kwargs['branch'], status=True, delete=False)
+        return BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False)
 
 
 class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
