@@ -91,11 +91,11 @@ class BranchAPIViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        codes, branch_incentive = [1, 2, 3, 4], []
+        codes = [1, 2, 3, 4]
         for role in codes:
+            branch_employee = BranchEmployeeIncentive.objects.create(branch=instance, employee_role=EmployeeRole.objects.get(code=role))
             for department in codes:
-                branch_incentive.append(BranchIncentive(branch=instance, department=BranchProductDepartment.objects.get(code=department), employee_role=EmployeeRole.objects.get(code=role), incentive=0))
-        BranchIncentive.objects.bulk_create(branch_incentive)
+                BranchDepartmentIncentive.objects.create(department=BranchProductDepartment.objects.get(code=department), role=branch_employee, incentive=0)
 
     def destroy(self, request, *args, **kwargs):
         destroy = Branch.objects.filter(pk=kwargs['pk']).update(delete=True)
