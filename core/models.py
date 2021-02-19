@@ -207,6 +207,8 @@ class Product(BaseModel):
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
     department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, related_name='department_product')
     classification = models.ForeignKey(BranchProductClassification, on_delete=models.CASCADE, null=True, blank=True, related_name='classification_product')
+    product_code = models.DecimalField(max_digits=10, decimal_places=2)
+    reorder_level = models.PositiveIntegerField()
     name = models.CharField(max_length=100)   
     sort_order = models.PositiveIntegerField()
 
