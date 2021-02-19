@@ -146,6 +146,8 @@ admin.site.register(BranchExpenses)
 
 admin.site.register(PaymentMode)
 
-admin.site.register(BranchIncentive)
+admin.site.register(BranchEmployeeIncentive)
+admin.site.register(BranchDepartmentIncentive)
+
 
 

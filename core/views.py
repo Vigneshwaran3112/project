@@ -4,6 +4,7 @@ import json, os
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import QuerySet
 
 from rest_framework import generics, viewsets, status
 from rest_framework.exceptions import ValidationError
@@ -579,16 +580,20 @@ class UserListAPIView(generics.ListAPIView):
         return BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_superuser=False)
 
 
-class BranchIncentiveListAPIView(generics.ListAPIView):
-    queryset = BranchIncentive.objects.filter(delete=False)
-    serializer_class = BranchIncentiveSerializer
-    # permission_classes = (IsAdminUser, )
+# class BranchIncentiveListAPIView(generics.ListAPIView):
+#     queryset = BranchIncentive.objects.filter(delete=False)
+#     serializer_class = BranchIncentiveSerializer
+#     # permission_classes = (IsAdminUser, )
 
-    def get_queryset(self):
-        return BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False)
+#     def get_queryset(self):
+#         query = BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False).query
+#         query.group_by = ['employee_role']
+#         results = QuerySet(query=query, model=BranchIncentive)
+#         print(results)
+#         return results
 
 
-class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
-    queryset = BranchIncentive.objects.filter(delete=False)
-    serializer_class = BranchIncentiveSerializer
-    # permission_classes = (IsAdminUser, )
+# class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
+#     queryset = BranchIncentive.objects.filter(delete=False)
+#     serializer_class = BranchIncentiveSerializer
+#     # permission_classes = (IsAdminUser, )

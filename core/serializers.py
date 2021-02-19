@@ -989,20 +989,20 @@ class BranchUserListSerializer(serializers.Serializer):
         }
 
 
-class BranchIncentiveSerializer(serializers.ModelSerializer):
+# class BranchIncentiveSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = BranchIncentive
-        exclude = ['delete']
+#     class Meta:
+#         model = BranchIncentive
+#         exclude = ['delete']
 
-    def to_representation(self, instance):
-        return {
-            'id': instance.pk,
-            'branch': instance.branch.pk,
-            'branch_name': instance.branch.name,
-            'department': instance.department.pk,
-            'department_name': instance.department.name,
-            'employee_role': instance.employee_role.pk,
-            'employee_role_name': instance.employee_role.name,
-            'incentive': instance.incentive
-        }
+#     def to_representation(self, instance):
+#         return {
+#             # 'id': instance.pk,
+#             'branch': instance.branch.pk,
+#             'branch_name': instance.branch.name,
+#             'department': instance.department.pk,
+#             'department_name': instance.department.name,
+#             'employee_role': instance.employee_role.pk,
+#             'employee_role_name': instance.employee_role.name,
+#             'incentive': instance.incentive
+#         }
