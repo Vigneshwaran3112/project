@@ -87,7 +87,7 @@ urlpatterns = [
     path('role_list/', views.RoleListAPIView.as_view()),    
     path('role_update/<int:pk>/', views.RoleUpdateAPIView.as_view()),
 
-    # path('branch_incentive_list/<int:pk>/', views.BranchIncentiveListAPIView.as_view()),    
-    # path('branch_incentive_update/<int:pk>/', views.BranchIncentiveUpdateAPIView.as_view()),
+    path('branch_incentive_list/<int:pk>/', views.BranchIncentiveListAPIView.as_view()),    
+    path('branch_incentive_update/<int:pk>/', views.BranchIncentiveUpdateAPIView.as_view()),
 
 ]

@@ -419,8 +419,8 @@ class BranchEmployeeIncentive(BaseModel):
 
 
 class BranchDepartmentIncentive(BaseModel):
-    department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, related_name='incentive_product_department_name')
     role = models.ForeignKey(BranchEmployeeIncentive, on_delete=models.CASCADE, related_name='incentive_branch_department_role')
+    department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, related_name='incentive_product_department_name')
     incentive = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):

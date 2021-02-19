@@ -580,20 +580,20 @@ class UserListAPIView(generics.ListAPIView):
         return BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_superuser=False)
 
 
-# class BranchIncentiveListAPIView(generics.ListAPIView):
-#     queryset = BranchIncentive.objects.filter(delete=False)
-#     serializer_class = BranchIncentiveSerializer
-#     # permission_classes = (IsAdminUser, )
+class BranchIncentiveListAPIView(generics.ListAPIView):
+    queryset = BranchEmployeeIncentive.objects.filter(delete=False)
+    serializer_class = BranchEmployeeIncentiveSerializer
+    # permission_classes = (IsAdminUser, )
 
-#     def get_queryset(self):
-#         query = BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False).query
-#         query.group_by = ['employee_role']
-#         results = QuerySet(query=query, model=BranchIncentive)
-#         print(results)
-#         return results
+    def get_queryset(self):
+    #     query = BranchIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False).query
+    #     query.group_by = ['employee_role']
+    #     results = QuerySet(query=query, model=BranchIncentive)
+    #     print(results)
+        return BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False)
 
 
-# class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
-#     queryset = BranchIncentive.objects.filter(delete=False)
-#     serializer_class = BranchIncentiveSerializer
-#     # permission_classes = (IsAdminUser, )
+class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
+    queryset = BranchEmployeeIncentive.objects.filter(delete=False)
+    serializer_class = BranchEmployeeIncentiveSerializer
+    # permission_classes = (IsAdminUser, )

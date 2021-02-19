@@ -1000,11 +1000,9 @@ class BranchEmployeeIncentiveSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
-            # 'department': instance.department.pk,
-            # 'department_name': instance.department.name,
             'employee_role': instance.employee_role.pk,
             'employee_role_name': instance.employee_role.name,
-            # 'incentive': instance.incentive
+            'departments': BranchDepartmentIncentiveSerializer(instance.incentive_branch_department_role, many=True).data
         }
 
 
@@ -1017,11 +1015,7 @@ class BranchDepartmentIncentiveSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.pk,
-            'branch': instance.branch.pk,
-            'branch_name': instance.branch.name,
-            # 'department': instance.department.pk,
-            # 'department_name': instance.department.name,
-            'employee_role': instance.employee.pk,
-            'employee_role_name': instance.employee_role.name,
+            'department': instance.department.pk,
+            'department_name': instance.department.name,
             'incentive': instance.incentive
         }
