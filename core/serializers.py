@@ -553,7 +553,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = ['delete']
+        exclude = ['delete', 'product_code']
 
     def to_representation(self, instance):
         return{
@@ -570,7 +570,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'department_name': instance.department.name,
             'classification': instance.classification.pk,
             'classification_name': instance.department.name,
-            'product_code': instance.product_code,
+            # 'product_code': instance.product_code,
             'reorder_level': instance.reorder_level,
             'sort_order': instance.sort_order,
             'status': instance.status,
