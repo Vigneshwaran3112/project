@@ -1395,7 +1395,7 @@ paths:
           description: ''
       tags:
       - Product Recipe Items
-  /v1/store_product/:
+  /v1/product/:
     get:
       operationId: listProducts
       description: ''
@@ -1435,7 +1435,7 @@ paths:
           description: ''
       tags:
       - Store Products
-  /v1/store_product/{id}/:
+  /v1/product/{id}/:
     get:
       operationId: retrieveProduct
       description: ''
@@ -1514,7 +1514,7 @@ paths:
                 $ref: '#/components/schemas/StoreProduct'
           description: ''
       tags:
-      - Store Products
+      -  Products
     delete:
       operationId: destroyProduct
       description: ''

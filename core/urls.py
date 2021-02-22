@@ -15,7 +15,7 @@ router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salar
 router.register(r'product_category', views.BranchProductClassificationViewset, basename='product_category')
 router.register(r'product_department', views.BranchProductDepartmentViewset, basename='product_type')
 router.register(r'recipe_item', views.ProductRecipeItemViewset, basename='recipe_item')
-router.register(r'branch_product', views.BranchProductViewset, basename='branch_product')
+# router.register(r'product/(?P<pk>\d+)', views.BranchProductViewset, basename='branch_product')
 router.register(r'wrong_bill', views.WrongBillAPIView, basename='wrong_bill')
 router.register(r'free_bill', views.FreeBillAPIView, basename='free_bill')
 router.register(r'electric_bill', views.ElectricBillAPIView, basename='electric_bill')
@@ -26,7 +26,9 @@ router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='com
 router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses')
 # router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
 
+# router.register(r'product', views.BranchProductViewset, basename='products')
 
+# router.register(prefix=r’cource_topic/(?P<course>\d+)', viewset=views.CourseTopicLisRetAPIView, basename=‘cource_topic’)
 
 urlpatterns = [
     path('swagger/', TemplateView.as_view(template_name='index.html')),
@@ -39,6 +41,10 @@ urlpatterns = [
 
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
+
+    path('product_list/<int:classification>/', views.ProductListCreate.as_view()),
+    path('product_create/', views.ProductListCreate.as_view()),
+    path('product/<int:pk>/', views.ProductRetriveUpdateDelete.as_view()),
 
     path('branch_specific_wrongbill/<int:pk>/', views.BranchSpecificWrongBillAPIView.as_view()),
     path('branch_specific_freebill/<int:pk>/', views.BranchSpecificFreeBillAPIView.as_view()),

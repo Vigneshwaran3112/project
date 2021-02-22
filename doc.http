@@ -41,9 +41,24 @@ Authorization: {{ TOKEN }}
 "id": 3,
 "incentive": 100
 }]
+###
 
+# @name product_onboarding
+POST {{ BASE_URL }}product_create/ HTTP/1.1
+Content-Type: {{ CONTENT_TYPE }}
+Authorization: {{ TOKEN }}
 
+{
+  "name": "test_product",
+  "unit": 1,
+  "department": 1,
+  "classification": 1,
+  "product_code": 2,
+  "reorder_level": 10,
+  "sort_order": 4
+}
 
+###
 # @name user_onboarding
 GET  {{ BASE_URL }}attendance_user_list/17/2021-02-02/ HTTP/1.1
 Content-Type: {{ CONTENT_TYPE }}

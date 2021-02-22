@@ -425,3 +425,18 @@ class BranchDepartmentIncentive(BaseModel):
 
     def __str__(self):
         return f'{self.role.branch.name}'
+
+
+class SlickposProducts(BaseModel):
+    slickpos_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    category_id = models.CharField(max_length=100)
+    taxgroup_id = models.CharField(max_length=100)
+    marked_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    register_id = models.CharField(max_length=100, null=True, blank=True)
+    variant_group_id = models.CharField(max_length=100, null=True, blank=True)
+    addon_group_id = models.CharField(max_length=100, null=True, blank=True)
+    order_id = models.CharField(max_length=100, null=True, blank=True)
+
+
+

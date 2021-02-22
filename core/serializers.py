@@ -549,7 +549,7 @@ class ProductRecipeItemSerializer(serializers.ModelSerializer):
         }
 
 
-class BranchProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
@@ -557,13 +557,20 @@ class BranchProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
+            # 'unit_data': UnitSerializer(instance.unit).data,
+            # 'department_data': BranchProductDepartmentSerializer(instance.department).data,
+            # 'classification_data': BranchProductClassificationSerializer(instance.classification).data,
             'id': instance.pk,
             'key': instance.pk,
-            'unit': UnitSerializer(instance.unit).data,
-            'department': BranchProductDepartmentSerializer(instance.department).data,
-            'classification': BranchProductClassificationSerializer(instance.classification).data,
-            'product_code': instance.product_code,
             'name': instance.name,
+            'unit': instance.unit.pk,
+            'unit_name': instance.unit.name,
+            'unit_symbol': instance.unit.symbol,
+            'department': instance.department.pk,
+            'department_name': instance.department.name,
+            'classification': instance.classification.pk,
+            'classification_name': instance.department.name,
+            'product_code': instance.product_code,
             'reorder_level': instance.reorder_level,
             'sort_order': instance.sort_order,
             'status': instance.status,
@@ -753,7 +760,7 @@ class ProductBranchMappingSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
-            'product': BranchProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
+            'product': ProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
         }
     
 

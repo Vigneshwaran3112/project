@@ -18,6 +18,12 @@ from .models import *
 from .serializers import *
 from .permissions import *
 from .exceptions import CustomError
+import requests
+
+headers = {
+  'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
+}
+
 
 # ------------------------- Begin State City Country ------------------------ #
 
@@ -242,10 +248,20 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
         return Response({'message':'recipe item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class BranchProductViewset(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(delete=False)
-    serializer_class = BranchProductSerializer
-    # permission_classes = (IsAdminUser, )
+class ProductListCreate(generics.ListCreateAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        if self.kwargs['classification']==0:
+            product = Product.objects.filter( status=True, delete=False).order_by('-id')
+        else:
+            product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).order_by('-id')
+        return product
+
+
+class ProductRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.exclude(delete=True).order_by('-id')
+    serializer_class = ProductSerializer
 
     def destroy(self, request, *args, **kwargs):
         destroy = Product.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -442,7 +458,7 @@ class PaymentModeListAPI(generics.ListAPIView):
 
 
 class ProductForMappingList(generics.ListAPIView):
-    serializer_class = BranchProductSerializer
+    serializer_class = ProductSerializer
 
     def get_queryset(self):
         try:
@@ -601,3 +617,5 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
             formated_data = dict(data)
             BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(incentive=formated_data['incentive'])
         return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False), many=True).data)
+
+

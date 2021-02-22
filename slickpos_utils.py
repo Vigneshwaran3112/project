@@ -1,3 +1,6 @@
+import json, os
+from core.models import SlickposProducts
+
 headers = {
   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
 }
@@ -16,4 +19,21 @@ products = requests.get('https://api.slickpos.com/api/product/list?accountId=737
 
 orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
 
-print(customer.text)
+# print(products.text)
+print('hai')
+
+# world_json = os.path.join(os.getcwd(), 'products.json')
+# with open(world_json) as f:
+#   pos_products = json.load(f)
+# for product in pos_products:
+#     country_data = SlickposProducts.objects.create(
+#     slickpos_id = product['id'],
+#     name = product['name'],
+#     category_id = product['categoryId'],
+#     taxgroup_id = product['taxGroupId'],
+#     marked_price = product['markedPrice'],
+#     register_id = product['registerId'],
+#     variant_group_id = product['variantGroupIds'],
+#     addon_group_id = product['addonGroupId'],
+#     order_id = product['order']
+# )
