@@ -122,9 +122,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        if BaseUser.objects.filter(phone=validated_data['phone'], is_active=True).exists():
-            raise serializers.ValidationError({'phone': "Entered phone already exist."})
-
         user = BaseUser.objects.create_user(
             username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp())),
             email = validated_data['email'],
