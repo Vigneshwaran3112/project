@@ -187,8 +187,10 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name': instance.first_name,
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
+            'formatted_date_of_joining': instance.date_of_joining.strftime("%d-%m-%Y") if instance.date_of_joining else None,
             'phone': instance.phone,
             'date_of_birth': instance.date_of_birth,
+            'formatted_date_of_birth': instance.date_of_birth.strftime("%d-%m-%Y") if instance.date_of_birth else None,
             'branch': instance.branch.pk if instance.branch else None,
             'branch_name': instance.branch.name if instance.branch else None,
             'aadhaar_number': instance.aadhaar_number,
@@ -337,7 +339,8 @@ class UserSalarySerializer(serializers.ModelSerializer):
             'work_minutes': instance.work_minutes,
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
-            'date': instance.date
+            'date': instance.date,
+            'formated_date': instance.date.strftime("%d-%m-%Y")
         }
 
 

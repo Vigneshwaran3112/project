@@ -109,7 +109,8 @@ class BulkOrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name' )
+    list_display = ('pk', 'name', 'department', 'classification' )
+
 
 admin.site.register(ProductBranchMapping)
 

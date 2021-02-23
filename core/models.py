@@ -206,13 +206,13 @@ class ProductRecipeItem(BaseModel):
 
 
 class Product(BaseModel):
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_product')
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_product')
     department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, related_name='department_product')
     classification = models.ForeignKey(BranchProductClassification, on_delete=models.CASCADE, null=True, blank=True, related_name='classification_product')
-    product_code = models.DecimalField(max_digits=10, decimal_places=2)
-    reorder_level = models.PositiveIntegerField()
-    name = models.CharField(max_length=100)   
-    sort_order = models.PositiveIntegerField()
+    product_code = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    reorder_level = models.PositiveIntegerField(null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)   
+    sort_order = models.PositiveIntegerField( null=True, blank=True)
 
     def __str__(self):
         return self.name
