@@ -191,6 +191,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
             'phone': instance.phone,
+            'date_of_birth': instance.date_of_birth,
             'branch': instance.branch.pk if instance.branch else None,
             'branch_name': instance.branch.name if instance.branch else None,
             'aadhaar_number': instance.aadhaar_number,
@@ -205,6 +206,7 @@ class UserSerializer(serializers.ModelSerializer):
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
             'is_active': instance.is_active,
+            'address': instance.address,
             'salary': salary_data
         }
 

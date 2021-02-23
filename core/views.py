@@ -89,7 +89,7 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
 class RoleListAPIView(generics.ListAPIView):
     queryset = EmployeeRole.objects.filter(status=True, delete=False)
     serializer_class = RoleSerializer
-0
+
 
 class BranchAPIViewset(viewsets.ModelViewSet):
     queryset = Branch.objects.filter(delete=False).order_by('-pk')
@@ -591,10 +591,10 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
         })
 
 class UserListAPIView(generics.ListAPIView):
-    serializer_class = BranchUserListSerializer
+    serializer_class = UserSerializer
 
     def get_queryset(self):
-        return BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_superuser=False)
+        return BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_superuser=False)
 
 
 class BranchIncentiveListAPIView(generics.ListAPIView):

@@ -81,12 +81,14 @@ class Branch(BaseModel):
 
 class BaseUser(AbstractUser):
     phone = models.CharField(max_length=20, db_index=True)
-    date_of_joining = models.DateTimeField(blank=True, null=True)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_users', blank=True, null=True)
-    is_employee = models.BooleanField(default=False)
     employee_role = models.ManyToManyField(EmployeeRole, blank=True, related_name='role_user')
+    date_of_joining = models.DateTimeField(blank=True, null=True)
+    is_employee = models.BooleanField(default=False)
     aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     pan_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    address = models.TextField(blank=True)
+    date_of_birth = models.DateField(blank=True, null=True)
     date_of_resignation = models.DateTimeField(blank=True, null=True)
     reason_of_resignation = models.CharField(max_length=300, unique=True, blank=True, null=True)
 
@@ -437,6 +439,3 @@ class SlickposProducts(BaseModel):
     variant_group_id = models.CharField(max_length=100, null=True, blank=True)
     addon_group_id = models.CharField(max_length=100, null=True, blank=True)
     order_id = models.CharField(max_length=100, null=True, blank=True)
-
-
-
