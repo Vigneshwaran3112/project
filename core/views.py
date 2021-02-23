@@ -3,6 +3,7 @@ from re import error
 import json, os
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 
@@ -150,7 +151,15 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserSalaryAPIViewset(viewsets.ModelViewSet):
     queryset = UserSalary.objects.filter(status=True, delete=False)
     serializer_class = UserSalarySerializer
-    permission_class = (IsAdminUser, )
+    # permission_class = (IsAdminUser, )
+
+
+class UserSalaryList(generics.ListAPIView):
+    serializer_class = UserSalarySerializer
+    # permission_class = (IsAdminUser, )
+
+    def get_queryset(self):
+        return UserSalary.objects.filter(user=self.kwargs['user_id']).order_by('-created')
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
