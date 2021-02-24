@@ -136,13 +136,13 @@ class UserSerializer(serializers.ModelSerializer):
             aadhaar_number = validated_data.get('aadhaar_number', None),
             pan_number = validated_data.get('pan_number', None)
         )
-        user_salary = UserSalary.objects.create(
-            user = user,
-            date = validated_data.get('salary_update_date', datetime.datetime.now()),
-            per_hour = validated_data['per_hour'],
-            work_hours = validated_data['work_hours'],
-            ot_per_hour = validated_data['ot_per_hour']
-        )
+        # user_salary = UserSalary.objects.create(
+        #     user = user,
+        #     date = validated_data.get('salary_update_date', datetime.datetime.now()),
+        #     per_hour = validated_data['per_hour'],
+        #     work_hours = validated_data['work_hours'],
+        #     ot_per_hour = validated_data['ot_per_hour']
+        # )
         if validated_data['user_role'] !=0:
             for e in validated_data['employee_role']:
                 user.employee_role.add(e)
@@ -172,8 +172,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
         
     def to_representation(self, instance):
-        salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        try:
+            salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        except:
+            salary_data = None
+        try:
+            current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        except:
+            current_salary = None
         if instance.is_superuser == True:
             user_role = 0
         elif instance.is_staff == True:
@@ -197,10 +203,10 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            'per_hour': current_salary.per_hour,
-            'work_hours': current_salary.work_hours,
-            'ot_per_hour': current_salary.ot_per_hour,
-            'date': current_salary.date,
+            'per_hour': current_salary.per_hour if current_salary else None,
+            'work_hours': current_salary.work_hours if current_salary else None,
+            'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
+            'date': current_salary.date if current_salary else None,
             'employee_role_data': RoleSerializer(instance.employee_role, many=True).data,
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
@@ -314,6 +320,21 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
+class UserSalarylistSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'per_hour': instance.per_hour,
+            'per_minute': instance.per_minute,
+            'work_hours': instance.work_hours,
+            'work_minutes': instance.work_minutes,
+            'ot_per_hour': instance.ot_per_hour,
+            'ot_per_minute': instance.ot_per_minute,
+            'date': instance.date,
+            'formated_date': instance.date.strftime("%d-%m-%Y")
+        }
+
 
 class UserSalarySerializer(serializers.ModelSerializer):
 
@@ -331,6 +352,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
+        # salary_list = UserSalarylistSerializer(UserSalary.objects.filter(user=instance.user.pk), many=True).data
         return {
             'id': instance.pk,
             'per_hour': instance.per_hour,
@@ -340,7 +362,8 @@ class UserSalarySerializer(serializers.ModelSerializer):
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
             'date': instance.date,
-            'formated_date': instance.date.strftime("%d-%m-%Y")
+            'formated_date': instance.date.strftime("%d-%m-%Y"),
+            # 'salary_list': salary_list
         }
 
 

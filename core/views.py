@@ -159,7 +159,8 @@ class UserSalaryList(generics.ListAPIView):
     # permission_class = (IsAdminUser, )
 
     def get_queryset(self):
-        return UserSalary.objects.filter(user=self.kwargs['user_id']).order_by('-created')
+        data = UserSalary.objects.filter(user=self.kwargs['user_id']).latest('created').pk
+        return UserSalary.objects.filter(pk=data)
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
