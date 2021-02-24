@@ -108,7 +108,7 @@ class UserSalary(BaseModel):
     work_minutes = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateTimeField()
+    date = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.per_minute = self.per_hour / 60
