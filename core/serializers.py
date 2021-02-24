@@ -187,7 +187,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name': instance.first_name,
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
-            'formatted_date_of_joining': instance.date_of_joining.strftime("%d-%m-%Y") if instance.date_of_joining else None,
+            'formatted_date_of_joining': instance.date_of_joining.strftime("%d-%m-%Y %I:%M %p") if instance.date_of_joining else None,
             'phone': instance.phone,
             'date_of_birth': instance.date_of_birth,
             'formatted_date_of_birth': instance.date_of_birth.strftime("%d-%m-%Y") if instance.date_of_birth else None,
