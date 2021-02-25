@@ -514,12 +514,12 @@ class AttendanceUserListAPIView(generics.ListAPIView):
         return branch_user
 
 
-class BranchSpecificUserListAPIView(generics.ListAPIView):
-    queryset = BaseUser.objects.filter(is_active=True)
-    serializer_class = UserSerializer
+# class BranchSpecificUserListAPIView(generics.ListAPIView):
+#     queryset = BaseUser.objects.filter(is_active=True)
+#     serializer_class = UserSerializer
 
-    def get_queryset(self):
-        return BaseUser.objects.filter(branch=self.kwargs["branch_id"])
+#     def get_queryset(self):
+#         return BaseUser.objects.filter(branch=self.kwargs["branch_id"])
 
 
 class ElectricBillAPIView(viewsets.ModelViewSet):
@@ -600,11 +600,16 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
             'break': break_data,
         })
 
+
 class UserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        return BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_superuser=False)
+        if self.kwargs['branch_id'] == 0:
+            user = BaseUser.objects.filter(is_active=True, is_superuser=True, is_staff=True)
+        else:
+            user = BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_superuser=False, is_staff=False, is_employee=True)
+        return user
 
 
 class BranchIncentiveListAPIView(generics.ListAPIView):

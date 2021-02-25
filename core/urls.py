@@ -65,7 +65,7 @@ urlpatterns = [
     path('attendance_report/<int:pk>/', views.AttendanceReportListAPIView.as_view()),
     path('attendance_user_list/<int:pk>/<str:date>/', views.AttendanceUserListAPIView.as_view()),
 
-    path('branch_user/<int:branch_id>/', views.UserListAPIView.as_view()),
+    path('user_list/<int:branch_id>/', views.UserListAPIView.as_view()),
 
     
     path('order_status/', views.OrderStatusListAPIView.as_view()),
@@ -88,7 +88,7 @@ urlpatterns = [
     path('sub_branch_update/<int:pk>/', views.SubBranchUpdateApiView.as_view()),
     path('sub_branch_create/<int:pk>/', views.SubBranchCreate.as_view()),
     
-    path('branch_specific_user/<int:branch_id>/', views.BranchSpecificUserListAPIView.as_view()),
+    # path('branch_specific_user/<int:branch_id>/', views.BranchSpecificUserListAPIView.as_view()),
 
     path('attendance_bulk_create/', views.AttendanceBulkCreateAPIView.as_view()),
     path('gst/', views.GSTListAPIView.as_view()),

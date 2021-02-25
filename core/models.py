@@ -88,7 +88,6 @@ class BaseUser(AbstractUser):
     aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     pan_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     address = models.TextField(blank=True)
-    date_of_birth = models.DateField(blank=True, null=True)
     date_of_resignation = models.DateTimeField(blank=True, null=True)
     reason_of_resignation = models.CharField(max_length=300, unique=True, blank=True, null=True)
 
