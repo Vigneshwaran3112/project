@@ -2,6 +2,8 @@ import datetime, decimal
 
 from django.db import models
 
+from datetime import date
+
 from django.contrib.auth.models import AbstractUser
 
 
@@ -131,7 +133,7 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
-            user_salary = self.user.user_salaries.filter().latest('date')
+            user_salary = self.user.user_salaries.filter(date__date__lte=date.today()).latest('date')
             self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
