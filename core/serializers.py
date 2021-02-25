@@ -332,7 +332,7 @@ class UserSalarylistSerializer(serializers.Serializer):
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
             'date': instance.date,
-            'formated_date': instance.date.strftime("%d-%m-%Y")
+            'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None
         }
 
 
@@ -362,7 +362,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
             'date': instance.date,
-            'formated_date': instance.date.strftime("%d-%m-%Y"),
+            'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None,
             # 'salary_list': salary_list
         }
 
