@@ -109,7 +109,7 @@ class UserSalary(BaseModel):
     work_minutes = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateTimeField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.per_minute = self.per_hour / 60
@@ -133,7 +133,7 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
-            user_salary = self.user.user_salaries.filter(date__date__lte=date.today()).latest('date')
+            user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
