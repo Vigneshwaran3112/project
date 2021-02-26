@@ -342,8 +342,11 @@ class UserSalarySerializer(serializers.ModelSerializer):
         fields = ('user', 'per_hour', 'work_hours', 'ot_per_hour', 'date')
 
     def validate(self, data):
-        if UserSalary.objects.filter(date=data['date'], user=data['user'], status=True).exists():
-            raise serializers.ValidationError({'user': "salary data already existing for this user on this date."})
+        if self.context['request'].method in ['POST', 'post']:
+            if UserSalary.objects.filter(date=data['date'], user=data['user'], status=True).exists():
+                raise serializers.ValidationError({'user': "salary data already existing for this user on this date."})
+            else:
+                return data
         else:
             return data
 

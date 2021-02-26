@@ -265,6 +265,7 @@ class ProductListCreate(generics.ListCreateAPIView):
         if self.kwargs['classification']==0:
             product = Product.objects.filter( status=True, delete=False).order_by('-id')
         else:
+            print(Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).count())
             product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).order_by('-id')
         return product
 
