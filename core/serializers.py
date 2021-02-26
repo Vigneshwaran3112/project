@@ -365,8 +365,10 @@ class UserSalarySerializer(serializers.ModelSerializer):
         return {
             'id': instance.pk,
             'per_hour': instance.per_hour,
+            'per_day': instance.per_hour * instance.work_hours,
             'per_minute': instance.per_minute,
             'work_hours': instance.work_hours,
+
             'work_minutes': instance.work_minutes,
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
