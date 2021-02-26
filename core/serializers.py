@@ -202,6 +202,7 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
+            'salary_id': current_salary.pk if current_salary else None,
             'per_hour': current_salary.per_hour if current_salary else None,
             'per_day': current_salary.per_day if current_salary else None,
             'work_hours': current_salary.work_hours if current_salary else None,
@@ -320,11 +321,13 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
-class UserSalarylistSerializer(serializers.Serializer):
+class UserSalaryReportSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
+            'staff_user': instance.user.pk,
+            'staff_name': instance.user.name,
             'per_hour': instance.per_hour,
             'per_day': instance.per_day,
             'per_minute': instance.per_minute,

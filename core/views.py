@@ -163,6 +163,21 @@ class UserSalaryList(generics.ListAPIView):
         return UserSalary.objects.filter(pk=data)
 
 
+class UserSalaryReport(generics.ListAPIView):
+    serializer_class = UserSalaryReportSerializer
+    # permission_class = (IsAdminUser, )
+
+    def get_queryset(self):
+        start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
+        stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
+        if self.kwargs['classification']==0:
+            product = Product.objects.filter(status=True, delete=False).order_by('-id')
+        else:
+            product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).order_by('-id')
+        data = UserAttendance.objects.filter(user=self.kwargs['user_id']).latest('created').pk
+        return UserSalary.objects.filter(pk=data)
+
+
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceInSerializer
     # permission_class = (IsAuthenticated, )
@@ -265,7 +280,6 @@ class ProductListCreate(generics.ListCreateAPIView):
         if self.kwargs['classification']==0:
             product = Product.objects.filter( status=True, delete=False).order_by('-id')
         else:
-            print(Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).count())
             product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).order_by('-id')
         return product
 
