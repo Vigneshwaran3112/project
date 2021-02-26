@@ -355,18 +355,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
         else:
             return data
 
-
-    def update(self, instance, validated_data):
-        instance.user = validated_data.get('user', instance.user)
-        instance.per_hour = validated_data.get('per_hour', instance.per_hour)
-        instance.work_hours = validated_data.get('work_hours', instance.work_hours)
-        instance.ot_per_hour = validated_data.get('ot_per_hour', instance.ot_per_hour)
-        instance.date = validated_data.get('date', instance.date)
-        instance.save()
-        return instance
-
     def to_representation(self, instance):
-        # salary_list = UserSalarylistSerializer(UserSalary.objects.filter(user=instance.user.pk), many=True).data
         return {
             'id': instance.pk,
             'per_hour': instance.per_hour,
