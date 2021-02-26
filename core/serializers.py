@@ -203,6 +203,7 @@ class UserSerializer(serializers.ModelSerializer):
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
             'per_hour': current_salary.per_hour if current_salary else None,
+            'per_day': current_salary.per_day if current_salary else None,
             'work_hours': current_salary.work_hours if current_salary else None,
             'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
             'date': current_salary.date if current_salary else None,
@@ -325,6 +326,7 @@ class UserSalarylistSerializer(serializers.Serializer):
         return {
             'id': instance.pk,
             'per_hour': instance.per_hour,
+            'per_day': instance.per_day,
             'per_minute': instance.per_minute,
             'work_hours': instance.work_hours,
             'work_minutes': instance.work_minutes,
@@ -339,7 +341,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserSalary
-        fields = ('user', 'per_hour', 'work_hours', 'ot_per_hour', 'date')
+        fields = ('user', 'per_day', 'work_hours', 'ot_per_hour', 'date')
 
     def validate(self, data):
         if self.context['request'].method in ['POST', 'post']:
@@ -365,7 +367,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
         return {
             'id': instance.pk,
             'per_hour': instance.per_hour,
-            'per_day': instance.per_hour * instance.work_hours,
+            'per_day': instance.per_day,
             'per_minute': instance.per_minute,
             'work_hours': instance.work_hours,
 

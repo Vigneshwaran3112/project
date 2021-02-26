@@ -103,6 +103,7 @@ class BaseUser(AbstractUser):
 
 class UserSalary(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries')
+    per_day = models.DecimalField(max_digits=10, decimal_places=2)
     per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     per_minute = models.DecimalField(max_digits=10, decimal_places=2)
     work_hours = models.DecimalField(max_digits=10, decimal_places=2)
@@ -112,6 +113,7 @@ class UserSalary(BaseModel):
     date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
+        self.per_hour = self.per_day / self.work_hours
         self.per_minute = self.per_hour / 60
         self.ot_per_minute = self.ot_per_hour / 60
         self.work_minutes = self.work_hours * 60
