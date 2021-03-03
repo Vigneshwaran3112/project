@@ -397,6 +397,17 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):
         }
 
 
+class UserAttendanceSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'punch_in': instance.start,
+            'punch_out': instance.stop,
+            'formatted_punch_in': instance.start.strftime("%I:%M %p") if instance.start else None,
+            'formatted_punch_out': instance.stop.strftime("%I:%M %p") if instance.stop else None,
+        }
+
 class UserSalaryAttendanceListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
@@ -413,7 +424,8 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):
             'user': instance.pk,
             'user_name': instance.get_full_name(),
             'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),
-            'ot_time_spend': "{:.2f}{}".format(ot_time_spend/60, ' Hr')
+            'ot_time_spend': "{:.2f}{}".format(ot_time_spend/60, ' Hr'),
+            'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False), many=True).data
         }
 
 
