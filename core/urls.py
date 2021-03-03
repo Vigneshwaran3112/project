@@ -47,6 +47,9 @@ urlpatterns = [
     path('salary_attendance_user_report/<int:branch_id>/', views.UserSalaryAttendanceListAPIView.as_view()),
     path('user_punch_attendance/<int:pk>/', views.UserPunchUpdateAPIView.as_view()),
 
+    path('previous_date/', views.PreviousDateAPIView.as_view()),
+
+
 
 
 

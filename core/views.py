@@ -261,9 +261,18 @@ class UserSalaryAttendanceListAPIView(generics.ListAPIView):
             data = BaseUser.objects.filter(is_employee=True)
         else:
             data = BaseUser.objects.filter(is_employee=True, branch__pk=self.kwargs['branch_id'])
-
-            # data = UserAttendance.objects.filter(user__branch__pk=self.kwargs['branch_id'], date=date, delete=False).distinct('date')
         return data
+
+
+class PreviousDateAPIView(generics.RetrieveAPIView):
+    serializer_class = UserSalaryAttendanceReportSerializer
+
+    def retrieve(self, request):
+        today = datetime.date.today()
+        date = today - datetime.timedelta(days=1)
+        return Response({
+            'date':date
+        })
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
