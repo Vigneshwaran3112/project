@@ -5,7 +5,8 @@ import json, os
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
+from django.http.request import RawPostDataException
 
 from rest_framework import generics, viewsets, status
 from rest_framework.exceptions import ValidationError
@@ -221,9 +222,17 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
             year = lastMonth.year
             month = lastMonth.month
 
+        context = {'user_id': user_id, 'month': month, 'year': year}
+        
+
         user = BaseUser.objects.get(pk=user_id)
-        queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date')
-        attendance_data = UserSalaryAttendanceReportSerializer(queryset, many=True).data
+        # queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).values('date').annotate(dcount=Count('date'))
+        # data = queryset.annotate(time_spend=Sum('time_spend')/60, ot_time_spend=Sum('ot_time_spend')/60, salary=Sum('salary'), ot_salary=Sum('ot_salary'))
+        # print(data)
+        queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
+        # queryset.group_by = ["date"]
+        # results = QuerySet(query=queryset, model=UserAttendance)
+        attendance_data = UserSalaryAttendanceReportSerializer(queryset, context=context, many=True).data
         
         return Response({
             'user':user.pk,
@@ -232,6 +241,23 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
             'year': year,
             'attendance_data': attendance_data
         })
+
+
+class UserSalaryAttendanceListAPIView(generics.ListAPIView):
+    serializer_class = UserSalaryAttendanceListSerializer
+
+    def get_queryset(self):
+        try:
+            date = self.kwargs['date']
+        except:
+            today = datetime.date.today()
+            date = today - datetime.timedelta(days=1)
+
+        if self.kwargs['branch_id']==0:
+            data = UserAttendance.objects.filter(date=date, delete=False)
+        else:
+            data = UserAttendance.objects.filter(user__branch__pk=self.kwargs['branch_id'], date=date, delete=False)
+        return data
 
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
