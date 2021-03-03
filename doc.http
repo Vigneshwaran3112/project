@@ -8,14 +8,14 @@ Content-Type: {{ CONTENT_TYPE }}
 Authorization: {{ TOKEN }}
 
 {
- "first_name": "haiiiiii",
- "email": "mahe@vgts.com",
+ "first_name": "Vignesh",
+ "email": "vignesh@vgts.com",
  "date_of_joining": "2010-07-30T15:05:00.000Z",
- "date_of_birth": "1998-02-14",
+ "date_of_birth": "1995-02-14",
  "is_superuser": false,
- "phone": "786811232679",
- "user_role": 1,
- "branch": 15,
+ "phone": "8765432190",
+ "user_role": 2,
+ "branch": 19,
  "employee_role": [2,3],
  "aadhaar_number": "8499b221312141",
  "pan_number": "AZ6522n1111o3",

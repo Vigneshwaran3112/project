@@ -715,7 +715,7 @@ class UserListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['branch_id'] == 0:
-            user = BaseUser.objects.exclude(is_employee=True)
+            user = BaseUser.objects.filter(is_employee=True, is_active=True, is_superuser=False, is_staff=False)
         else:
             user = BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_superuser=False, is_staff=False, is_employee=True)
         return user

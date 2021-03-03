@@ -24,7 +24,7 @@ class UserSalaryAdmin(admin.ModelAdmin):
 
 @admin.register(BaseUser)
 class BaseUserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'date_joined', 'branch')
+    list_display = ('pk', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'date_joined', 'branch', 'phone')
 
     def roles(self, obj):
         return "\n".join([r.name for r in obj.employee_role.all()])
