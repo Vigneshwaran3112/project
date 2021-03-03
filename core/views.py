@@ -168,17 +168,36 @@ class UserSalaryReport(generics.RetrieveAPIView):
     # permission_class = (IsAdminUser, )
 
     def retrieve(self, request, branch_id):
-        start = datetime.datetime.strptime(request.query_params.get('start'), '%Y-%m-%d')
-        stop = datetime.datetime.strptime(request.query_params.get('stop'), '%Y-%m-%d')
-        context = {'branch_id': branch_id, 'start': start, 'stop': stop}
+        try:
+            year = datetime.datetime.strptime(request.query_params.get('year'), '%Y')
+            month = datetime.datetime.strptime(request.query_params.get('month'), '%m')
+            year = year.year
+            month = month.month
+        except:
+            today = datetime.date.today()
+            first = today.replace(day=1)
+            lastMonth = first - datetime.timedelta(days=1)
+            year = lastMonth.year
+            month = lastMonth.month
 
-        queryset = UserAttendance.objects.filter(date__gte=start, date__lte=stop, delete=False)
-        total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
-        total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
+        context = {'branch_id': branch_id, 'month': month, 'year': year}
 
-        queryset = BaseUser.objects.filter(branch__pk=branch_id, is_active=True, is_superuser=False)
-        sales_data = UserSalaryReportSerializer(queryset, context=context, many=True).data
+        if branch_id == 0:
+            queryset = UserAttendance.objects.filter(date__year=year, date__month=month, delete=False)
+            total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
+            total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
+            queryset = BaseUser.objects.filter(is_active=True, is_superuser=False, is_staff=False)
+            sales_data = UserSalaryReportSerializer(queryset, context=context, many=True).data
+        else:
+            queryset = UserAttendance.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
+            total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
+            total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
+            queryset = BaseUser.objects.filter(branch__pk=branch_id, is_active=True, is_superuser=False)
+            sales_data = UserSalaryReportSerializer(queryset, context=context, many=True).data
+        
         return Response({
+            'month': month,
+            'year': year,
             'total_salary': total_salary['total_salary_price'],
             'total_ot': total_ot['overall_ot_price'],
             'data': sales_data

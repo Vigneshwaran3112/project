@@ -8,7 +8,7 @@ Content-Type: {{ CONTENT_TYPE }}
 Authorization: {{ TOKEN }}
 
 {
- "first_name": "test_backend",
+ "first_name": "haiiiiii",
  "email": "mahe@vgts.com",
  "date_of_joining": "2010-07-30T15:05:00.000Z",
  "date_of_birth": "1998-02-14",

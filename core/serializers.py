@@ -353,29 +353,22 @@ class UserSalaryAttendanceSerializer(serializers.Serializer):
 class UserSalaryReportSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        start = self.context['start']
-        stop = self.context['stop']
+        month = self.context['month']
+        year = self.context['year']
         branch_id = self.context['branch_id']
-
-        queryset = UserAttendance.objects.filter(date__gte=start, date__lte=stop, delete=False)
-        total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
-        total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
-
-        queryset_data = UserAttendance.objects.filter(user=instance.pk, date__gte=start, date__lte=stop, delete=False)
-        user_daily_salary = queryset_data.aggregate( total_salary_price=Sum('salary'))
-        user_total_time_spend = queryset_data.aggregate(time_spend=Sum('time_spend'))
-        user_total_ot = queryset_data.aggregate(overall_ot_price=Sum('ot_salary'))
-
-        # total_salary_data = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
-        a = user_total_ot.get('overall_ot_price', 0)
-        print(a)
+        
+        queryset_data = UserAttendance.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
+        user_daily_salary = queryset_data.aggregate( total_salary_price=Coalesce (Sum('salary'), 0))
+        user_total_time_spend = queryset_data.aggregate(time_spend=Coalesce (Sum('time_spend'), 0))
+        user_total_ot = queryset_data.aggregate(overall_ot_price=Coalesce (Sum('ot_salary'), 0))
+        total_salary_data = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
         return {
             'id': instance.pk,
             'staff_user': instance.pk,
             'staff_name': instance.get_full_name(),
             'overall_user_salary': user_daily_salary['total_salary_price'],
             'overall_ot_salary': user_total_ot['overall_ot_price'],
-            # 'total_salary': total_salary_data
+            'total_salary': total_salary_data
         }
 
 

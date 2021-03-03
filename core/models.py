@@ -82,7 +82,7 @@ class Branch(BaseModel):
 
 
 class BaseUser(AbstractUser):
-    phone = models.CharField(max_length=20, db_index=True)
+    phone = models.CharField(max_length=20, db_index=True, unique=True)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_users', blank=True, null=True)
     employee_role = models.ManyToManyField(EmployeeRole, blank=True, related_name='role_user')
     date_of_joining = models.DateTimeField(blank=True, null=True)
