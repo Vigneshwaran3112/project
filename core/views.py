@@ -226,12 +226,7 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
         
 
         user = BaseUser.objects.get(pk=user_id)
-        # queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).values('date').annotate(dcount=Count('date'))
-        # data = queryset.annotate(time_spend=Sum('time_spend')/60, ot_time_spend=Sum('ot_time_spend')/60, salary=Sum('salary'), ot_salary=Sum('ot_salary'))
-        # print(data)
         queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
-        # queryset.group_by = ["date"]
-        # results = QuerySet(query=queryset, model=UserAttendance)
         attendance_data = UserSalaryAttendanceReportSerializer(queryset, context=context, many=True).data
         
         return Response({
@@ -246,17 +241,28 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
 class UserSalaryAttendanceListAPIView(generics.ListAPIView):
     serializer_class = UserSalaryAttendanceListSerializer
 
-    def get_queryset(self):
+    def get_serializer_context(self):
         try:
-            date = self.kwargs['date']
+            date = datetime.datetime.strptime(self.request.query_params.get('date'), '%Y-%m-%d')
         except:
             today = datetime.date.today()
             date = today - datetime.timedelta(days=1)
 
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+            'date': date
+        }
+
+    def get_queryset(self):
         if self.kwargs['branch_id']==0:
-            data = UserAttendance.objects.filter(date=date, delete=False)
+            # data = UserAttendance.objects.filter(date=date, delete=False)
+            data = BaseUser.objects.filter(is_employee=True)
         else:
-            data = UserAttendance.objects.filter(user__branch__pk=self.kwargs['branch_id'], date=date, delete=False)
+            data = BaseUser.objects.filter(is_employee=True, branch__pk=self.kwargs['branch_id'])
+
+            # data = UserAttendance.objects.filter(user__branch__pk=self.kwargs['branch_id'], date=date, delete=False).distinct('date')
         return data
 
 

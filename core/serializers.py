@@ -378,23 +378,18 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):
         year = self.context['year']
         user_id = self.context['user_id']
 
-        # time_spend = instance.time_spend if instance.time_spend else 0
-        # ot_time_spend = instance.ot_time_spend if instance.ot_time_spend else 0
-        # salary = instance.salary if instance.salary else 0
-        # ot_salary = instance.ot_salary if instance.ot_salary else 0
-
         queryset =  UserAttendance.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
         time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
         salary = queryset.aggregate(overall_salary=Sum('salary'))
         ot_salary = queryset.aggregate(overall_ot_salary=Sum('ot_salary'))
 
+        time_spend_value = time_spend['overall_time_spend'] if time_spend['overall_time_spend'] else 0
         salary_value = salary['overall_salary'] if salary['overall_salary'] else 0
         ot_salary_value = ot_salary['overall_ot_salary'] if ot_salary['overall_ot_salary'] else 0
 
-
         return {
             'date': instance.date,
-            'time_spend': "{:.2f}{}".format(time_spend['overall_time_spend']/60, ' Hr'),
+            'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),
             'salary':'Rs{}'.format(salary_value),
             'ot_salary':'Rs{}'.format(ot_salary_value),
             'total_salary': 'Rs{}'.format(salary_value + ot_salary_value),
@@ -405,21 +400,20 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):
 class UserSalaryAttendanceListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        time_spend = instance.time_spend if instance.time_spend else 0
-        ot_time_spend = instance.ot_time_spend if instance.ot_time_spend else 0
+        date = self.context['date']
+
+        queryset =  UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False)
+        time_spend = queryset.aggregate(time_spend=Sum('time_spend'))
+        ot_time_spend = queryset.aggregate(ot_time_spend=Sum('ot_time_spend'))
+
+        time_spend_value = time_spend['time_spend'] if time_spend['time_spend'] else 0
+        ot_time_spend = ot_time_spend['ot_time_spend'] if ot_time_spend['ot_time_spend'] else 0
+
         return {
-            'id': instance.pk,
-            'user': instance.user.pk,
-            'user_name': instance.user.get_full_name(),
-            'start': instance.start,
-            'stop': instance.stop,
-            'date': instance.date,
-            'time_spend': float("{:.2f} ".format(time_spend/60)),  
-            'formatted_time_spend': float("{:.2f} ".format(time_spend/60)),
-            'ot_time_spend': float("{:.2f} ".format(ot_time_spend/60)) ,
-            'formatted_ot_time_spend': float("{:.2f} ".format(ot_time_spend/60)),
-            'total_time_spend': (time_spend + ot_time_spend),
-            'formatted_total_time_spend':float("{:.2f} ".format((time_spend/60) + (ot_time_spend/60))),
+            'user': instance.pk,
+            'user_name': instance.get_full_name(),
+            'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),
+            'ot_time_spend': "{:.2f}{}".format(ot_time_spend/60, ' Hr')
         }
 
 
