@@ -371,6 +371,31 @@ class UserSalaryReportSerializer(serializers.Serializer):
             'total_salary': total_salary_data
         }
 
+class UserSalaryAttendanceReportSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+
+        time_spend = instance.time_spend if instance.time_spend else 0
+        ot_time_spend = instance.ot_time_spend if instance.ot_time_spend else 0
+        salary = instance.salary if instance.salary else 0
+        ot_salary = instance.ot_salary if instance.ot_salary else 0
+
+        return {
+            'date': instance.date,
+            # 'user': instance.user.pk,
+            # 'user_name': instance.user.get_full_name(),
+            'time_spend': float("{:.2f} ".format(time_spend/60)),  
+            'formatted_time_spend': float("{:.2f} ".format(time_spend/60)),
+            'ot_time_spend': float("{:.2f} ".format(ot_time_spend/60)) ,
+            'formatted_ot_time_spend': float("{:.2f} ".format(ot_time_spend/60)),
+            'total_time_spend': (time_spend + ot_time_spend),
+            'formatted_total_time_spend':float("{:.2f} ".format((time_spend/60) + (ot_time_spend/60))),
+            'salary': instance.salary,
+            'ot_salary': instance.ot_salary,
+            'total_salary': salary + ot_salary,
+            'incentive_salary': 0
+        }
+
 
 class UserSalarySerializer(serializers.ModelSerializer):
 

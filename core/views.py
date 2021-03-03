@@ -204,6 +204,36 @@ class UserSalaryReport(generics.RetrieveAPIView):
         })
 
 
+class UserSalaryAttendanceReport(generics.RetrieveAPIView):
+    serializer_class = UserSalaryAttendanceReportSerializer
+    # permission_class = (IsAdminUser, )
+
+    def retrieve(self, request, user_id):
+        try:
+            year = datetime.datetime.strptime(request.query_params.get('year'), '%Y')
+            month = datetime.datetime.strptime(request.query_params.get('month'), '%m')
+            year = year.year
+            month = month.month
+        except:
+            today = datetime.date.today()
+            first = today.replace(day=1)
+            lastMonth = first - datetime.timedelta(days=1)
+            year = lastMonth.year
+            month = lastMonth.month
+
+        user = BaseUser.objects.get(pk=user_id)
+        queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date')
+        attendance_data = UserSalaryAttendanceReportSerializer(queryset, many=True).data
+        
+        return Response({
+            'user':user.pk,
+            'user_name':user.get_full_name(),
+            'month': month,
+            'year': year,
+            'attendance_data': attendance_data
+        })
+
+
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceInSerializer
     # permission_class = (IsAuthenticated, )
