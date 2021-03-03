@@ -404,8 +404,8 @@ class UserAttendanceSerializer(serializers.Serializer):
             'id': instance.pk,
             'punch_in': instance.start,
             'punch_out': instance.stop,
-            'formatted_punch_in': instance.start.strftime("%I:%M %p") if instance.start else None,
-            'formatted_punch_out': instance.stop.strftime("%I:%M %p") if instance.stop else None,
+            'formatted_punch_in': instance.start.strftime("%d-%m-%Y %I:%M %p") if instance.start else None,
+            'formatted_punch_out': instance.stop.strftime("%d-%m-%Y %I:%M %p") if instance.stop else None,
         }
 
 class UserSalaryAttendanceListSerializer(serializers.Serializer):
@@ -421,6 +421,7 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):
         ot_time_spend = ot_time_spend['ot_time_spend'] if ot_time_spend['ot_time_spend'] else 0
 
         return {
+            'date': date,
             'user': instance.pk,
             'user_name': instance.get_full_name(),
             'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),

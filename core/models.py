@@ -139,10 +139,13 @@ class UserAttendance(BaseModel):
             self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
-                day_salary = round(user_salary.per_minute * user_salary.work_minutes)
-                ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
-                self.salary = round(day_salary + ot_salary)
-                self.ot_salary = round((self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute)
+                self.time_spend
+                self.salary = user_salary.per_day
+                print(user_salary.ot_per_minute , self.ot_time_spend)
+                print(user_salary.ot_per_minute * self.ot_time_spend)
+                self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
+                # self.salary = round(day_salary + ot_salary)
+                # self.ot_salary = round((self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute)
             else:
                 self.salary = round(user_salary.per_minute * self.time_spend)
         super(UserAttendance, self).save(*args, **kwargs)
