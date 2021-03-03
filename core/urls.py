@@ -45,6 +45,8 @@ urlpatterns = [
     path('salary_report/<int:branch_id>/', views.UserSalaryReport.as_view()),
     path('salary_user_report/<int:user_id>/', views.UserSalaryAttendanceReport.as_view()),
     path('salary_attendance_user_report/<int:branch_id>/', views.UserSalaryAttendanceListAPIView.as_view()),
+    path('user_punch_attendance/<int:pk>/', views.UserPunchUpdateAPIView.as_view()),
+
 
 
 

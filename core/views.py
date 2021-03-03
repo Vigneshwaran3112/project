@@ -277,6 +277,12 @@ class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     # permission_class = (IsAuthenticated,)
 
 
+class UserPunchUpdateAPIView(generics.UpdateAPIView):
+    queryset = UserAttendance.objects.filter(delete=False)
+    serializer_class = UserPunchUpdateSerializer
+    # permission_class = (IsAuthenticated,)
+
+
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
     queryset = UserAttendanceBreak.objects.filter(delete=False)
     serializer_class = UserAttendanceBreakInSerializer
