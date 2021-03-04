@@ -527,50 +527,20 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
-
-class UserPunchUpdateSerializer(serializers.ModelSerializer):
-
+class UserPunchBulkUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     class Meta:
         model = UserAttendance
-        fields = ( 'start', 'stop')
+        fields = ( 'id', 'start', 'stop') 
 
-    def to_representation(self, instance):
-        time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
-        try:
-            break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
-            break_data.stop = instance.stop
-            break_data.save()
-        except:
-            break_data = 0
-        try:
-            total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
-            grand_salary = total_salary['total']
-        except:
-            grand_salary = 0
-        try:
-            ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
-            ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
-        except:
-            ot_time_spend_hours = None
 
-        return {
-            'id': instance.pk,
-            'user': BaseUserSerializer(instance.user).data,
-            'start': instance.start,
-            'stop': instance.stop,
-            'date': instance.date,
-            'stop_availability': False if instance.stop else True,
-            'time_spend_minuts': instance.time_spend,
-            'time_spend_hours': time_spend_hours,
-            'salary': instance.salary,
-            'ot_time_spend_minuts': instance.ot_time_spend,
-            'ot_time_spend_hours': ot_time_spend_hours,
-            'ot_salary': instance.ot_salary,
-            'grand_total_salary' : grand_salary,
-            'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
-        }
 
+class UserPunchUpdateSerializer(serializers.ModelSerializer):
+    data = UserPunchBulkUpdateSerializer(many=True)
+    class Meta:
+        model = UserAttendance
+        fields = ( 'data', 'status')
+    
 
 class UserAttendanceBreakInSerializer(serializers.ModelSerializer):
 

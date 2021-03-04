@@ -139,7 +139,7 @@ class UserAttendance(BaseModel):
             self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
-                self.time_spend
+                # self.time_spend
                 self.salary = user_salary.per_day
                 print(user_salary.ot_per_minute , self.ot_time_spend)
                 print(user_salary.ot_per_minute * self.ot_time_spend)
@@ -148,7 +148,23 @@ class UserAttendance(BaseModel):
                 # self.ot_salary = round((self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute)
             else:
                 self.salary = round(user_salary.per_minute * self.time_spend)
+
+            # obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date, defaults={'salary': 0.0, 'ot_salary': 0.0, 'ut_time_spend': 0.0},)
+            # obj.salary += 
+            # obj.ot_salary += 
+            # obj.ut_time_spend += 
+            # obj.save()
+
         super(UserAttendance, self).save(*args, **kwargs)
+
+
+# class UserSalaryPerDay(BaseModel):
+#     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries')
+#     date = models.DateField()
+#     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+#     ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+#     ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
 
 
 class UserAttendanceBreak(BaseModel):

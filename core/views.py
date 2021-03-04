@@ -291,6 +291,13 @@ class UserPunchUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserPunchUpdateSerializer
     # permission_class = (IsAuthenticated,)
 
+    def partial_update(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        for data in serializer.validated_data['data']:
+            order_item = UserAttendance.objects.filter(pk=data['id']).update(start=data['start'], stop=data['stop'])
+        return Response({'message': 'Vendor store item status changed'}, status=status.HTTP_202_ACCEPTED)
+
 
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
     queryset = UserAttendanceBreak.objects.filter(delete=False)
