@@ -184,22 +184,17 @@ class UserSalaryReport(generics.RetrieveAPIView):  # Important
         context = {'branch_id': branch_id, 'month': month, 'year': year}
 
         if branch_id == 0:
-            
-
-            # queryset = UserSalaryPerDay.objects.filter(date__year=year, date__month=month, delete=False)
-            
-            queryset = UserAttendance.objects.filter(date__year=year, date__month=month, delete=False)
-            total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
-            total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
+            queryset = UserSalaryPerDay.objects.filter(date__year=year, date__month=month, delete=False)
+            # queryset = UserAttendance.objects.filter(date__year=year, date__month=month, delete=False)
             query = BaseUser.objects.filter(is_active=True, is_superuser=False, is_staff=False)
         else:
-            # queryset = UserSalaryPerDay.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
-
-            queryset = UserAttendance.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
-            total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
-            total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
+            queryset = UserSalaryPerDay.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
+            # queryset = UserAttendance.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
             query = BaseUser.objects.filter(branch__pk=branch_id, is_active=True, is_superuser=False, is_staff=False)
 
+
+        total_salary = queryset.aggregate(total_salary_price=Coalesce (Sum('salary'), 0))
+        total_ot = queryset.aggregate(overall_ot_price=Coalesce (Sum('ot_salary'), 0))
         sales_data = UserSalaryReportSerializer(query, context=context, many=True).data
         
         return Response({
@@ -232,7 +227,9 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
         
 
         user = BaseUser.objects.get(pk=user_id)
-        queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
+        queryset = UserSalaryPerDay.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
+
+        # queryset = UserAttendance.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
         attendance_data = UserSalaryAttendanceReportSerializer(queryset, context=context, many=True).data
         
         return Response({
@@ -263,7 +260,6 @@ class UserSalaryAttendanceListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['branch_id']==0:
-            # data = UserAttendance.objects.filter(date=date, delete=False)
             data = BaseUser.objects.filter(is_employee=True)
         else:
             data = BaseUser.objects.filter(is_employee=True, branch__pk=self.kwargs['branch_id'])
@@ -301,8 +297,8 @@ class UserPunchUpdateAPIView(generics.UpdateAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         for data in serializer.validated_data['data']:
-            order_item = UserAttendance.objects.filter(pk=data['id']).update(start=data['start'], stop=data['stop'])
-        return Response({'message': 'Vendor store item status changed'}, status=status.HTTP_202_ACCEPTED)
+            attendance_data = UserAttendance.objects.filter(pk=data['id']).update(start=data['start'], stop=data['stop'])
+        return Response({'message': 'Updated Successfully'}, status=status.HTTP_202_ACCEPTED)
 
 
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
@@ -771,5 +767,3 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
             formated_data = dict(data)
             BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(incentive=formated_data['incentive'])
         return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False), many=True).data)
-
-
