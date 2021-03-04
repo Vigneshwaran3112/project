@@ -737,6 +737,14 @@ class UserListAPIView(generics.ListAPIView):
         return user
 
 
+class AdminUserListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return BaseUser.objects.filter(Q(is_superuser=True) | Q(is_staff=True)).filter(is_employee=False, is_active=True)
+
+        
+
 class BranchIncentiveListAPIView(generics.ListAPIView):
     queryset = BranchEmployeeIncentive.objects.filter(delete=False)
     serializer_class = BranchEmployeeIncentiveSerializer

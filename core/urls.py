@@ -78,7 +78,7 @@ urlpatterns = [
     path('attendance_user_list/<int:pk>/<str:date>/', views.AttendanceUserListAPIView.as_view()),
 
     path('user_list/<int:branch_id>/', views.UserListAPIView.as_view()),
-
+    path('admin_user/', views.AdminUserListAPIView.as_view()),
     
     path('order_status/', views.OrderStatusListAPIView.as_view()),
     path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
