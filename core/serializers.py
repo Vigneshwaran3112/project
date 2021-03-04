@@ -125,7 +125,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = BaseUser.objects.create_user(
             username = validated_data['first_name'][:3].upper() + str(int(datetime.datetime.utcnow().timestamp())),
-            email = validated_data['email'],
+            email = validated_data.get('email', None),
             first_name = validated_data['first_name'],
             date_of_joining = validated_data['date_of_joining'],
             branch = validated_data.get('branch', None),
@@ -156,20 +156,27 @@ class UserSerializer(serializers.ModelSerializer):
         user.email = validated_data.get('email', instance.email)
         user.first_name = validated_data.get('first_name', instance.first_name)
         user.phone = validated_data.get('phone', instance.phone) 
-        date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining),
-        branch = validated_data.get('branch', instance.branch),
-        is_superuser = True if validated_data['user_role']==0 else False,
-        is_staff = True if validated_data['user_role']==1 else False,
-        is_employee = True if validated_data['user_role']==2 else False,
-        aadhaar_number = validated_data.get('aadhaar_number', None),
-        pan_number = validated_data.get('pan_number', None)
+        user.date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining)
+        user.branch = validated_data.get('branch', instance.branch)
+        user.aadhaar_number = validated_data.get('aadhaar_number', instance.aadhaar_number)
+        pan = validated_data.get('pan_number', instance.pan_number)
+        user.pan_number = pan
+        try:
+            user.is_superuser = True if validated_data['user_role']==0 else False
+            user.is_staff = True if validated_data['user_role']==1 else False
+            user.is_employee = True if validated_data['user_role']==2 else False
+        except:
+            pass
         user.save()
-        if validated_data['user_role']!=0:
-            user.employee_role.clear()
-            for e in validated_data['employee_role']:
-                user.employee_role.add(e)
-        else:
-            user.employee_role.clear()
+        try:
+            if validated_data['user_role']==2:
+                user.employee_role.clear()
+                for e in validated_data['employee_role']:
+                    user.employee_role.add(e)
+            else:
+                user.employee_role.clear()
+        except:
+            pass
 
         return user
         
