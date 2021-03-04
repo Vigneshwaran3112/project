@@ -164,7 +164,7 @@ class UserSalaryList(generics.ListAPIView):
         return UserSalary.objects.filter(pk=data)
 
 
-class UserSalaryReport(generics.RetrieveAPIView):
+class UserSalaryReport(generics.RetrieveAPIView):  # Important
     serializer_class = UserSalaryReportSerializer
     # permission_class = (IsAdminUser, )
 
@@ -184,17 +184,23 @@ class UserSalaryReport(generics.RetrieveAPIView):
         context = {'branch_id': branch_id, 'month': month, 'year': year}
 
         if branch_id == 0:
+            
+
+            # queryset = UserSalaryPerDay.objects.filter(date__year=year, date__month=month, delete=False)
+            
             queryset = UserAttendance.objects.filter(date__year=year, date__month=month, delete=False)
             total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
             total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
-            queryset = BaseUser.objects.filter(is_active=True, is_superuser=False, is_staff=False)
-            sales_data = UserSalaryReportSerializer(queryset, context=context, many=True).data
+            query = BaseUser.objects.filter(is_active=True, is_superuser=False, is_staff=False)
         else:
+            # queryset = UserSalaryPerDay.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
+
             queryset = UserAttendance.objects.filter(user__branch__pk=branch_id, date__year=year, date__month=month, delete=False)
             total_salary = queryset.aggregate(total_salary_price=Sum('salary'))
             total_ot = queryset.aggregate(overall_ot_price=Sum('ot_salary'))
-            queryset = BaseUser.objects.filter(branch__pk=branch_id, is_active=True, is_superuser=False)
-            sales_data = UserSalaryReportSerializer(queryset, context=context, many=True).data
+            query = BaseUser.objects.filter(branch__pk=branch_id, is_active=True, is_superuser=False, is_staff=False)
+
+        sales_data = UserSalaryReportSerializer(query, context=context, many=True).data
         
         return Response({
             'month': month,

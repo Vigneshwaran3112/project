@@ -150,6 +150,9 @@ admin.site.register(PaymentMode)
 admin.site.register(BranchEmployeeIncentive)
 admin.site.register(BranchDepartmentIncentive)
 
+admin.site.register(UserSalaryPerDay)
+
+
 
 @admin.register(SlickposProducts)
 class SlickposProductsAdmin(admin.ModelAdmin):

@@ -322,7 +322,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
-class UserSalaryAttendanceSerializer(serializers.Serializer):
+class UserSalaryAttendanceSerializer(serializers.Serializer):  # Important
 
     def to_representation(self, instance):
         start = self.context['start']
@@ -350,7 +350,7 @@ class UserSalaryAttendanceSerializer(serializers.Serializer):
         }
 
 
-class UserSalaryReportSerializer(serializers.Serializer):
+class UserSalaryReportSerializer(serializers.Serializer):   # Important
 
     def to_representation(self, instance):
         month = self.context['month']
@@ -359,7 +359,6 @@ class UserSalaryReportSerializer(serializers.Serializer):
         
         queryset_data = UserAttendance.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
         user_daily_salary = queryset_data.aggregate( total_salary_price=Coalesce (Sum('salary'), 0))
-        user_total_time_spend = queryset_data.aggregate(time_spend=Coalesce (Sum('time_spend'), 0))
         user_total_ot = queryset_data.aggregate(overall_ot_price=Coalesce (Sum('ot_salary'), 0))
         total_salary_data = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
         return {
@@ -371,7 +370,7 @@ class UserSalaryReportSerializer(serializers.Serializer):
             'total_salary': total_salary_data
         }
 
-class UserSalaryAttendanceReportSerializer(serializers.Serializer):
+class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Important
 
     def to_representation(self, instance):
         month = self.context['month']
@@ -408,7 +407,7 @@ class UserAttendanceSerializer(serializers.Serializer):
             'formatted_punch_out': instance.stop.strftime("%d-%m-%Y %I:%M %p") if instance.stop else None,
         }
 
-class UserSalaryAttendanceListSerializer(serializers.Serializer):
+class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
 
     def to_representation(self, instance):
         date = self.context['date']
