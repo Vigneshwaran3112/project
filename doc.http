@@ -8,7 +8,7 @@ Content-Type: {{ CONTENT_TYPE }}
 Authorization: {{ TOKEN }}
 
 {
- "first_name": "Vignesh",
+ "first_name": "Vigneshh",
  "date_of_joining": "2010-07-30T15:05:00.000Z",
  "date_of_birth": "1995-02-14",
  "is_superuser": false,
@@ -20,7 +20,6 @@ Authorization: {{ TOKEN }}
  "pan_number": "AZ6522n1198811o3",
  "date_of_resignation": null,
  "reason_of_resignation": null,
- "address": "vadapalani",
  "salary_update_date": "2010-07-30T15:05:00.000Z"
 }
 

@@ -115,10 +115,10 @@ class UserSalary(BaseModel):
     date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.per_hour = self.per_day / self.work_hours
-        self.per_minute = self.per_hour / 60
-        self.ot_per_minute = self.ot_per_hour / 60
-        self.work_minutes = self.work_hours * 60
+        self.per_hour = round((self.per_day / self.work_hours),2)
+        self.per_minute = round((self.per_hour / 60),2)
+        self.ot_per_minute = round((self.ot_per_hour / 60),2)
+        self.work_minutes = round((self.work_hours * 60),2)
         super(UserSalary, self).save(*args, **kwargs)
 
     def __str__(self):
