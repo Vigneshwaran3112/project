@@ -5,7 +5,7 @@ import json, os
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet, Count
+from django.db.models import QuerySet, Count, Q
 from django.http.request import RawPostDataException
 
 from rest_framework import generics, viewsets, status
@@ -733,10 +733,12 @@ class UserListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['branch_id'] == 0:
-            user = BaseUser.objects.filter(is_employee=True, is_active=True, is_superuser=False, is_staff=False)
+            user = BaseUser.objects.filter(is_employee=True, is_active=True)
         else:
-            user = BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_superuser=False, is_staff=False, is_employee=True)
-        return user
+            user = BaseUser.objects.filter(branch=self.kwargs['branch_id'], is_active=True, is_employee=True)
+
+        data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
+        return data
 
 
 class AdminUserListAPIView(generics.ListAPIView):
