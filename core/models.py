@@ -91,7 +91,7 @@ class BaseUser(AbstractUser):
     is_employee = models.BooleanField(default=False)
     aadhaar_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
     pan_number = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    address = models.TextField(blank=True)
+    address = models.TextField(blank=True, null=True)
     date_of_resignation = models.DateTimeField(blank=True, null=True)
     reason_of_resignation = models.CharField(max_length=300, unique=True, blank=True, null=True)
 
@@ -174,6 +174,7 @@ class UserSalaryPerDay(BaseModel):
     time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):

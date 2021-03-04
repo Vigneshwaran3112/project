@@ -174,14 +174,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
         
     def to_representation(self, instance):
-        try:
-            salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        except:
-            salary_data = None
-        try:
-            current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
-        except:
-            current_salary = None
+        # try:
+        #     salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        # except:
+        #     salary_data = None
+        # try:
+        #     current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        # except:
+        #     current_salary = None
         if instance.is_superuser == True:
             user_role = 0
         elif instance.is_staff == True:
@@ -203,18 +203,18 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            'salary_id': current_salary.pk if current_salary else None,
-            'per_hour': current_salary.per_hour if current_salary else None,
-            'per_day': current_salary.per_day if current_salary else None,
-            'work_hours': current_salary.work_hours if current_salary else None,
-            'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
-            'date': current_salary.date if current_salary else None,
+            # 'salary_id': current_salary.pk if current_salary else None,
+            # 'per_hour': current_salary.per_hour if current_salary else None,
+            # 'per_day': current_salary.per_day if current_salary else None,
+            # 'work_hours': current_salary.work_hours if current_salary else None,
+            # 'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
+            # 'date': current_salary.date if current_salary else None,
             'employee_role_data': RoleSerializer(instance.employee_role, many=True).data,
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
             'is_active': instance.is_active,
-            'address': instance.address,
-            'salary': salary_data
+            'address': instance.address
+            # 'salary': salary_data
         }
 
 
@@ -322,32 +322,32 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
-class UserSalaryAttendanceSerializer(serializers.Serializer):  # Important
+# class UserSalaryAttendanceSerializer(serializers.Serializer):  # Important
 
-    def to_representation(self, instance):
-        start = self.context['start']
-        stop = self.context['stop']
-        branch_id = self.context['branch_id']
+#     def to_representation(self, instance):
+#         start = self.context['start']
+#         stop = self.context['stop']
+#         branch_id = self.context['branch_id']
 
-        queryset = UserAttendance.objects.filter(branch=branch_id, date__gte=start, date__lte=stop, delete=False)
-        user_daily_salary = queryset.aggregate(user=instance.user, total_salary_price=Coalesce(Sum('salary'), V(0)))
-        user_total_time_spend = queryset.aggregate(user=instance.user, time_spend=Coalesce(Sum('time_spend'), V(0)))
-        user_total_ot = queryset.aggregate(user=instance.user, overall_ot_price=Coalesce(Sum('ot_salary'), V(0)))
-        total_salary = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
-        return {
-            'id': instance.pk,
-            'staff_user': instance.user.pk,
-            'staff_name': instance.user.name,
-            'per_hour': instance.per_hour,
-            'per_day': instance.per_day,
-            'per_minute': instance.per_minute,
-            'work_hours': instance.work_hours,
-            'work_minutes': instance.work_minutes,
-            'ot_per_hour': instance.ot_per_hour,
-            'ot_per_minute': instance.ot_per_minute,
-            'date': instance.date,
-            'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None
-        }
+#         queryset = UserAttendance.objects.filter(branch=branch_id, date__gte=start, date__lte=stop, delete=False)
+#         user_daily_salary = queryset.aggregate(user=instance.user, total_salary_price=Coalesce(Sum('salary'), V(0)))
+#         user_total_time_spend = queryset.aggregate(user=instance.user, time_spend=Coalesce(Sum('time_spend'), V(0)))
+#         user_total_ot = queryset.aggregate(user=instance.user, overall_ot_price=Coalesce(Sum('ot_salary'), V(0)))
+#         total_salary = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
+#         return {
+#             'id': instance.pk,
+#             'staff_user': instance.user.pk,
+#             'staff_name': instance.user.name,
+#             'per_hour': instance.per_hour,
+#             'per_day': instance.per_day,
+#             'per_minute': instance.per_minute,
+#             'work_hours': instance.work_hours,
+#             'work_minutes': instance.work_minutes,
+#             'ot_per_hour': instance.ot_per_hour,
+#             'ot_per_minute': instance.ot_per_minute,
+#             'date': instance.date,
+#             'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None
+#         }
 
 
 class UserSalaryReportSerializer(serializers.Serializer):   # Important
@@ -356,8 +356,9 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
         month = self.context['month']
         year = self.context['year']
         branch_id = self.context['branch_id']
-        
-        queryset_data = UserAttendance.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
+
+        queryset_data = UserSalaryPerDay.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
+        # queryset_data = UserAttendance.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
         user_daily_salary = queryset_data.aggregate( total_salary_price=Coalesce (Sum('salary'), 0))
         user_total_ot = queryset_data.aggregate(overall_ot_price=Coalesce (Sum('ot_salary'), 0))
         total_salary_data = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
@@ -373,25 +374,34 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
 class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Important
 
     def to_representation(self, instance):
-        month = self.context['month']
-        year = self.context['year']
-        user_id = self.context['user_id']
+        # month = self.context['month']
+        # year = self.context['year']
+        # user_id = self.context['user_id']
 
-        queryset =  UserAttendance.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
-        time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
-        salary = queryset.aggregate(overall_salary=Sum('salary'))
-        ot_salary = queryset.aggregate(overall_ot_salary=Sum('ot_salary'))
+        # # queryset = UserSalaryPerDay.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
 
-        time_spend_value = time_spend['overall_time_spend'] if time_spend['overall_time_spend'] else 0
-        salary_value = salary['overall_salary'] if salary['overall_salary'] else 0
-        ot_salary_value = ot_salary['overall_ot_salary'] if ot_salary['overall_ot_salary'] else 0
+
+        # # # queryset =  UserAttendance.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
+        # # time_spend = queryset.aggregate(overall_time_spend=Coalesce (Sum('time_spend'), 0))
+        # # salary = queryset.aggregate(overall_salary=Coalesce (Sum('salary'), 0))
+        # # ot_salary = queryset.aggregate(overall_ot_salary=Coalesce (Sum('ot_salary'), 0))
+
+        # # time_spend_value = time_spend['overall_time_spend']
+        # # salary_value = salary['overall_salary']
+        # # ot_salary_value = ot_salary['overall_ot_salary']
+
+        # print(time_spend_value, instance.time_spend)
+        # print(salary_value, instance.salary)
+        # print(ot_salary_value, instance.ot_salary)
+
 
         return {
+            'pk': instance.pk,
             'date': instance.date,
-            'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),
-            'salary':'Rs{}'.format(salary_value),
-            'ot_salary':'Rs{}'.format(ot_salary_value),
-            'total_salary': 'Rs{}'.format(salary_value + ot_salary_value),
+            'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
+            'salary':'Rs {}'.format(instance.salary),
+            'ot_salary':'Rs {}'.format(instance.ot_salary),
+            'total_salary': 'Rs {}'.format(instance.salary + instance.ot_salary),
             'incentive': 0
         }
 
@@ -412,19 +422,16 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
     def to_representation(self, instance):
         date = self.context['date']
 
-        queryset =  UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False)
-        time_spend = queryset.aggregate(time_spend=Sum('time_spend'))
-        ot_time_spend = queryset.aggregate(ot_time_spend=Sum('ot_time_spend'))
-
-        time_spend_value = time_spend['time_spend'] if time_spend['time_spend'] else 0
-        ot_time_spend = ot_time_spend['ot_time_spend'] if ot_time_spend['ot_time_spend'] else 0
+        queryset =  UserSalaryPerDay.objects.filter(date=date, user=instance.pk, status=True, delete=False)
+        time_spend = queryset.aggregate(time_spend=Coalesce (Sum('time_spend'), 0))
+        ot_time_spend = queryset.aggregate(ot_time_spend=Coalesce (Sum('ot_time_spend'), 0))
 
         return {
             'date': date,
             'user': instance.pk,
             'user_name': instance.get_full_name(),
-            'time_spend': "{:.2f}{}".format(time_spend_value/60, ' Hr'),
-            'ot_time_spend': "{:.2f}{}".format(ot_time_spend/60, ' Hr'),
+            'time_spend': "{:.2f}{}".format(time_spend['time_spend']/60, ' Hr'),
+            'ot_time_spend': "{:.2f}{}".format(ot_time_spend['ot_time_spend']/60, ' Hr'),
             'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False), many=True).data
         }
 
@@ -476,9 +483,9 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend,
-            'salary': instance.salary,
+            # 'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            'ot_salary': instance.ot_salary,
+            # 'ot_salary': instance.ot_salary,
             'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
@@ -498,11 +505,11 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             break_data.save()
         except:
             break_data = 0
-        try:
-            total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
-            grand_salary = total_salary['total']
-        except:
-            grand_salary = 0
+        # try:
+        #     total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
+        #     grand_salary = total_salary['total']
+        # except:
+        #     grand_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
             ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
@@ -518,11 +525,11 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'stop_availability': False if instance.stop else True,
             'time_spend_minuts': instance.time_spend,
             'time_spend_hours': time_spend_hours,
-            'salary': instance.salary,
+            # 'salary': instance.salary,
             'ot_time_spend_minuts': instance.ot_time_spend,
             'ot_time_spend_hours': ot_time_spend_hours,
-            'ot_salary': instance.ot_salary,
-            'grand_total_salary' : grand_salary,
+            # 'ot_salary': instance.ot_salary,
+            # 'grand_total_salary' : grand_salary,
             'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
@@ -971,9 +978,9 @@ class AttendanceSerializer(serializers.Serializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend': time_spend_hours,
-            'salary': instance.salary,
+            # 'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            'ot_salary': instance.ot_salary,
+            # 'ot_salary': instance.ot_salary,
             'existing': True
         }
 
