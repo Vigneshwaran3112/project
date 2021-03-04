@@ -2,6 +2,8 @@ import datetime, decimal
 
 from django.db import models
 
+from django.db.models import Sum
+
 from datetime import date
 
 from django.contrib.auth.models import AbstractUser
@@ -103,13 +105,13 @@ class BaseUser(AbstractUser):
 
 class UserSalary(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries')
-    per_day = models.DecimalField(max_digits=10, decimal_places=2)
-    per_hour = models.DecimalField(max_digits=10, decimal_places=2)
-    per_minute = models.DecimalField(max_digits=10, decimal_places=2)
-    work_hours = models.DecimalField(max_digits=10, decimal_places=2)
-    work_minutes = models.DecimalField(max_digits=10, decimal_places=2)
-    ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
-    ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2)
+    per_day = models.DecimalField(max_digits=10, decimal_places=2)  #avanoda day salary
+    per_hour = models.DecimalField(max_digits=10, decimal_places=2) # avanoda one hr ku evalo salary
+    per_minute = models.DecimalField(max_digits=10, decimal_places=2) # avanoda one min ku evalo salary
+    work_hours = models.DecimalField(max_digits=10, decimal_places=2) ### oru nal ku evelo hr avan work pananum
+    work_minutes = models.DecimalField(max_digits=10, decimal_places=2) # oru nal ku evelo min avan work pananum
+    ot_per_hour = models.DecimalField(max_digits=10, decimal_places=2) # avanoda one hr ku evalo salary
+    ot_per_minute = models.DecimalField(max_digits=10, decimal_places=2) # avanoda one min ku evalo salary
     date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -133,37 +135,91 @@ class UserAttendance(BaseModel):
     ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
+
     def save(self, *args, **kwargs):
         if self.stop:
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
-                # self.time_spend
                 self.salary = user_salary.per_day
-                print(user_salary.ot_per_minute , self.ot_time_spend)
-                print(user_salary.ot_per_minute * self.ot_time_spend)
+                # print(user_salary.ot_per_minute , self.ot_time_spend)
+                # print(user_salary.ot_per_minute * self.ot_time_spend)
                 self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
                 # self.salary = round(day_salary + ot_salary)
                 # self.ot_salary = round((self.time_spend - user_salary.work_minutes) * user_salary.ot_per_minute)
             else:
                 self.salary = round(user_salary.per_minute * self.time_spend)
-
-            # obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date, defaults={'salary': 0.0, 'ot_salary': 0.0, 'ut_time_spend': 0.0},)
-            # obj.salary += 
-            # obj.ot_salary += 
-            # obj.ut_time_spend += 
-            # obj.save()
-
         super(UserAttendance, self).save(*args, **kwargs)
 
+        if self.stop:
+            queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
+            total_time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
+            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date)
+            obj.user = self.user
+            obj.date = self.date
+            obj.time_spend = total_time_spend['overall_time_spend']
+            obj.save()
 
-# class UserSalaryPerDay(BaseModel):
-#     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries')
-#     date = models.DateField()
-#     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-#     ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-#     ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+class UserSalaryPerDay(BaseModel):
+    class DayAttendance(models.IntegerChoices):
+        Absent = 1
+        Present = 2
+        Present_for_Half_Day = 3
+
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_salaries_per_day')
+    date = models.DateField()
+    attendance = models.IntegerField(choices=DayAttendance.choices, default=1)
+    time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
+
+        per_day_salary = user_salary.per_day
+        working_minutes = user_salary.work_minutes
+        a = (working_minutes*75) / 100
+        b = (working_minutes*50) / 100
+
+        #case1
+        if self.time_spend > user_salary.work_minutes:
+            self.ot_time_spend = self.time_spend - user_salary.work_minutes
+            self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
+            self.salary = user_salary.per_day
+            self.attendance = 2
+            self.ut_time_spend = 0
+
+        #case2
+        elif self.time_spend == user_salary.work_minutes:
+            self.attendance = 2
+            self.salary = user_salary.per_day
+            self.ut_time_spend = 0
+            self.ot_salary = 0
+
+        #case3
+        elif self.time_spend >=a:
+            self.attendance = 2
+            self.salary = user_salary.per_day
+            self.ut_time_spend = user_salary.work_minutes - self.time_spend
+            self.ot_salary = 0
+
+        #case4
+        elif self.time_spend >=b:
+            self.attendance = 3
+            self.salary = user_salary.per_day/2
+            self.ot_salary = 0
+            self.ut_time_spend = 0
+        #case5
+        elif self.time_spend < b:
+            self.attendance = 1
+            self.salary = 0
+            self.ot_salary = 0
+            self.ut_time_spend = 0
+
+        super(UserSalaryPerDay, self).save(*args, **kwargs)
 
 
 
