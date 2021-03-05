@@ -185,10 +185,10 @@ class UserSerializer(serializers.ModelSerializer):
             salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
         except:
             salary_data = None
-        # try:
-        #     current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
-        # except:
-        #     current_salary = None
+        try:
+            current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        except:
+            current_salary = None
         if instance.is_superuser == True:
             user_role = 0
         elif instance.is_staff == True:
@@ -210,12 +210,12 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            # 'salary_id': current_salary.pk if current_salary else None,
+            'salary_id': current_salary.pk if current_salary else None,
             # 'per_hour': current_salary.per_hour if current_salary else None,
-            # 'per_day': current_salary.per_day if current_salary else None,
-            # 'work_hours': current_salary.work_hours if current_salary else None,
-            # 'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
-            # 'date': current_salary.date if current_salary else None,
+            'per_day': current_salary.per_day if current_salary else None,
+            'work_hours': current_salary.work_hours if current_salary else None,
+            'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
+            'date': current_salary.date if current_salary else None,
             'employee_role_data': RoleSerializer(instance.employee_role, many=True).data,
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
