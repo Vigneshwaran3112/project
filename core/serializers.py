@@ -181,10 +181,10 @@ class UserSerializer(serializers.ModelSerializer):
         return user
         
     def to_representation(self, instance):
-        # try:
-        #     salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        # except:
-        #     salary_data = None
+        try:
+            salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        except:
+            salary_data = None
         # try:
         #     current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
         # except:
@@ -220,8 +220,8 @@ class UserSerializer(serializers.ModelSerializer):
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
             'is_active': instance.is_active,
-            'address': instance.address
-            # 'salary': salary_data
+            'address': instance.address,
+            'salary': salary_data
         }
 
 
