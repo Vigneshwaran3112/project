@@ -1,4 +1,4 @@
-import datetime, decimal
+import datetime, decimal, math
 
 from django.db import models
 
@@ -188,7 +188,9 @@ class UserSalaryPerDay(BaseModel):
         #case1
         if self.time_spend > user_salary.work_minutes:
             self.ot_time_spend = self.time_spend - user_salary.work_minutes
-            self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
+            quater_of_ot_salary = user_salary.ot_per_hour/4
+            trunc_value = math.trunc(self.ot_time_spend/15)
+            self.ot_salary = quater_of_ot_salary * trunc_value
             self.salary = user_salary.per_day
             self.attendance = 2
             self.ut_time_spend = 0
