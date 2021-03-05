@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
+from django.db.models.expressions import Exists
 from django.db.models.fields import NullBooleanField
 from django.db.models import Sum ,Value as V, Prefetch, Q, query
 from django.db.models.functions import Coalesce
@@ -321,6 +322,8 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
+            # 'is_incharge': True if instance.employee_role.filter(code=1).Exists() else False,
+            'is_incharge': instance.employee_role.filter(code=1).exists(),
             'is_admin': instance.is_staff,
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
@@ -450,7 +453,7 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
             'minutes': time_spend['time_spend'],
             'time_spend': time_spend_hours,
             'ot_time_spend': ot_time_spend_hours,
-            'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False), many=True).data
+            'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False).order_by('-created'), many=True).data
         }
 
 
