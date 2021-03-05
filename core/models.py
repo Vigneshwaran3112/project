@@ -138,8 +138,9 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
+            stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
-            self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
+            self.time_spend = decimal.Decimal((stop_start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
                 self.salary = user_salary.per_day
@@ -228,14 +229,15 @@ class UserSalaryPerDay(BaseModel):
 
 class UserAttendanceBreak(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_attendances_break')
-    start = models.DateTimeField()
-    stop = models.DateTimeField(null=True, blank=True)
+    start = models.TimeField()
+    stop = models.TimeField(null=True, blank=True)
     date = models.DateField()
     time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.stop:
-            self.time_spend = decimal.Decimal((self.stop - self.start).seconds / 60)
+            stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
+            self.time_spend = decimal.Decimal((stop_start).seconds / 60)
         super(UserAttendanceBreak, self).save(*args, **kwargs)
 
 
