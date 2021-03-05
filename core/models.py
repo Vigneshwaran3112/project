@@ -127,8 +127,8 @@ class UserSalary(BaseModel):
 
 class UserAttendance(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_attendances')
-    start = models.DateTimeField()
-    stop = models.DateTimeField(null=True, blank=True)
+    start = models.TimeField()
+    stop = models.TimeField(null=True, blank=True)
     date = models.DateField()
     time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

@@ -420,8 +420,8 @@ class UserAttendanceSerializer(serializers.Serializer):
             'id': instance.pk,
             'punch_in': instance.start,
             'punch_out': instance.stop,
-            'formatted_punch_in': instance.start.strftime("%d-%m-%Y %I:%M %p") if instance.start else None,
-            'formatted_punch_out': instance.stop.strftime("%d-%m-%Y %I:%M %p") if instance.stop else None,
+            'formatted_punch_in': instance.start.strftime("%I:%M %p") if instance.start else None,
+            'formatted_punch_out': instance.stop.strftime("%I:%M %p") if instance.stop else None,
         }
 
 class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
