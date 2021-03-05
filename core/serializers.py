@@ -381,6 +381,10 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
 class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Important
 
     def to_representation(self, instance):
+
+        time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
+
         # month = self.context['month']
         # year = self.context['year']
         # user_id = self.context['user_id']
@@ -401,11 +405,11 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Importa
         # print(salary_value, instance.salary)
         # print(ot_salary_value, instance.ot_salary)
 
-
         return {
             'pk': instance.pk,
             'date': instance.date,
-            'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
+            # 'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
+            'time_spend': time_spend_hours,
             'salary':'Rs {}'.format(instance.salary),
             'ot_salary':'Rs {}'.format(instance.ot_salary),
             'total_salary': 'Rs {}'.format(instance.salary + instance.ot_salary),
@@ -433,12 +437,19 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
         time_spend = queryset.aggregate(time_spend=Coalesce (Sum('time_spend'), 0))
         ot_time_spend = queryset.aggregate(ot_time_spend=Coalesce (Sum('ot_time_spend'), 0))
 
+        time_spend_hours , time_spend_minutes = divmod(time_spend['time_spend'], 60)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
+
+        ot_time_spend_hours , ot_time_spend_minutes = divmod(ot_time_spend['ot_time_spend'], 60)
+        ot_time_spend_hours = '%d:%02d Hr' % (ot_time_spend_hours, ot_time_spend_minutes)
+
         return {
             'date': date,
             'user': instance.pk,
             'user_name': instance.get_full_name(),
-            'time_spend': "{:.2f}{}".format(time_spend['time_spend']/60, ' Hr'),
-            'ot_time_spend': "{:.2f}{}".format(ot_time_spend['ot_time_spend']/60, ' Hr'),
+            'minutes': time_spend['time_spend'],
+            'time_spend': time_spend_hours,
+            'ot_time_spend': ot_time_spend_hours,
             'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False), many=True).data
         }
 
@@ -505,7 +516,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         try:
             break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
             break_data.stop = instance.stop
@@ -519,7 +530,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
         #     grand_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
-            ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
+            ot_time_spend_hours = '%d:%02d Hr' % (ot_hours, ot_minutes)
         except:
             ot_time_spend_hours = None
 
@@ -974,7 +985,7 @@ class AttendanceSerializer(serializers.Serializer):
     def to_representation(self, instance):
         if instance.time_spend:
             time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+            time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         else:
             time_spend_hours = None
             
@@ -997,7 +1008,7 @@ class AttendanceBreakSerializer(serializers.Serializer):
     def to_representation(self, instance):
         if instance.time_spend:
             time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+            time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         else:
             time_spend_hours = None
         return {
