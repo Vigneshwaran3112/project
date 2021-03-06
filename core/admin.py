@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import *
 
+
 admin.site.site_header = "South Indian Coffee"
 admin.site.site_title = "South Indian Coffee Admin Portal"
 admin.site.index_title = "Welcome to South Indian Coffee Admin Portal"
@@ -43,6 +44,7 @@ class GSTAdmin(admin.ModelAdmin):
 @admin.register(Unit)
 class UnitAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'symbol', 'code', )
+
 
 @admin.register(BranchProductClassification)
 class BranchProductClassificationAdmin(admin.ModelAdmin):
@@ -103,31 +105,41 @@ class BulkOrderAdmin(admin.ModelAdmin):
 class BulkOrderItemAdmin(admin.ModelAdmin):
     list_display = ('pk', 'order', 'item', 'quantity', 'price', 'gst_price', 'total', 'total_item_price', )
 
-# @admin.register(ProductBranchMapping)
-# class ProductBranchMappingAdmin(admin.ModelAdmin):
-#     list_display = ('pk' )
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'department', 'classification' )
 
 
+@admin.register(ProductPricingBatch)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'product', 'mrp_price', 'Buying_price', 'selling_price', 'date' )
+
+
+@admin.register(ProductInventory)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'product', 'date', 'received', 'sell', 'on_hand' )
+
+
 admin.site.register(ProductBranchMapping)
 
-# admin.site.register(Product)
 
 admin.site.register(FreeBillCustomer)
 
-# admin.site.register(SubBranch)
 
 @admin.register(SubBranch)
 class SubBranchAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
 
+
 admin.site.register(Country)
+
+
 admin.site.register(State)
-# admin.site.register(City)
+
+
 admin.site.register(UserAttendanceBreak)
+
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
@@ -143,19 +155,22 @@ class CreditSaleCustomerAdmin(admin.ModelAdmin):
 class CreditSalesAdmin(admin.ModelAdmin):
     list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
 
+
 admin.site.register(BranchExpenses)
+
 
 admin.site.register(PaymentMode)
 
+
 admin.site.register(BranchEmployeeIncentive)
+
+
 admin.site.register(BranchDepartmentIncentive)
 
-admin.site.register(UserSalaryPerDay)
 
+admin.site.register(UserSalaryPerDay)
 
 
 @admin.register(SlickposProducts)
 class SlickposProductsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'slickpos_id', 'name', 'category_id', 'taxgroup_id', 'marked_price', 'register_id', 'variant_group_id', 'addon_group_id', 'order_id')
-
-# admin.site.register(SlickposProducts)
