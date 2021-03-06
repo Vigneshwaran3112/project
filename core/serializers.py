@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from django.db import transaction
+from django.db.models.expressions import Exists
 from django.db.models.fields import NullBooleanField
 from django.db.models import Sum ,Value as V, Prefetch, Q, query
 from django.db.models.functions import Coalesce
@@ -181,14 +182,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
         
     def to_representation(self, instance):
-        # try:
-        #     salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
-        # except:
-        #     salary_data = None
-        # try:
-        #     current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
-        # except:
-        #     current_salary = None
+        try:
+            salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
+        except:
+            salary_data = None
+        try:
+            current_salary = UserSalary.objects.filter(user=instance.pk, delete=False).latest('date')
+        except:
+            current_salary = None
         if instance.is_superuser == True:
             user_role = 0
         elif instance.is_staff == True:
@@ -202,7 +203,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name': instance.first_name,
             'email': instance.email,
             'date_of_joining': instance.date_of_joining,
-            'formatted_date_of_joining': instance.date_of_joining.strftime("%d-%m-%Y %I:%M %p") if instance.date_of_joining else None,
+            'formatted_date_of_joining': instance.date_of_joining.strftime("%d-%m-%Y") if instance.date_of_joining else None,
             'phone': instance.phone,
             'branch': instance.branch.pk if instance.branch else None,
             'branch_name': instance.branch.name if instance.branch else None,
@@ -210,18 +211,18 @@ class UserSerializer(serializers.ModelSerializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            # 'salary_id': current_salary.pk if current_salary else None,
+            'salary_id': current_salary.pk if current_salary else None,
             # 'per_hour': current_salary.per_hour if current_salary else None,
-            # 'per_day': current_salary.per_day if current_salary else None,
-            # 'work_hours': current_salary.work_hours if current_salary else None,
-            # 'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
-            # 'date': current_salary.date if current_salary else None,
+            'per_day': current_salary.per_day if current_salary else None,
+            'work_hours': current_salary.work_hours if current_salary else None,
+            'ot_per_hour': current_salary.ot_per_hour if current_salary else None,
+            'date': current_salary.date if current_salary else None,
             'employee_role_data': RoleSerializer(instance.employee_role, many=True).data,
             'employee_role': instance.employee_role.values_list('pk', flat=True).order_by('pk'),
             'user_role': user_role,
             'is_active': instance.is_active,
-            'address': instance.address
-            # 'salary': salary_data
+            'address': instance.address,
+            'salary': salary_data
         }
 
 
@@ -321,6 +322,8 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
+            # 'is_incharge': True if instance.employee_role.filter(code=1).Exists() else False,
+            'is_incharge': instance.employee_role.filter(code=1).exists(),
             'is_admin': instance.is_staff,
             'date_of_joining': instance.date_of_joining,
             'created': instance.date_joined,
@@ -381,6 +384,10 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
 class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Important
 
     def to_representation(self, instance):
+
+        time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
+
         # month = self.context['month']
         # year = self.context['year']
         # user_id = self.context['user_id']
@@ -401,11 +408,11 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Importa
         # print(salary_value, instance.salary)
         # print(ot_salary_value, instance.ot_salary)
 
-
         return {
             'pk': instance.pk,
             'date': instance.date,
-            'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
+            # 'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
+            'time_spend': time_spend_hours,
             'salary':'Rs {}'.format(instance.salary),
             'ot_salary':'Rs {}'.format(instance.ot_salary),
             'total_salary': 'Rs {}'.format(instance.salary + instance.ot_salary),
@@ -420,8 +427,8 @@ class UserAttendanceSerializer(serializers.Serializer):
             'id': instance.pk,
             'punch_in': instance.start,
             'punch_out': instance.stop,
-            'formatted_punch_in': instance.start.strftime("%d-%m-%Y %I:%M %p") if instance.start else None,
-            'formatted_punch_out': instance.stop.strftime("%d-%m-%Y %I:%M %p") if instance.stop else None,
+            'formatted_punch_in': instance.start.strftime("%I:%M %p") if instance.start else None,
+            'formatted_punch_out': instance.stop.strftime("%I:%M %p") if instance.stop else None,
         }
 
 class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
@@ -433,13 +440,20 @@ class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
         time_spend = queryset.aggregate(time_spend=Coalesce (Sum('time_spend'), 0))
         ot_time_spend = queryset.aggregate(ot_time_spend=Coalesce (Sum('ot_time_spend'), 0))
 
+        time_spend_hours , time_spend_minutes = divmod(time_spend['time_spend'], 60)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
+
+        ot_time_spend_hours , ot_time_spend_minutes = divmod(ot_time_spend['ot_time_spend'], 60)
+        ot_time_spend_hours = '%d:%02d Hr' % (ot_time_spend_hours, ot_time_spend_minutes)
+
         return {
             'date': date,
             'user': instance.pk,
             'user_name': instance.get_full_name(),
-            'time_spend': "{:.2f}{}".format(time_spend['time_spend']/60, ' Hr'),
-            'ot_time_spend': "{:.2f}{}".format(ot_time_spend['ot_time_spend']/60, ' Hr'),
-            'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False), many=True).data
+            'minutes': time_spend['time_spend'],
+            'time_spend': time_spend_hours,
+            'ot_time_spend': ot_time_spend_hours,
+            'staff_attendance': UserAttendanceSerializer(UserAttendance.objects.filter(date=date, user=instance.pk, status=True, delete=False).order_by('-created'), many=True).data
         }
 
 
@@ -505,7 +519,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-        time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+        time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         try:
             break_data = UserAttendanceBreak.objects.filter(date=instance.date, stop=None, user=instance.user).latest('created')
             break_data.stop = instance.stop
@@ -519,7 +533,7 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
         #     grand_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
-            ot_time_spend_hours = '%d:%02d' % (ot_hours, ot_minutes)
+            ot_time_spend_hours = '%d:%02d Hr' % (ot_hours, ot_minutes)
         except:
             ot_time_spend_hours = None
 
@@ -974,7 +988,7 @@ class AttendanceSerializer(serializers.Serializer):
     def to_representation(self, instance):
         if instance.time_spend:
             time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+            time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         else:
             time_spend_hours = None
             
@@ -997,7 +1011,7 @@ class AttendanceBreakSerializer(serializers.Serializer):
     def to_representation(self, instance):
         if instance.time_spend:
             time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
-            time_spend_hours = '%d:%02d' % (time_spend_hours, time_spend_minutes)
+            time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         else:
             time_spend_hours = None
         return {
