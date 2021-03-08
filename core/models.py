@@ -188,7 +188,7 @@ class UserSalaryPerDay(BaseModel):
         a = (working_minutes*75) / 100
         b = (working_minutes*50) / 100
 
-        if self.time_spend < user_salary.work_minutes:
+        if self.time_spend <= user_salary.work_minutes:
             self.ot_salary = 0
             self.ot_time_spend = 0
 
