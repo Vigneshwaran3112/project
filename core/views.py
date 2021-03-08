@@ -783,3 +783,10 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
 class VendorAPIView(viewsets.ModelViewSet):
     queryset = Vendor.objects.filter(delete=False)
     serializer_class = VendorSerializer
+
+
+class BranchProductList(generics.ListAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product

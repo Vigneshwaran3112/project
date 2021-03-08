@@ -1212,3 +1212,4 @@ class VendorSerializer(serializers.ModelSerializer):
             'address': instance.address,
             'description': instance.description
         }
+
