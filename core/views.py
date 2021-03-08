@@ -553,9 +553,6 @@ class BranchProductMappingCreate(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         print(serializer.validated_data['product'])
         product_mapping.product.add(*serializer.validated_data['product'])
-        # print(request.data)
-        # serializer = self.serializer_class(product_mapping, request.data)
-        # serializer.is_valid(raise_exception=True)
         product_mapping.save()
         serializer_data = ProductBranchMappingSerializer(product_mapping).data
         return Response(serializer_data, status=status.HTTP_201_CREATED)
@@ -786,7 +783,6 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
         return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False), many=True).data)
 
 
-
 class VendorAPIView(viewsets.ModelViewSet):
     queryset = Vendor.objects.filter(delete=False)
     serializer_class = VendorSerializer
@@ -796,4 +792,9 @@ class BranchProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product
+        if self.kwargs['classification']==0:
+            products = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        else:
+            query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            products = query.filter(classification=self.kwargs['classification'])
+        return products
