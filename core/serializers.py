@@ -1209,7 +1209,6 @@ class VendorSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'name': instance.name,
             'company_name': instance.company_name,
-            'address': instance.address,
-            'description': instance.description
+            'address': instance.address
         }
 
