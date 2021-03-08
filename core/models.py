@@ -528,4 +528,10 @@ class Vendor(BaseModel):
     name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)
     address = models.TextField(blank=True)
+
+
+class OilConcumption(BaseModel):
+    name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
+    address = models.TextField(blank=True)
     description = models.CharField(max_length=100)
