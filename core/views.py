@@ -558,6 +558,19 @@ class BranchProductMappingCreate(generics.CreateAPIView):
         return Response(serializer_data, status=status.HTTP_201_CREATED)
 
 
+class BranchProductMappingDelete(generics.CreateAPIView):
+    serializer_class = ProductBranchMappingSerializer
+
+    def create(self, request, *args, **kwargs):
+        product_mapping= ProductBranchMapping.objects.get(branch=self.request.user.branch)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data['product'])
+        product_mapping.product.remove(*serializer.validated_data['product'])
+        product_mapping.save()
+        serializer_data = ProductBranchMappingSerializer(product_mapping).data
+        return Response(serializer_data, status=status.HTTP_201_CREATED)
+
 # class BranchProductMappingUpdate(generics.UpdateAPIView):
 #     queryset = ProductBranchMapping.objects.exclude(delete=True).order_by('pk')
 #     serializer_class = ProductBranchMappingSerializer
