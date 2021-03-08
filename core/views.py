@@ -529,35 +529,40 @@ class CustomerListAPIView(generics.ListAPIView):
     serializer_class = CustomerSerializer
 
 
-class BranchProductMappingListCreate(generics.CreateAPIView):
-    queryset = ProductBranchMapping.objects.exclude(delete=True).order_by('pk')
+class BranchProductMappingList(generics.ListAPIView):
     serializer_class = ProductBranchMappingSerializer
 
-    def create(self, request, branch_id):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            product_mapping = ProductBranchMapping.objects.get(branch=Branch.objects.get(pk=branch_id, delete=False))
-            product_mapping.product.add(*serializer.validated_data['product'])
-        except ProductBranchMapping.DoesNotExist:
-            product_mapping = ProductBranchMapping.objects.create(branch=Branch.objects.get(pk=branch_id, delete=False))
-            product_mapping.product.add(*serializer.validated_data['product'])
-            product_mapping = ProductBranchMapping.objects.get(branch=Branch.objects.get(pk=branch_id, delete=False))
-        serializer_data = self.serializer_class(product_mapping).data
-        return Response(serializer_data, status=status.HTTP_201_CREATED)
+    def list(self, request, classification):
+        product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.values_list('pk', flat=True)
+        if self.kwargs['classification']==0:
+            product = Product.objects.filter(classification=1, status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+        else:
+            product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+        return Response(ProductSerializer(product.exclude(pk__in=product_mapping, delete=True), many=True).data, status=status.HTTP_201_CREATED)
 
 
-class BranchProductMappingUpdate(generics.UpdateAPIView):
-    queryset = ProductBranchMapping.objects.exclude(delete=True).order_by('pk')
+class BranchProductMappingCreate(generics.CreateAPIView):
     serializer_class = ProductBranchMappingSerializer
 
-    def update(self, request, branch_id):
-        serializer = self.get_serializer(data=request.data)
+    def create(self, request):
+        product_mapping, created = ProductBranchMapping.objects.get_or_create(branch=self.request.user.branch)
+        serializer = self.serializer_class(product_mapping, request.data)
         serializer.is_valid(raise_exception=True)
-        product_mapping = ProductBranchMapping.objects.get(branch=Branch.objects.get(pk=branch_id, delete=False))
-        product_mapping.product.remove(*serializer.validated_data['product'])
-        serializer_data = ProductBranchMappingSerializer(product_mapping).data
-        return Response(serializer_data, status=status.HTTP_201_CREATED)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# class BranchProductMappingUpdate(generics.UpdateAPIView):
+#     queryset = ProductBranchMapping.objects.exclude(delete=True).order_by('pk')
+#     serializer_class = ProductBranchMappingSerializer
+
+#     def update(self, request, branch_id):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         product_mapping = ProductBranchMapping.objects.get(branch=Branch.objects.get(pk=branch_id, delete=False))
+#         product_mapping.product.remove(*serializer.validated_data['product'])
+#         serializer_data = ProductBranchMappingSerializer(product_mapping).data
+#         return Response(serializer_data, status=status.HTTP_201_CREATED)
 
 
 class ComplaintStatusViewSet(viewsets.ModelViewSet):

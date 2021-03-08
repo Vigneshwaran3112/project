@@ -917,12 +917,12 @@ class ProductBranchMappingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductBranchMapping
-        exclude = ['delete', 'branch']
+        exclude = ['delete', 'branch', 'status']
 
-    def to_representation(self, instance):
-        return{
-            'product': ProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
-        }
+    # def to_representation(self, instance):
+    #     return{
+    #         'product': ProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
+    #     }
     
 
 class ComplaintStatusSerializer(serializers.ModelSerializer):
