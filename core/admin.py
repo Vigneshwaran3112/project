@@ -176,3 +176,8 @@ class UserSalaryPerDayAdmin(admin.ModelAdmin):
 @admin.register(SlickposProducts)
 class SlickposProductsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'slickpos_id', 'name', 'category_id', 'taxgroup_id', 'marked_price', 'register_id', 'variant_group_id', 'addon_group_id', 'order_id')
+
+
+@admin.register(Vendor)
+class VendorAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'company_name', 'address')

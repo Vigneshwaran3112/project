@@ -518,3 +518,10 @@ class SlickposProducts(BaseModel):
     variant_group_id = models.CharField(max_length=100, null=True, blank=True)
     addon_group_id = models.CharField(max_length=100, null=True, blank=True)
     order_id = models.CharField(max_length=100, null=True, blank=True)
+
+
+class Vendor(BaseModel):
+    name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
+    address = models.TextField(blank=True)
+    description = models.CharField(max_length=100)

@@ -774,3 +774,9 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
             formated_data = dict(data)
             BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(incentive=formated_data['incentive'])
         return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False), many=True).data)
+
+
+
+class VendorAPIView(viewsets.ModelViewSet):
+    queryset = Vendor.objects.filter(delete=False)
+    serializer_class = VendorSerializer
