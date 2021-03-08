@@ -110,4 +110,7 @@ urlpatterns = [
     path('branch_incentive_list/<int:pk>/', views.BranchIncentiveListAPIView.as_view()),    
     path('branch_incentive_update/<int:pk>/', views.BranchIncentiveUpdateAPIView.as_view()),
 
+    path('branch_product', views.BranchProductList.as_view()),
+
+
 ]
