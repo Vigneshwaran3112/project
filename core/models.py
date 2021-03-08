@@ -138,6 +138,7 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
+            print('hai')
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
             self.time_spend = decimal.Decimal((stop_start).seconds / 60)
@@ -151,6 +152,7 @@ class UserAttendance(BaseModel):
 
         if self.stop:
             queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
+            print(queryset)
             total_time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
             obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date)
             obj.user = self.user
