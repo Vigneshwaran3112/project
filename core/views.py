@@ -297,7 +297,10 @@ class UserPunchUpdateAPIView(generics.UpdateAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         for data in serializer.validated_data['data']:
-            attendance_data = UserAttendance.objects.filter(pk=data['id']).update(start=data['start'], stop=data['stop'])
+            attendance_data = UserAttendance.objects.get(pk=data['id'])
+            attendance_data.start=data['start']
+            attendance_data.stop=data['stop']
+            attendance_data.save()
         return Response({'message': 'Updated Successfully'}, status=status.HTTP_202_ACCEPTED)
 
 
@@ -535,7 +538,8 @@ class BranchProductMappingList(generics.ListAPIView):
     def list(self, request, classification):
         product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.values_list('pk', flat=True)
         if self.kwargs['classification']==0:
-            product = Product.objects.filter(classification=1, status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+            product = Product.objects.filter(classification__in=[2,3] , status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+            print(product)
         else:
             product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         return Response(ProductSerializer(product.exclude(pk__in=product_mapping, delete=True), many=True).data, status=status.HTTP_201_CREATED)
