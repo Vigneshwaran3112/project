@@ -155,13 +155,11 @@ class UserAttendance(BaseModel):
 
         if self.stop:
             queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
-            total_time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
-            # ot_total_time_spend = queryset.aggregate(overall_ot_time_spend=Coalesce(Sum('ot_time_spend'), V(0)))
+            total_time_spend = queryset.aggregate(overall_time_spend=Coalesce(Sum('time_spend'), V(0)))
             obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date) 
+            obj.time_spend = total_time_spend['overall_time_spend']
             obj.user = self.user
             obj.date = self.date
-            obj.time_spend = total_time_spend['overall_time_spend']
-            # obj.ot_time_spend = ot_total_time_spend['overall_ot_time_spend']
             obj.save()
 
 
@@ -183,10 +181,9 @@ class UserSalaryPerDay(BaseModel):
     def save(self, *args, **kwargs):
         user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
 
-        per_day_salary = user_salary.per_day
         working_minutes = user_salary.work_minutes
-        a = (working_minutes*75) / 100
-        b = (working_minutes*50) / 100
+        a = (working_minutes*75) / 100   # 3/4 of working hours
+        b = (working_minutes*50) / 100   # 1/2 of working hours
 
         if self.time_spend <= user_salary.work_minutes:
             self.ot_salary = 0
@@ -207,26 +204,23 @@ class UserSalaryPerDay(BaseModel):
             self.attendance = 2
             self.salary = user_salary.per_day
             self.ut_time_spend = 0
-            self.ot_salary = 0
 
         #case3
         elif self.time_spend >=a:
             self.attendance = 2
             self.salary = user_salary.per_day
             self.ut_time_spend = user_salary.work_minutes - self.time_spend
-            self.ot_salary = 0
 
         #case4
         elif self.time_spend >=b:
             self.attendance = 3
             self.salary = user_salary.per_day/2
-            self.ot_salary = 0
             self.ut_time_spend = 0
+
         #case5
         elif self.time_spend < b:
             self.attendance = 1
             self.salary = 0
-            self.ot_salary = 0
             self.ut_time_spend = 0
 
         super(UserSalaryPerDay, self).save(*args, **kwargs)
