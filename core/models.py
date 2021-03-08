@@ -2,11 +2,13 @@ import datetime, decimal, math
 
 from django.db import models
 
-from django.db.models import Sum
+from django.db.models import Sum, Value as V
 
 from datetime import date
 
 from django.contrib.auth.models import AbstractUser
+
+from django.db.models.functions import Coalesce
 
 
 class BaseModel(models.Model):
@@ -138,7 +140,6 @@ class UserAttendance(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.stop:
-            print('hai')
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
             self.time_spend = decimal.Decimal((stop_start).seconds / 60)
@@ -152,12 +153,13 @@ class UserAttendance(BaseModel):
 
         if self.stop:
             queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
-            print(queryset)
             total_time_spend = queryset.aggregate(overall_time_spend=Sum('time_spend'))
-            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date)
+            # ot_total_time_spend = queryset.aggregate(overall_ot_time_spend=Coalesce(Sum('ot_time_spend'), V(0)))
+            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date) 
             obj.user = self.user
             obj.date = self.date
             obj.time_spend = total_time_spend['overall_time_spend']
+            # obj.ot_time_spend = ot_total_time_spend['overall_ot_time_spend']
             obj.save()
 
 
