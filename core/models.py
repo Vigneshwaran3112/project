@@ -148,6 +148,8 @@ class UserAttendance(BaseModel):
                 self.salary = user_salary.per_day
                 self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
             else:
+                self.ot_time_spend = 0
+                self.ot_salary = 0
                 self.salary = round(user_salary.per_minute * self.time_spend)
         super(UserAttendance, self).save(*args, **kwargs)
 
@@ -173,10 +175,10 @@ class UserSalaryPerDay(BaseModel):
     date = models.DateField()
     attendance = models.IntegerField(choices=DayAttendance.choices, default=1)
     time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
-    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
 
     def save(self, *args, **kwargs):
         user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
@@ -185,6 +187,10 @@ class UserSalaryPerDay(BaseModel):
         working_minutes = user_salary.work_minutes
         a = (working_minutes*75) / 100
         b = (working_minutes*50) / 100
+
+        if self.time_spend < user_salary.work_minutes:
+            self.ot_salary = 0
+            self.ot_time_spend = 0
 
         #case1
         if self.time_spend > user_salary.work_minutes:
