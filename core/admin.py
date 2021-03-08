@@ -121,10 +121,14 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'product', 'date', 'received', 'sell', 'on_hand' )
 
 
-admin.site.register(ProductBranchMapping)
+@admin.register(ProductBranchMapping)
+class ProductBranchMappingAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch')
 
 
-admin.site.register(FreeBillCustomer)
+@admin.register(FreeBillCustomer)
+class FreeBillCustomerAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'description')
 
 
 @admin.register(SubBranch)
@@ -132,13 +136,19 @@ class SubBranchAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
 
 
-admin.site.register(Country)
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'iso3', 'iso2', 'phone_code', 'capital', 'currency')
 
 
-admin.site.register(State)
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'country', 'name', 'state_code')
 
 
-admin.site.register(UserAttendanceBreak)
+@admin.register(UserAttendanceBreak)
+class UserAttendanceBreakAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'start', 'stop', 'date', 'time_spend')
 
 
 @admin.register(City)
@@ -156,16 +166,24 @@ class CreditSalesAdmin(admin.ModelAdmin):
     list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
 
 
-admin.site.register(BranchExpenses)
+@admin.register(BranchExpenses)
+class BranchExpensesAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'description', 'code' )
 
 
-admin.site.register(PaymentMode)
+@admin.register(PaymentMode)
+class PaymentModeAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'description', 'code' )
 
 
-admin.site.register(BranchEmployeeIncentive)
+@admin.register(BranchEmployeeIncentive)
+class BranchEmployeeIncentiveAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'employee_role')
 
 
-admin.site.register(BranchDepartmentIncentive)
+@admin.register(BranchDepartmentIncentive)
+class BranchDepartmentIncentiveAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'role', 'department', 'incentive')
 
 
 @admin.register(UserSalaryPerDay)
