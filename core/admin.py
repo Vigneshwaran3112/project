@@ -168,7 +168,9 @@ admin.site.register(BranchEmployeeIncentive)
 admin.site.register(BranchDepartmentIncentive)
 
 
-admin.site.register(UserSalaryPerDay)
+@admin.register(UserSalaryPerDay)
+class UserSalaryPerDayAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'date', 'attendance', 'time_spend', 'salary', 'ot_salary', 'ot_time_spend', 'ut_time_spend')
 
 
 @admin.register(SlickposProducts)
