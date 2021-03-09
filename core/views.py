@@ -395,7 +395,7 @@ class ProductListCreate(generics.ListCreateAPIView):
         if self.kwargs['classification']==0:
             product = Product.objects.filter( status=True, delete=False).order_by('-id')
         else:
-            product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).order_by('-id')
+            product = Product.objects.filter(classification__code=self.kwargs['classification'], status=True, delete=False).order_by('-id')
         return product
 
 
@@ -540,7 +540,7 @@ class BranchProductMappingList(generics.ListAPIView):
         if self.kwargs['classification']==0:
             product = Product.objects.filter(classification__in=[2,3,5] , status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         else:
-            product = Product.objects.filter(classification=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+            product = Product.objects.filter(classification__code=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         return Response(ProductSerializer(product.exclude(pk__in=product_mapping, delete=True), many=True).data, status=status.HTTP_201_CREATED)
 
 
@@ -805,5 +805,5 @@ class BranchProductList(generics.ListAPIView):
             products = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
         else:
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-            products = query.filter(classification=self.kwargs['classification'])
+            products = query.filter(classification__code=self.kwargs['classification'])
         return products
