@@ -108,7 +108,7 @@ class BulkOrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name','unit', 'department', 'classification' )
+    list_display = ('pk', 'name', 'unit', 'department', 'classification' )
 
 
 @admin.register(ProductPricingBatch)
