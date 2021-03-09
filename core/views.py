@@ -807,3 +807,16 @@ class BranchProductList(generics.ListAPIView):
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
             products = query.filter(classification__code=self.kwargs['classification'])
         return products
+
+
+class InventoryRawProductList(generics.ListAPIView):
+    serializer_class = DailySheetInventoryListSerializer
+
+    def list(self, request, date):
+        # context = {'store': store_id, 'start': start, 'stop': stop}
+
+        user = Branch.objects.get(pk= self.request.user.branch.pk)
+
+        return Response({
+            'inventory': DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context = {'branch': self.request.user.branch.pk, 'date': date}).data,
+        })

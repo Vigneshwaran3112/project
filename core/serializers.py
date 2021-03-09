@@ -1,3 +1,4 @@
+from decimal import Context
 from django.contrib.auth import authenticate
 from django.core.validators import validate_email, validate_integer
 from django.core.exceptions import ValidationError
@@ -1213,3 +1214,40 @@ class VendorSerializer(serializers.ModelSerializer):
             'address': instance.address
         }
 
+
+
+class InventoryDataListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        branch = self.context['branch']
+        date = self.context['date']
+
+        for i in range(4):
+            print(i)
+            if i==0:
+                name = "raw_products"
+                completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()
+            if i==1:
+                name = "operational_products"
+                completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()
+
+        return {
+            'name': name,
+            'completed_status': completed_status
+        }
+
+
+class DailySheetInventoryListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        branch = self.context['branch']
+        date = self.context['date']
+        print(branch)
+        return {
+            'name': "inventory",
+            'total_count': 0,
+            'completed_count': 0,
+            'sub_menu': InventoryDataListSerializer(Branch.objects.filter(pk=branch), context={'branch': branch, 'date': date}, many=True).data,
+            # 'completed_count': DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context = {'branch': self.request.user.branch.pk, 'date': date}).data,
+
+        }

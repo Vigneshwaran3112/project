@@ -76,6 +76,10 @@ urlpatterns = [
     path('user_list/<int:branch_id>/', views.UserListAPIView.as_view()),
     path('admin_user/', views.AdminUserListAPIView.as_view()),
     
+    
+    path('daily_sheet/<str:date>/', views.InventoryRawProductList.as_view()),
+
+
     path('order_status/', views.OrderStatusListAPIView.as_view()),
     path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
     
