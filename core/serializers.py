@@ -711,6 +711,7 @@ class ProductRecipeItemSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    classification = serializers.IntegerField()
 
     class Meta:
         model = Product
