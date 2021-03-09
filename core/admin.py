@@ -199,3 +199,8 @@ class SlickposProductsAdmin(admin.ModelAdmin):
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'company_name', 'address')
+
+
+@admin.register(InventoryControl)
+class InventoryControlAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'product', 'opening_stock', 'closing_stock', 'received_stock', 'date')

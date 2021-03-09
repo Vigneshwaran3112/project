@@ -539,7 +539,7 @@ class Vendor(BaseModel):
     address = models.TextField(blank=True)
 
 
-class OilConcumption(BaseModel):
+class OilConsumption(BaseModel):
     name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)
     address = models.TextField(blank=True)
