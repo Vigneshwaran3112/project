@@ -356,8 +356,7 @@ class ProductInventory(BaseModel):
 
 
     def save(self, *args, **kwargs):
-        if self.sell:
-            self.on_hand = decimal.Decimal((self.received - self.taken))
+        self.on_hand = decimal.Decimal((self.received - self.taken))
         super(ProductInventory, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -367,11 +366,16 @@ class ProductInventory(BaseModel):
 class InventoryControl(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    opening_stock = models.PositiveIntegerField(null=True, blank=True)
-    closing_stock = models.PositiveIntegerField(null=True, blank=True)
-    received_stock = models.PositiveIntegerField(null=True, blank=True)
+    opening_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
+    closing_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
+    received_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     date = models.DateTimeField()
 
+    def save(self, *args, **kwargs):
+        data = ProductInventory.objects.get(branch=self.branch, product=self.product)
+        data.taken += self.closing_stock
+        data.save()
+        super(InventoryControl, self).save(*args, **kwargs)
 
 
 class ComplaintStatus(BaseModel):
