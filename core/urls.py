@@ -54,8 +54,8 @@ urlpatterns = [
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
 
-    path('product_list/<int:classification>/', views.ProductListCreate.as_view()),
-    path('product_create/', views.ProductListCreate.as_view()),
+    path('product_list/<int:classification>/', views.ProductList.as_view()),
+    path('product_create/', views.ProductCreate.as_view()),
     path('product/<int:pk>/', views.ProductRetriveUpdateDelete.as_view()),
 
     path('branch_specific_wrongbill/<int:pk>/', views.BranchSpecificWrongBillAPIView.as_view()),

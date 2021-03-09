@@ -337,7 +337,7 @@ class ProductPricingBatch(BaseModel):
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        # self.product_unique_id = str(self.product.id) + str(int(self.datetime.datetime.utcnow().timestamp()))
+        self.product_unique_id = str(self.product.id) + str(int(datetime.datetime.utcnow().timestamp()))
         data, created = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
         data.save()
@@ -509,6 +509,7 @@ class ElectricBill(BaseModel):
     sub_branch = models.ForeignKey(SubBranch, blank=True, on_delete=models.CASCADE, related_name='sub_branch_electric_bill')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_EB') 
     date = models.DateTimeField()
 
     def __str__(self):
