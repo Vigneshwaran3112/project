@@ -509,6 +509,7 @@ class ElectricBill(BaseModel):
     sub_branch = models.ForeignKey(SubBranch, blank=True, on_delete=models.CASCADE, related_name='sub_branch_electric_bill')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_EB') 
     date = models.DateTimeField()
 
     def __str__(self):

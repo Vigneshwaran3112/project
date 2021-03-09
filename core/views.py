@@ -388,7 +388,7 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
         return Response({'message':'recipe item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class ProductList(generics.ListCreateAPIView):
+class ProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
