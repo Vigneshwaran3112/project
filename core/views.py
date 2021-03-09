@@ -558,18 +558,14 @@ class BranchProductMappingCreate(generics.CreateAPIView):
         return Response(serializer_data, status=status.HTTP_201_CREATED)
 
 
-class BranchProductMappingDelete(generics.CreateAPIView):
+class BranchProductMappingDelete(generics.DestroyAPIView):
     serializer_class = ProductBranchMappingSerializer
 
-    def create(self, request, *args, **kwargs):
+    def destroy(self, request, pk):
         product_mapping= ProductBranchMapping.objects.get(branch=self.request.user.branch)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data['product'])
-        product_mapping.product.remove(*serializer.validated_data['product'])
+        product_mapping.product.remove(pk)
         product_mapping.save()
-        serializer_data = ProductBranchMappingSerializer(product_mapping).data
-        return Response(serializer_data, status=status.HTTP_201_CREATED)
+        return Response({'message':'product removed deleted sucessfully'}, status=status.HTTP_200_OK)
 
 # class BranchProductMappingUpdate(generics.UpdateAPIView):
 #     queryset = ProductBranchMapping.objects.exclude(delete=True).order_by('pk')
