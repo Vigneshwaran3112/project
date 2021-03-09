@@ -331,6 +331,7 @@ class ProductPricingBatch(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    product_unique_id = models.CharField(max_length=100, null=True, blank=True)
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     date = models.DateTimeField()
@@ -338,10 +339,12 @@ class ProductPricingBatch(BaseModel):
     def save(self, *args, **kwargs):
         data = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
-        super(UserAttendanceBreak, self).save(*args, **kwargs)
+        data.save()
+        self.product_unique_id = str(self.product) + str(int(self.datetime.datetime.utcnow().timestamp()))
+        super(ProductPricingBatch, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.branch.name} - {self.product.name}'
+        return f'{self.branch.name} - {self.product_unique_id}'
 
 
 class ProductInventory(BaseModel):
@@ -543,7 +546,7 @@ class Vendor(BaseModel):
     address = models.TextField(blank=True)
 
 
-class OilConcumption(BaseModel):
+class OilConsumption(BaseModel):
     name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)
     address = models.TextField(blank=True)
