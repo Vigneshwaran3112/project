@@ -340,7 +340,7 @@ class ProductPricingBatch(BaseModel):
         data = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
         data.save()
-        self.product_unique_id = str(self.product) + str(int(self.datetime.datetime.utcnow().timestamp()))
+        self.product_unique_id = str(self.product.id) + str(int(self.datetime.datetime.utcnow().timestamp()))
         super(ProductPricingBatch, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -356,8 +356,7 @@ class ProductInventory(BaseModel):
 
 
     def save(self, *args, **kwargs):
-        if self.sell:
-            self.on_hand = decimal.Decimal((self.received - self.taken))
+        self.on_hand = decimal.Decimal((self.received - self.taken))
         super(ProductInventory, self).save(*args, **kwargs)
 
     def __str__(self):
