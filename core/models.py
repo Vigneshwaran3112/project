@@ -332,7 +332,6 @@ class ProductPricingBatch(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
-    # selling_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     date = models.DateTimeField()
 
     def __str__(self):
@@ -342,11 +341,10 @@ class ProductPricingBatch(BaseModel):
 class ProductInventory(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    # product_batch = models.ManyToManyField(ProductPricingBatch)
-    date = models.DateTimeField()
     received = models.PositiveIntegerField(null=True, blank=True)
     taken = models.PositiveIntegerField(null=True, blank=True)
     on_hand = models.PositiveIntegerField(null=True, blank=True)
+    date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
         if self.sell:

@@ -1077,7 +1077,7 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
             'product_name': instance.product.name,
             'mrp_price': instance.mrp_price,
             'Buying_price': instance.Buying_price,
-            'selling_price': instance.selling_price,
+            # 'selling_price': instance.selling_price,
             'date': instance.date,
             'created': instance.created
         }
