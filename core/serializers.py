@@ -1066,7 +1066,7 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
-        exclude = ['delete', 'branch', 'status']
+        exclude = ['delete', 'branch', 'status', 'product_unique_id']
 
     def to_representation(self, instance):
         return {
