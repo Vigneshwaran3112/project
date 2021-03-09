@@ -337,10 +337,10 @@ class ProductPricingBatch(BaseModel):
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        data = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
+        # self.product_unique_id = str(self.product.id) + str(int(self.datetime.datetime.utcnow().timestamp()))
+        data, created = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
         data.save()
-        self.product_unique_id = str(self.product.id) + str(int(self.datetime.datetime.utcnow().timestamp()))
         super(ProductPricingBatch, self).save(*args, **kwargs)
 
     def __str__(self):
