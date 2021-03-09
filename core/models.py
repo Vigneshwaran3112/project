@@ -330,9 +330,15 @@ class ProductBranchMapping(BaseModel):
 class ProductPricingBatch(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        data = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
+        data.received += self.quantity
+        super(UserAttendanceBreak, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.branch.name} - {self.product.name}'
@@ -341,10 +347,10 @@ class ProductPricingBatch(BaseModel):
 class ProductInventory(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    received = models.PositiveIntegerField(null=True, blank=True)
-    taken = models.PositiveIntegerField(null=True, blank=True)
-    on_hand = models.PositiveIntegerField(null=True, blank=True)
-    date = models.DateTimeField()
+    received = models.PositiveIntegerField(null=True, blank=True, default=0)
+    taken = models.PositiveIntegerField(null=True, blank=True, default=0)
+    on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
+
 
     def save(self, *args, **kwargs):
         if self.sell:
