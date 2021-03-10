@@ -1291,3 +1291,19 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         return {
             'data': l
         }
+
+
+
+class ProductInstockListSerializer(serializers.ModelSerializer):
+    classification = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = ProductInventory
+        exclude = ['delete',]
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'product_id': instance.product.pk,
+            'product_count': instance.on_hand
+        }

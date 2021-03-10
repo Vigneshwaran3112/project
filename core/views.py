@@ -824,3 +824,13 @@ class InventoryRawProductList(generics.ListAPIView):
     def list(self, request, date):
         user = Branch.objects.get(pk= self.request.user.branch.pk)
         return Response(DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context = {'branch': self.request.user.branch.pk, 'date': date}).data)
+
+
+class ProductInstockCountList(generics.ListAPIView):
+    serializer_class = ProductInstockListSerializer
+
+    def get_queryset(self):
+        query = ProductInventory.objects.filter(branch=self.request.user.branch)
+        products_count = query.filter(product__pk=self.kwargs['product'])
+        print(products_count)
+        return products_count
