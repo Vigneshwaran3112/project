@@ -1306,3 +1306,38 @@ class ProductInstockListSerializer(serializers.ModelSerializer):
             'product_id': instance.product.pk,
             'product_count': instance.on_hand
         }
+
+
+class ProductInventoryControlSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+
+        date = self.context['date']
+        branch = self.context['branch']
+
+        date = datetime.datetime.strptime(date, '%Y-%m-%d')
+        previous_day = date - datetime.timedelta(days=1)
+
+        try:
+            query = InventoryControl.objects.get(branch=branch, date__date=previous_day, product__pk=instance.pk)
+        except:
+            query = None
+
+        # print(opening_stock)
+
+        return{
+            'id': instance.pk,
+            'key': instance.pk,
+            'name': instance.name,
+            'unit': instance.unit.pk if instance.unit else None,
+            'unit_name': instance.unit.name if instance.unit else None,
+            'unit_symbol': instance.unit.symbol if instance.unit else None,
+            'opening_stock': query.opening_stock if query else 0,
+            'closing_stock': 0
+
+
+            # 'product_code': instance.product_code,
+            # 'reorder_level': instance.reorder_level,
+            # 'sort_order': instance.sort_order,
+            # 'status': instance.status,
+        }

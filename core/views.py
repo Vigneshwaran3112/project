@@ -831,3 +831,12 @@ class ProductInstockCountList(generics.RetrieveAPIView):
 
     def get_object(self):
         return ProductInventory.objects.get(branch=self.request.user.branch, product__pk=self.kwargs['product'])
+
+
+class ProductInventoryControlList(generics.ListAPIView):
+    serializer_class = ProductInventoryControlSerializer
+
+    def list(self, request, date, classification):
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        products = query.filter(classification__code=classification)
+        return Response(ProductInventoryControlSerializer(products, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)

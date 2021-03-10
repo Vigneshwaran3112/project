@@ -119,5 +119,6 @@ urlpatterns = [
 
     path('store_product_instock_count/<int:product>/', views.ProductInstockCountList.as_view()),
 
+    path('product_inventory_control/<str:date>/<int:classification>/', views.ProductInventoryControlList.as_view()),
 
 ]
