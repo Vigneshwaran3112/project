@@ -1245,10 +1245,6 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
 
         data = InventoryControl.objects.get(branch__pk=branch, status=True, product__classification__code=2, date__date=date)
 
-        # l = []
-        # for key,value in data.items():
-        #     l.append(value)
-
         inventory_list, bills_list = [],[]
         inventory_data =  {
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
@@ -1257,10 +1253,9 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
         bills_data = {
-                    'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
-                    'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
-                    'food_wastage':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'free_bills': {'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'wrong_bills':{'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'eb_bills':{'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
 
         inventory_count, bill_count = 0, 0
@@ -1283,7 +1278,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                 }
 
         bills = {
-                'name': "inventory",
+                'name': "bills",
                 'total_count': len(bills_list),
                 'completed_count': bill_count,
                 'sub_menu': bills_list
