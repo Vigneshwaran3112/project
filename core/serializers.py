@@ -1295,7 +1295,6 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
 
 
 class ProductInstockListSerializer(serializers.ModelSerializer):
-    classification = serializers.IntegerField(required=False)
 
     class Meta:
         model = ProductInventory
