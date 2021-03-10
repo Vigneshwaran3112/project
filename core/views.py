@@ -388,7 +388,7 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
         return Response({'message':'recipe item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class ProductList(generics.ListAPIView):
+class ProductListAPI(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
@@ -809,7 +809,9 @@ class BranchProductList(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['classification']==0:
-            products = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            products = query.filter(classification__code__in=[2,3])
+
         else:
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
             products = query.filter(classification__code=self.kwargs['classification'])

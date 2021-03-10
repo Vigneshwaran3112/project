@@ -54,7 +54,7 @@ urlpatterns = [
     path('states/', views.StateListAPIView.as_view()),
     path('cities/<int:state_id>/', views.CityListAPIView.as_view()),
 
-    path('product_list/<int:classification>/', views.ProductList.as_view()),
+    path('product_list/<int:classification>/', views.ProductListAPI.as_view()),
     path('product_create/', views.ProductCreate.as_view()),
     path('product/<int:pk>/', views.ProductRetriveUpdateDelete.as_view()),
 
@@ -116,6 +116,8 @@ urlpatterns = [
     path('branch_incentive_update/<int:pk>/', views.BranchIncentiveUpdateAPIView.as_view()),
 
     path('branch_product/<int:classification>/', views.BranchProductList.as_view()),
+
+    # path('product_data', views.ProductListDataAPI.as_view()),
 
 
 ]
