@@ -1315,15 +1315,24 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         date = self.context['date']
         branch = self.context['branch']
 
-        date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        previous_day = date - datetime.timedelta(days=1)
+        formatted_date = datetime.datetime.strptime(date, '%Y-%m-%d')
+        previous_day = formatted_date - datetime.timedelta(days=1)
 
         try:
-            query = InventoryControl.objects.get(branch=branch, date__date=previous_day, product__pk=instance.pk)
+            query = InventoryControl.objects.get(branch=branch, date__date=date, product__pk=instance.pk)
+            opening_stock = query.opening_stock
+            closing_stock = query.closing_stock
         except:
-            query = None
+            try:
+                query = InventoryControl.objects.filter(branch=branch, product__pk=instance.pk).latest('date')
+                opening_stock = query.closing_stock
+                closing_stock = 0
+            except:
+                opening_stock = 0
+                closing_stock = 0
 
-        # print(opening_stock)
+
+        received_stock = ProductPricingBatch.objects.filter(branch=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
         return{
             'id': instance.pk,
@@ -1332,12 +1341,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'unit': instance.unit.pk if instance.unit else None,
             'unit_name': instance.unit.name if instance.unit else None,
             'unit_symbol': instance.unit.symbol if instance.unit else None,
-            'opening_stock': query.opening_stock if query else 0,
-            'closing_stock': 0
-
-
-            # 'product_code': instance.product_code,
-            # 'reorder_level': instance.reorder_level,
-            # 'sort_order': instance.sort_order,
-            # 'status': instance.status,
+            'opening_stock': opening_stock,
+            'received_stock': received_stock['total_received_stock'],
+            'closing_stock': closing_stock
         }

@@ -840,3 +840,7 @@ class ProductInventoryControlList(generics.ListAPIView):
         query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
         products = query.filter(classification__code=classification)
         return Response(ProductInventoryControlSerializer(products, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+
+
+class ProductInventoryControlCreate(generics.CreateAPIView):
+    serializer_class = ProductInventoryControlSerializer
