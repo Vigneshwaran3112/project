@@ -1245,33 +1245,38 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
 
         data = InventoryControl.objects.get(branch__pk=branch, status=True, product__classification__code=2, date__date=date)
 
-        l = []
-        for key,value in data.items():
-            l.append(value)
+        # l = []
+        # for key,value in data.items():
+        #     l.append(value)
 
-        data = 'inventory' : {
+        inventory = {
                 'name': "inventory",
-                'total_count': len(data),
+                # 'total_count': len(data),
                 'completed_count': 0,
                 'sub_menu':{
-                    'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
-                    'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
-                    'food_wastage':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                } 
-                }
+                        'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
+                        'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
+                        'food_wastage':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                        'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                        } 
+                    }
 
         bills = {
     
         'name': "inventory",
-        'total_count': len(data),
+        # 'total_count': len(data),
         'completed_count': 0,
-        'sub_menu': l,
+        # 'sub_menu': l,
         'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
         'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
         'food_wastage':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
         'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
         }
+
+        l = []
+        l.append(inventory)
+        l.append(bills)
+
         return {
-            'data': "inventory"
+            'data': l
         }
