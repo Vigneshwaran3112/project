@@ -1250,7 +1250,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
                     'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
                     'food_wastage':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'oil_consumption':{'id':4, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'oil_consumption':{'id':4, 'name':"oil_consumption", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
         bills_data = {
                     'free_bills': {'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
