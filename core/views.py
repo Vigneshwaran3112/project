@@ -388,7 +388,7 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
         return Response({'message':'recipe item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class ProductList(generics.ListAPIView):
+class ProductListAPI(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
@@ -809,7 +809,9 @@ class BranchProductList(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['classification']==0:
-            products = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            products = query.filter(classification__code__in=[2,3])
+
         else:
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
             products = query.filter(classification__code=self.kwargs['classification'])
@@ -827,3 +829,11 @@ class InventoryRawProductList(generics.ListAPIView):
         return Response({
             'inventory': DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context = {'branch': self.request.user.branch.pk, 'date': date}).data,
         })
+
+
+# class ProductListDataAPI(generics.ListAPIView):
+#     serializer_class = ProductListDataSerializer
+
+#     def get_queryset(self):
+#         return Product.objects.filter(branch=self.request.user.branch, classification__code__in=[2,3], status=True, delete=False).order_by('-id')
+
