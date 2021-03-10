@@ -1,10 +1,11 @@
 import datetime
 from re import error
 import json, os
+import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, RequestDataTooBig
 from django.db.models import QuerySet, Count, Q
 from django.http.request import RawPostDataException
 
@@ -558,7 +559,6 @@ class BranchProductMappingCreate(generics.CreateAPIView):
         product_mapping, created = ProductBranchMapping.objects.get_or_create(branch=self.request.user.branch)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data['product'])
         product_mapping.product.add(*serializer.validated_data['product'])
         product_mapping.save()
         serializer_data = ProductBranchMappingSerializer(product_mapping).data
@@ -844,3 +844,10 @@ class ProductInventoryControlList(generics.ListAPIView):
 
 class ProductInventoryControlCreate(generics.CreateAPIView):
     serializer_class = ProductInventoryControlSerializer
+
+    def create(self, request, date):
+        for inventory_data in request.data:
+            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})

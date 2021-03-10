@@ -1315,9 +1315,6 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         date = self.context['date']
         branch = self.context['branch']
 
-        formatted_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        previous_day = formatted_date - datetime.timedelta(days=1)
-
         try:
             query = InventoryControl.objects.get(branch=branch, date__date=date, product__pk=instance.pk)
             opening_stock = query.opening_stock
@@ -1331,12 +1328,9 @@ class ProductInventoryControlSerializer(serializers.Serializer):
                 opening_stock = 0
                 closing_stock = 0
 
-
         received_stock = ProductPricingBatch.objects.filter(branch=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
         return{
-            'id': instance.pk,
-            'key': instance.pk,
             'name': instance.name,
             'unit': instance.unit.pk if instance.unit else None,
             'unit_name': instance.unit.name if instance.unit else None,
@@ -1345,3 +1339,22 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'received_stock': received_stock['total_received_stock'],
             'closing_stock': closing_stock
         }
+
+
+class ProductInventoryControlSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = InventoryControl
+        fields = ('id', 'product', 'opening_stock', 'closing_stock', 'date')
+
+    def create(self, validated_data):
+
+        date = self.context['date']
+        branch = self.context['branch']
+
+        if validated_data.get('id', None):
+            data = InventoryControl.objects.filter(pk=int(validated_data['id'])).update(closing_stock=validated_data['closing_stock'])
+        else:
+            data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['date'], closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
+        return data
