@@ -1331,6 +1331,8 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         received_stock = ProductPricingBatch.objects.filter(branch=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
         return{
+            'id': instance.pk,
+            'key': instance.pk,
             'name': instance.name,
             'unit': instance.unit.pk if instance.unit else None,
             'unit_name': instance.unit.name if instance.unit else None,
@@ -1341,7 +1343,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         }
 
 
-class ProductInventoryControlSerializer(serializers.ModelSerializer):
+class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
 
     class Meta:

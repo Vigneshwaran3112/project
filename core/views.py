@@ -843,7 +843,7 @@ class ProductInventoryControlList(generics.ListAPIView):
 
 
 class ProductInventoryControlCreate(generics.CreateAPIView):
-    serializer_class = ProductInventoryControlSerializer
+    serializer_class = ProductInventoryControlCreateSerializer
 
     def create(self, request, date):
         for inventory_data in request.data:
