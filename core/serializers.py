@@ -1217,25 +1217,24 @@ class VendorSerializer(serializers.ModelSerializer):
 
 
 
-class InventoryDataListSerializer(serializers.Serializer):
+# class InventoryDataListSerializer(serializers.Serializer):
 
-    def to_representation(self, instance):
-        branch = self.context['branch']
-        date = self.context['date']
+#     def to_representation(self, instance):
+#         branch = self.context['branch']
+#         date = self.context['date']
 
-        for i in range(4):
-            print(i)
-            if i==0:
-                name = "raw_products"
-                completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()
-            if i==1:
-                name = "operational_products"
-                completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()
+#         '''for i in range(4):
+#             print(i)
+#             if i==0:
+#                 name = "raw_products"
+#                 completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()
+#             if i==1:
+#                 name = "operational_products"
+#                 completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()'''
 
-        return {
-            'name': name,
-            'completed_status': completed_status
-        }
+#         data = {'operational' : {'name' : "operational_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()}, 'raw' : {'name' : "raw_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()}}
+#         print(InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3))
+#         return {'v':data['operational'], 'y': data['raw']}
 
 
 class DailySheetInventoryListSerializer(serializers.Serializer):
@@ -1243,12 +1242,14 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
     def to_representation(self, instance):
         branch = self.context['branch']
         date = self.context['date']
-        print(branch)
+        data = {'operational_products': {'name' : "operational_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()},
+                'raw_products':{'name' : "raw_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()}}
+        l = []
+        for key,value in data.items():
+            l.append(value)
         return {
             'name': "inventory",
             'total_count': 0,
             'completed_count': 0,
-            'sub_menu': InventoryDataListSerializer(Branch.objects.filter(pk=branch), context={'branch': branch, 'date': date}, many=True).data,
-            # 'completed_count': DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context = {'branch': self.request.user.branch.pk, 'date': date}).data,
-
+            'sub_menu': l
         }
