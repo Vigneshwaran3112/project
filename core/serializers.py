@@ -1317,6 +1317,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
 
         try:
             query = InventoryControl.objects.get(branch=branch, date__date=date, product__pk=instance.pk)
+            pk = query.pk
             opening_stock = query.opening_stock
             closing_stock = query.closing_stock
         except:
@@ -1331,7 +1332,8 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         received_stock = ProductPricingBatch.objects.filter(branch=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
         return{
-            'key': instance.pk,
+            'id': pk if instance.unit else None, 
+            'key': pk if instance.unit else None,
             'name': instance.name,
             'unit': instance.unit.pk if instance.unit else None,
             'unit_name': instance.unit.name if instance.unit else None,
