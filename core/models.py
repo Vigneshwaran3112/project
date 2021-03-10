@@ -556,3 +556,16 @@ class OilConsumption(BaseModel):
     company_name = models.CharField(max_length=100)
     address = models.TextField(blank=True)
     description = models.CharField(max_length=100)
+
+
+class FoodWastage(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_food_wastage')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_food_wastage')
+    wasted_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_food_wastage')
+    quantity = models.PositiveIntegerField(default=0)
+    description = models.CharField(max_length=100, null=True, blank=True)
+    date = models.DateTimeField()
+
+
+    def __str__(self):
+        return f'{self.branch.name} - {self.date}'
