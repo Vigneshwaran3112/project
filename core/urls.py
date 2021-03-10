@@ -117,7 +117,7 @@ urlpatterns = [
 
     path('branch_product/<int:classification>/', views.BranchProductList.as_view()),
 
-    path('store_product_instock_count/<int:product>', views.ProductInstockCountList.as_view()),
+    path('store_product_instock_count/<int:product>/', views.ProductInstockCountList.as_view()),
 
 
 ]
