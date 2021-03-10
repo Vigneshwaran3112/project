@@ -1243,7 +1243,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         branch = self.context['branch']
         date = self.context['date']
 
-        data = InventoryControl.objects.get(branch__pk=branch, status=True, product__classification__code=2, date__date=date)
+        # data = InventoryControl.objects.get(branch__pk=branch, status=True, product__classification__code=2, date__date=date)
 
         inventory_list, bills_list = [],[]
         inventory_data =  {
