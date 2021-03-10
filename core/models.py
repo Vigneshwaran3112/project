@@ -368,7 +368,7 @@ class InventoryControl(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     opening_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     closing_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
-    received_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
+    # received_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
