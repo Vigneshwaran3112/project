@@ -1311,20 +1311,15 @@ class ProductInstockListSerializer(serializers.ModelSerializer):
 class ProductInventoryControlSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-
         date = self.context['date']
         branch = self.context['branch']
-
-        print(branch)
         try:
             query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.pk)
-            print('hai')
             pk = query.pk
             opening_stock = query.opening_stock
             closing_stock = query.closing_stock
         except:
             pk = None
-
             try:
                 query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
@@ -1345,7 +1340,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'unit_symbol': instance.unit.symbol if instance.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
-            'closing_stock': closing_stock
+            'closing_stock': ""
         }
 
 
