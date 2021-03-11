@@ -907,4 +907,11 @@ class BranchProductInventoryList(generics.ListAPIView):
         return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk).order_by('-id')
 
 
-    
+class OilConsumptionAPIView(viewsets.ModelViewSet):
+    queryset = OilConsumption.objects.exclude(delete=True)
+    serializer_class = ElectricBillSerializer
+    # permission_class = (AllowAny,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)

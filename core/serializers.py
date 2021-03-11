@@ -1361,7 +1361,8 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
 
         if validated_data.get('id', None):
             data = InventoryControl.objects.filter(pk=int(validated_data['id'])).update(closing_stock=validated_data['closing_stock'])
-            
+
+#--------------------------------model create logic implemented here for update method--------------------------------#
             inventory_product = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])
             if validated_data['closing_stock'] == 0:
                 inventory_product.taken = inventory_product.received
@@ -1372,6 +1373,8 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
                 inventory_product.on_hand = validated_data['closing_stock']
                 inventory_product.received -= inventory_product.taken 
                 inventory_product.save()
+#--------------------------------model create logic implemented here for update method--------------------------------#
+            
         else:
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
         return data

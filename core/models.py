@@ -557,13 +557,6 @@ class SlickposProducts(BaseModel):
     order_id = models.CharField(max_length=100, null=True, blank=True)
 
 
-class OilConsumption(BaseModel):
-    name = models.CharField(max_length=100)
-    company_name = models.CharField(max_length=100)
-    address = models.TextField(blank=True)
-    description = models.CharField(max_length=100)
-
-
 class FoodWastage(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_food_wastage')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_food_wastage')
@@ -575,3 +568,16 @@ class FoodWastage(BaseModel):
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'
+
+
+class OilConsumption(BaseModel):
+    class Item(models.IntegerChoices):
+        Friyer = 1
+        Kadai = 2
+
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_oil_consumption')
+    item = models.IntegerField(choices=Item.choices)
+    fresh_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    used_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    wastage_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    date = models.DateTimeField()
