@@ -1393,5 +1393,5 @@ class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         branch = self.context['branch']
-        data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['product'], quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
+        data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['date'], quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
         return data
