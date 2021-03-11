@@ -467,25 +467,7 @@ class BranchSpecificFreeBillAPIView(generics.ListAPIView):
     serializer_class = FreeBillSerializer
 
     def get_queryset(self):
-        try:
-            start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
-            stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
-        except:
-            start = None
-            stop = None
-
-        branch = self.kwargs['pk']
-
-        if start == None:
-            if branch == 0:
-                freebill_data = FreeBill.objects.filter(delete=False, status=True)
-            else:
-                freebill_data = FreeBill.objects.filter(branch=self.kwargs['pk'], delete=False, status=True)
-        else:
-            if branch == 0:
-                freebill_data = FreeBill.objects.filter(date__range=[start, stop], delete=False, status=True)
-            else:
-                freebill_data = FreeBill.objects.filter(date__range=[start, stop], branch=self.kwargs['pk'], delete=False, status=True)
+        freebill_data = FreeBill.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
         return freebill_data
 
 
