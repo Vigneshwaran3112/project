@@ -361,11 +361,6 @@ class ProductInventory(BaseModel):
     taken = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
 
-
-    def save(self, *args, **kwargs):
-        self.on_hand = decimal.Decimal((self.received - self.taken))
-        super(ProductInventory, self).save(*args, **kwargs)
-
     def __str__(self):
         return f'{self.branch.name} - {self.product.name}'
 
@@ -381,8 +376,11 @@ class InventoryControl(BaseModel):
         data = ProductInventory.objects.get(branch=self.branch, product=self.product)
         if self.closing_stock == 0:
             data.taken = data.received
+            data.on_hand = 0
         else:
-            data.taken += self.closing_stock
+            data.taken = data.received-self.closing_stock
+            data.on_hand = self.closing_stock
+            data.received -= data.taken 
         data.save()
         super(InventoryControl, self).save(*args, **kwargs)
 
