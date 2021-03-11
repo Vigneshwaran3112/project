@@ -847,7 +847,6 @@ class ProductInventoryControlList(generics.ListAPIView):
     def list(self, request, date, classification):
         print(classification)
         query = ProductInventory.objects.filter(branch=self.request.user.branch, product__classification__code=classification, on_hand__gt=0).order_by('-id')
-        # products = query.filter(classification__code=classification)
         return Response(ProductInventoryControlSerializer(query, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
 
 
