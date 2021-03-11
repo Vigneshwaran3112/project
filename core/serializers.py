@@ -1315,30 +1315,30 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         date = self.context['date']
         branch = self.context['branch']
         try:
-            query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.pk)
+            query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.product.pk)
             pk = query.pk
             opening_stock = query.opening_stock
             closing_stock = query.closing_stock
         except:
             pk = None
             try:
-                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
+                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.product.pk).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
             except:
                 opening_stock = 0
                 closing_stock = ""
 
-        received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+        received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.product.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
         return{
             'id': pk, 
             'key': pk,
-            'product': instance.pk,
-            'name': instance.name,
-            'unit': instance.unit.pk if instance.unit else None,
-            'unit_name': instance.unit.name if instance.unit else None,
-            'unit_symbol': instance.unit.symbol if instance.unit else None,
+            'product': instance.product.pk,
+            'name': instance.product.name,
+            'unit': instance.product.unit.pk if instance.product.unit else None,
+            'unit_name': instance.product.unit.name if instance.product.unit else None,
+            'unit_symbol': instance.product.unit.symbol if instance.product.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
             'closing_stock': closing_stock,
