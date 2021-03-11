@@ -859,19 +859,9 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
 class StoreProductInventoryCreate(generics.CreateAPIView):
     serializer_class = StoreProductInventoryCreateSerializer
 
-    # def get_queryset(self):
-    #     date = datetime.datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
-    #     # print(date)
-    #     products = ProductPricingBatch.objects.filter(branch__pk=self.request.user.branch.pk, date__date=self.kwargs['date'])
-    #     # print(products)
-    #     # print(self.request.user.branch.pk)
-    #     return products
-
     def create(self, request):
-        print(request.data)
         for inventory_data in request.data:
-            print(inventory_data)
-            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': datetime.datetime.now()})
+            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk})
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response({'message': 'Data Saved!'})

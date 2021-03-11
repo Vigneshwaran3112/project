@@ -1387,22 +1387,9 @@ class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
-        fields = ('id', 'product', 'quantity', 'Buying_price')
-
-    # def to_representation(self, instance):
-
-    #     return{
-    #         'date': date,
-    #         'inventory_date': {
-    #             'product_id': instance.product.pk,
-    #             'quantity': instance.quantity,
-    #             'price': instance.Buying_price
-    #         }
-    #     }
+        fields = ('id', 'product', 'quantity', 'Buying_price', 'date')
 
     def create(self, validated_data):
-
-        date = self.context['date']
         branch = self.context['branch']
-        data = ProductPricingBatch.objects.create(branch=branch, product=validated_data['product'], date=date, quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
+        data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['product'], quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
         return data
