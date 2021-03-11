@@ -1323,10 +1323,10 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             try:
                 query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
-                closing_stock = 0
+                closing_stock = ""
             except:
                 opening_stock = 0
-                closing_stock = 0
+                closing_stock = ""
 
         received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
@@ -1340,7 +1340,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'unit_symbol': instance.unit.symbol if instance.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
-            'closing_stock': "",
+            'closing_stock': closing_stock,
             'error':""
         }
 
@@ -1365,24 +1365,6 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
         return data
 
 
-# class StoreProductInventorylistSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = ProductPricingBatch
-#         exclude = ['delete',]
-
-#     def to_representation(self, instance):
-
-#         date = self.context['date']
-#         branch = self.context['branch']
-#         date_time = datetime.datetime.strptime(date, '%Y-%m-%d')
-#         # x = ProductInventory.objects.get(branch__pk=branch, product__pk=instance.product.pk)
-#         print(instance.product.pk)
-#         # n = StoreProductInventoryCreateSerializer(ProductPricingBatch.objects.filter(branch__pk=branch, date=date_time), many=True).data
-#         return{
-#             'date': date,
-#             'inventory_data': StoreProductInventoryCreateSerializer(ProductPricingBatch.objects.filter(branch__pk=branch, date=date_time), many=True).data
-#         }
 
 class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
 
