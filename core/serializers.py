@@ -1049,7 +1049,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ElectricBill
-        exclude = ['delete', 'unit', 'branch']
+        exclude = ['delete', 'unit', 'branch', 'status']
 
     def to_representation(self, instance):
 
