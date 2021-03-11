@@ -1418,7 +1418,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OilConsumption
-        exclude = ['delete',]
+        exclude = ['delete', 'date', 'status']
 
     def to_representation(self, instance):
         
