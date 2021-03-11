@@ -1311,20 +1311,15 @@ class ProductInstockListSerializer(serializers.ModelSerializer):
 class ProductInventoryControlSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-
         date = self.context['date']
         branch = self.context['branch']
-
-        print(branch)
         try:
             query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.pk)
-            print('hai')
             pk = query.pk
             opening_stock = query.opening_stock
             closing_stock = query.closing_stock
         except:
             pk = None
-
             try:
                 query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
@@ -1338,32 +1333,34 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         return{
             'id': pk, 
             'key': pk,
+            'product': instance.pk,
             'name': instance.name,
             'unit': instance.unit.pk if instance.unit else None,
             'unit_name': instance.unit.name if instance.unit else None,
             'unit_symbol': instance.unit.symbol if instance.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
-            'closing_stock': closing_stock
+            'closing_stock': ""
         }
 
 
 class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
+    id = serializers.IntegerField(required=False,  allow_null=True)
 
     class Meta:
         model = InventoryControl
-        fields = ('id', 'product', 'opening_stock', 'closing_stock', 'date')
+        fields = ('id', 'product', 'opening_stock', 'closing_stock')
 
     def create(self, validated_data):
 
-        date = self.context['date']
-        branch = self.context['branch']
+        date = datetime.datetime.strptime(self.context['date'], '%Y-%m-%d')
+        now = datetime.datetime.now()
+        date = datetime.datetime.combine(date, now.time())
 
         if validated_data.get('id', None):
             data = InventoryControl.objects.filter(pk=int(validated_data['id'])).update(closing_stock=validated_data['closing_stock'])
         else:
-            data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['date'], closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
+            data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
         return data
 
 
