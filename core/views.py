@@ -426,7 +426,7 @@ class WrongBillAPIView(viewsets.ModelViewSet):
         return WrongBill.objects.filter(branch=self.request.user.branch, delete=False, status=True)
 
     def perform_create(self, serializer):
-        serializer.save(branch=serializer.validated_data['billed_by'].branch, billed_by=self.request.user)
+        serializer.save(branch=self.request.user.branch, billed_by=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         destroy = WrongBill.objects.filter(pk=kwargs['pk']).update(delete=True)
