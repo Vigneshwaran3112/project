@@ -1340,7 +1340,8 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'unit_symbol': instance.unit.symbol if instance.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
-            'closing_stock': ""
+            'closing_stock': "",
+            'error':""
         }
 
 
