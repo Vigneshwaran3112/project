@@ -907,17 +907,16 @@ class BranchProductInventoryList(generics.ListAPIView):
         return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk).order_by('-id')
 
 
-class OilConsumptionAPIView(viewsets.ModelViewSet):
-    queryset = OilConsumption.objects.exclude(delete=True)
+class OilConsumptionListCreate(generics.ListCreateAPIView):
     serializer_class = OilConsumptionSerializer
-    # permission_class = (AllowAny,)
+
+    def get_queryset(self):
+        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date=self.kwargs['date']).order_by('-id')
 
     def perform_create(self, serializer):
-        serializer.save(branch=self.request.user.branch)
-    
-    def get_queryset(self):
-        return OilConsumption.objects.filter(branch=self.request.user.branch.pk).order_by('-id')
+        serializer.save(branch=self.request.user.branch, date=self.kwargs['date'])
 
-    def destroy(self, request, *args, **kwargs):
-        destroy = OilConsumption.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+class OilConsumptionUpdate(generics.UpdateAPIView):
+    queryset = OilConsumption.objects.exclude(delete=True)
+    serializer_class = OilConsumptionSerializer
