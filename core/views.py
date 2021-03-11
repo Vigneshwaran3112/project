@@ -438,25 +438,7 @@ class BranchSpecificWrongBillAPIView(generics.ListAPIView):
     serializer_class = WrongBillSerializer
 
     def get_queryset(self):
-        try:
-            start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
-            stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
-        except:
-            start = None
-            stop = None
-
-        branch = self.kwargs['pk']
-        if start == None:
-            if branch == 0:
-                wrongbill_data = WrongBill.objects.filter(delete=False, status=True)
-            else:
-                wrongbill_data = WrongBill.objects.filter(branch=branch, delete=False, status=True)
-
-        else:
-            if branch == 0:
-                wrongbill_data = WrongBill.objects.filter(date__range=[start, stop], delete=False, status=True)
-            else:
-                wrongbill_data = WrongBill.objects.filter(date__range=[start, stop], branch=branch, delete=False, status=True)
+        wrongbill_data = WrongBill.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
         return wrongbill_data
 
 
