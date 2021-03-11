@@ -1058,6 +1058,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'branch_name': instance.branch.name,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
+            'unit': instance.unit.pk,
             'date': instance.date,
             'created': instance.created
         }
