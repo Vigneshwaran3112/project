@@ -60,6 +60,7 @@ urlpatterns = [
 
     path('branch_specific_wrongbill/<int:pk>/', views.BranchSpecificWrongBillAPIView.as_view()),
     path('branch_specific_freebill/<int:pk>/', views.BranchSpecificFreeBillAPIView.as_view()),
+    path('branch_specific_electricbill/<int:pk>/', views.BranchSpecificElectricBillAPIView.as_view()),
 
     path('unit_list/', views.UnitListAPIView.as_view()),
     path('unit_update/<int:pk>/', views.UnitUpdateAPIView.as_view()),

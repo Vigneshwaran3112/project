@@ -507,6 +507,33 @@ class BranchSpecificFreeBillAPIView(generics.ListAPIView):
         return freebill_data
 
 
+class BranchSpecificElectricBillAPIView(generics.ListAPIView):
+    queryset = ElectricBill.objects.filter(delete=False, status=True)
+    serializer_class = ElectricBillSerializer
+
+    def get_queryset(self):
+        try:
+            start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
+            stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
+        except:
+            start = None
+            stop = None
+
+        branch = self.kwargs['pk']
+
+        if start == None:
+            if branch == 0:
+                electricbill_data = ElectricBill.objects.filter(delete=False, status=True)
+            else:
+                electricbill_data = ElectricBill.objects.filter(branch=self.kwargs['pk'], delete=False, status=True)
+        else:
+            if branch == 0:
+                electricbill_data = ElectricBill.objects.filter(date__range=[start, stop], delete=False, status=True)
+            else:
+                electricbill_data = ElectricBill.objects.filter(date__range=[start, stop], branch=self.kwargs['pk'], delete=False, status=True)
+        return electricbill_data
+
+
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True)
     serializer_class = ComplaintSerializer
@@ -875,11 +902,9 @@ class BranchProductInventoryList(generics.ListAPIView):
     serializer_class = BranchProductInventoryListSerializer
 
     def get_queryset(self):
-
         start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
         stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
-
-        return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk)
+        return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk).order_by('-id')
 
 
     
