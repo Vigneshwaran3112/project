@@ -518,8 +518,12 @@ class ElectricBill(BaseModel):
     sub_branch = models.ForeignKey(SubBranch, on_delete=models.CASCADE, blank=True, null=True,  related_name='sub_branch_electric_bill')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_EB') 
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_EB') 
     date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.unit = Unit.objects.get(code=4)
+        super(ElectricBill, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'

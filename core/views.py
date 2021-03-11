@@ -687,8 +687,7 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
 
 
     def perform_create(self, serializer):
-        print(self.request.user.branch.name)
-        serializer.save()
+        serializer.save(branch=self.request.user.branch)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
