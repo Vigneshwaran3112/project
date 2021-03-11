@@ -1059,11 +1059,11 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
-            'sub_branch_id': instance.sub_branch.pk if instance.sub_branch in instance.branch.sub_branch else None,
-            'sub_branch_name': instance.sub_branch.name if instance.sub_branch in instance.branch.sub_branch else None,
+            'sub_branch_id': instance.sub_branch.pk if instance.sub_branch in instance.branch.sub_branch.values('pk') else None,
+            'sub_branch_name': instance.sub_branch.name if instance.sub_branch in instance.branch.sub_branch.values('pk') else None,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
-            'unit': instance.unit.pk,
+            'unit': 4,
             'date': instance.date,
             'created': instance.created
         }
