@@ -204,3 +204,8 @@ class VendorAdmin(admin.ModelAdmin):
 @admin.register(InventoryControl)
 class InventoryControlAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'product', 'opening_stock', 'closing_stock', 'date')
+
+
+@admin.register(FoodWastage)
+class FoodWastageAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'product', 'wasted_by', 'quantity', 'description', 'date')
