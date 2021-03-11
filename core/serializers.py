@@ -1052,10 +1052,15 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         exclude = ['delete']
 
     def to_representation(self, instance):
+
+        print( instance.branch.pk)
+
         return {
             'id': instance.pk,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
+            'sub_branch_id': instance.sub_branch.pk if instance.sub_branch in instance.branch.sub_branch else None,
+            'sub_branch_name': instance.sub_branch.name if instance.sub_branch in instance.branch.sub_branch else None,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
             'unit': instance.unit.pk,
@@ -1377,3 +1382,20 @@ class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
         branch = self.context['branch']
         data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['date'], quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
         return data
+
+
+class StoreProductInventoryListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductPricingBatch
+        exclude = ['delete',]
+
+    def to_representation(self, instance):
+        
+        return{
+            'product': instance.product.pk,
+            'product_name': instance.product.name,
+            'price': instance.Buying_price,
+            'quantity': instance.quantity,
+            'date': instance.date
+        }
