@@ -1061,6 +1061,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
+            'number_of_units': instance.closing_reading - instance.opening_reading,
             'unit': instance.unit.code if instance.unit else None,
             'date': instance.date,
             'created': instance.created
