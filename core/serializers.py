@@ -1255,9 +1255,9 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'vegetable_purchase':{'id':4, 'name':"vegetable_purchase", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False, product__classification__code=4).exists()},
                 }
         bills_data = {
-                    'free_bills': {'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'wrong_bills':{'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'eb_bills':{'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    'free_bills': {'id':21, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'wrong_bills':{'id':22, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'eb_bills':{'id':23, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
 
         inventory_count, bill_count = 0, 0
