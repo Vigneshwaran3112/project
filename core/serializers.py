@@ -1365,3 +1365,47 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
         else:
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=validated_data['date'], closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
         return data
+
+
+# class StoreProductInventorylistSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = ProductPricingBatch
+#         exclude = ['delete',]
+
+#     def to_representation(self, instance):
+
+#         date = self.context['date']
+#         branch = self.context['branch']
+#         date_time = datetime.datetime.strptime(date, '%Y-%m-%d')
+#         # x = ProductInventory.objects.get(branch__pk=branch, product__pk=instance.product.pk)
+#         print(instance.product.pk)
+#         # n = StoreProductInventoryCreateSerializer(ProductPricingBatch.objects.filter(branch__pk=branch, date=date_time), many=True).data
+#         return{
+#             'date': date,
+#             'inventory_data': StoreProductInventoryCreateSerializer(ProductPricingBatch.objects.filter(branch__pk=branch, date=date_time), many=True).data
+#         }
+
+class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductPricingBatch
+        fields = ('id', 'product', 'quantity', 'Buying_price')
+
+    # def to_representation(self, instance):
+
+    #     return{
+    #         'date': date,
+    #         'inventory_date': {
+    #             'product_id': instance.product.pk,
+    #             'quantity': instance.quantity,
+    #             'price': instance.Buying_price
+    #         }
+    #     }
+
+    def create(self, validated_data):
+
+        date = self.context['date']
+        branch = self.context['branch']
+        data = ProductPricingBatch.objects.create(branch=branch, product=validated_data['product'], date=date, quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
+        return data

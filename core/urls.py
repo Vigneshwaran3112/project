@@ -123,4 +123,6 @@ urlpatterns = [
 
     path('product_inventory_control_create/<str:date>/', views.ProductInventoryControlCreate.as_view()),
 
+    path('store_product_inventory_create/', views.StoreProductInventoryCreate.as_view()),
+
 ]
