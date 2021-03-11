@@ -744,7 +744,7 @@ class WrongBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WrongBill
-        exclude = ['delete', 'branch']
+        exclude = ['delete', 'branch', 'billed_by']
 
     def to_representation(self, instance):
         return{
