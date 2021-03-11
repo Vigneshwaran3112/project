@@ -347,6 +347,7 @@ class ProductPricingBatch(BaseModel):
         self.product_unique_id = str(self.product.id) + str(int(datetime.datetime.utcnow().timestamp()))
         data, created = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
+        data.on_hand += self.quantity
         data.save()
         super(ProductPricingBatch, self).save(*args, **kwargs)
 
