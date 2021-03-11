@@ -860,7 +860,7 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
 
 
 class BranchProductInventoryCreate(generics.CreateAPIView):
-    serializer_class = StoreProductInventoryCreateSerializer
+    serializer_class = BranchProductInventoryCreateSerializer
 
     def create(self, request):
         for inventory_data in request.data:
@@ -872,7 +872,7 @@ class BranchProductInventoryCreate(generics.CreateAPIView):
 
 class BranchProductInventoryList(generics.ListAPIView):
     queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
-    serializer_class = StoreProductInventoryListSerializer
+    serializer_class = BranchProductInventoryListSerializer
 
     def get_queryset(self):
 
