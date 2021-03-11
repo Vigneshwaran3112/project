@@ -1061,7 +1061,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
-            'unit': instance.unit.code,
+            'unit': instance.unit.code if instance.unit else None,
             'date': instance.date,
             'created': instance.created
         }
@@ -1394,6 +1394,6 @@ class BranchProductInventoryListSerializer(serializers.ModelSerializer):
             'price': instance.Buying_price,
             'quantity': instance.quantity,
             'date': instance.date,
-            'formatted_date': instance.date.strftime("%d-%m-%Y %I:%M %p")
+            'formatted_date': instance.date.strftime("%d-%m-%Y")
         }
 
