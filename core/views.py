@@ -909,7 +909,7 @@ class BranchProductInventoryList(generics.ListAPIView):
 
 class OilConsumptionAPIView(viewsets.ModelViewSet):
     queryset = OilConsumption.objects.exclude(delete=True)
-    serializer_class = ElectricBillSerializer
+    serializer_class = OilConsumptionSerializer
     # permission_class = (AllowAny,)
 
     def perform_create(self, serializer):

@@ -1412,3 +1412,23 @@ class BranchProductInventoryListSerializer(serializers.ModelSerializer):
             'formatted_date': instance.date.strftime("%d-%m-%Y")
         }
 
+
+
+class OilConsumptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OilConsumption
+        exclude = ['delete',]
+
+    def to_representation(self, instance):
+        
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'item': instance.item,
+            'fresh_oil': instance.fresh_oil,
+            'used_oil': instance.used_oil,
+            'wastage_oil': instance.wastage_oil,
+            'date': instance.date
+        }
