@@ -1222,7 +1222,6 @@ class VendorSerializer(serializers.ModelSerializer):
         }
 
 
-
 # class InventoryDataListSerializer(serializers.Serializer):
 
 #     def to_representation(self, instance):
