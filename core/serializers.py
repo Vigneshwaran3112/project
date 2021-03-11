@@ -1053,8 +1053,6 @@ class ElectricBillSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
 
-        print( instance.branch.pk)
-
         return {
             'id': instance.pk,
             'branch': instance.branch.pk,
