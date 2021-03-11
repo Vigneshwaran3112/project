@@ -379,7 +379,10 @@ class InventoryControl(BaseModel):
 
     def save(self, *args, **kwargs):
         data = ProductInventory.objects.get(branch=self.branch, product=self.product)
-        data.taken += self.closing_stock
+        if self.closing_stock == 0:
+            data.taken = data.received
+        else:
+            data.taken += self.closing_stock
         data.save()
         super(InventoryControl, self).save(*args, **kwargs)
 
