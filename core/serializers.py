@@ -1369,7 +1369,7 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
 
 
 
-class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
+class BranchProductInventoryCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
@@ -1381,7 +1381,7 @@ class StoreProductInventoryCreateSerializer(serializers.ModelSerializer):
         return data
 
 
-class StoreProductInventoryListSerializer(serializers.ModelSerializer):
+class BranchProductInventoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
@@ -1392,7 +1392,10 @@ class StoreProductInventoryListSerializer(serializers.ModelSerializer):
         return{
             'product': instance.product.pk,
             'product_name': instance.product.name,
+            'unit': instance.product.unit.name,
             'price': instance.Buying_price,
             'quantity': instance.quantity,
-            'date': instance.date
+            'date': instance.date,
+            'formatted_date': instance.date.strftime("%d-%m-%Y %I:%M %p")
         }
+
