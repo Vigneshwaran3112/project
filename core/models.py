@@ -377,7 +377,9 @@ class InventoryControl(BaseModel):
         if self.closing_stock == 0:
             data.taken = data.received
             data.on_hand = 0
+            print(data.on_hand)
             data.save()
+            print(data.on_hand)
         else:
             data.taken = data.received-self.closing_stock
             data.on_hand = self.closing_stock
