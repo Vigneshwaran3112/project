@@ -327,13 +327,20 @@ class ProductBranchMapping(BaseModel):
         return f'{self.branch.name} - {self.product.name}'
 
 
+class Vendor(BaseModel):
+    name = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=100)
+    address = models.TextField(blank=True)
+
+
 class ProductPricingBatch(BaseModel):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_product_batch')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     product_unique_id = models.CharField(max_length=100, null=True, blank=True)
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     Buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True, related_name='vendor_product_batch')
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
@@ -348,8 +355,8 @@ class ProductPricingBatch(BaseModel):
 
 
 class ProductInventory(BaseModel):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_inventory')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_inventory')
     received = models.PositiveIntegerField(null=True, blank=True, default=0)
     taken = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -364,8 +371,8 @@ class ProductInventory(BaseModel):
 
 
 class InventoryControl(BaseModel):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_inventory_control')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_inventory_control')
     opening_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     closing_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     # received_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -506,7 +513,7 @@ class CreditSales(BaseModel):
 
 class ElectricBill(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_electric_bill')
-    sub_branch = models.ForeignKey(SubBranch, blank=True, on_delete=models.CASCADE, related_name='sub_branch_electric_bill')
+    sub_branch = models.ForeignKey(SubBranch, on_delete=models.CASCADE, blank=True, null=True,  related_name='sub_branch_electric_bill')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_EB') 
@@ -543,12 +550,6 @@ class SlickposProducts(BaseModel):
     variant_group_id = models.CharField(max_length=100, null=True, blank=True)
     addon_group_id = models.CharField(max_length=100, null=True, blank=True)
     order_id = models.CharField(max_length=100, null=True, blank=True)
-
-
-class Vendor(BaseModel):
-    name = models.CharField(max_length=100)
-    company_name = models.CharField(max_length=100)
-    address = models.TextField(blank=True)
 
 
 class OilConsumption(BaseModel):
