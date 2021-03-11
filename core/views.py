@@ -685,6 +685,11 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
     serializer_class = ElectricBillSerializer
     # permission_class = (AllowAny,)
 
+
+    def perform_create(self, serializer):
+        print(self.request.user.branch.name)
+        serializer.save()
+
     def destroy(self, request, *args, **kwargs):
         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
@@ -856,7 +861,7 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
         return Response({'message': 'Data Saved!'})
 
 
-class StoreProductInventoryCreate(generics.CreateAPIView):
+class BranchProductInventoryCreate(generics.CreateAPIView):
     serializer_class = StoreProductInventoryCreateSerializer
 
     def create(self, request):
@@ -865,5 +870,18 @@ class StoreProductInventoryCreate(generics.CreateAPIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response({'message': 'Data Saved!'})
+
+
+class BranchProductInventoryList(generics.ListAPIView):
+    queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
+    serializer_class = StoreProductInventoryListSerializer
+
+    def get_queryset(self):
+
+        start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
+        stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
+
+        return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk)
+
 
     

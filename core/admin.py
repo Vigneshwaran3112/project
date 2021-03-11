@@ -71,6 +71,11 @@ class FreeBillAdmin(admin.ModelAdmin):
     list_display = ('pk', 'bill_no', 'amount', 'billed_by', 'date', 'description', )
 
 
+@admin.register(ElectricBill)
+class ElectricBillAdmin(admin.ModelAdmin):
+    list_display = ('pk','sub_branch', 'opening_reading', 'closing_reading', 'unit', 'date')
+
+
 @admin.register(ComplaintStatus)
 class ComplaintStatusAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code')
