@@ -912,6 +912,12 @@ class OilConsumptionAPIView(viewsets.ModelViewSet):
     serializer_class = ElectricBillSerializer
     # permission_class = (AllowAny,)
 
-
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
+    
+    def get_queryset(self):
+        return OilConsumption.objects.filter(branch=self.request.user.branch.pk).order_by('-id')
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = OilConsumption.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
