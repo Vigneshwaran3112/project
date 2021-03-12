@@ -362,10 +362,6 @@ class ProductInventory(BaseModel):
     taken = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
 
-    def save(self, *args, **kwargs):
-        self.on_hand -= self.taken
-        super(ProductInventory, self).save(*args, **kwargs)
-
     def __str__(self):
         return f'{self.branch.name} - {self.product.name}'
 
