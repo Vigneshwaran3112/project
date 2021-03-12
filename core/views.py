@@ -874,7 +874,7 @@ class OilConsumptionList(generics.ListAPIView):
     serializer_class = OilConsumptionSerializer
 
     def get_queryset(self):
-        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date=self.kwargs['date']).order_by('-id')
+        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date']).order_by('-id')
 
 
 class OilConsumptionCreate(generics.CreateAPIView):
