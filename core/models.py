@@ -529,6 +529,9 @@ class EBMeter(BaseModel):
     meter = models.CharField(max_length=100)
     description = models.TextField(blank=True)
 
+    def __str__(self):
+        return f'{self.branch.name} - {self.meter}'
+
 
 class ElectricBill(BaseModel):
     eb_meter = models.ForeignKey(EBMeter, on_delete=models.CASCADE, related_name='meter_EB')
@@ -544,7 +547,7 @@ class ElectricBill(BaseModel):
         super(ElectricBill, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.branch.name} - {self.date}'
+        return f'{self.eb_meter.branch.name} - {self.date}'
 
 
 class BranchEmployeeIncentive(BaseModel):

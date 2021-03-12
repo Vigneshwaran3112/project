@@ -1045,27 +1045,29 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
         }
 
 
-# class ElectricBillSerializer(serializers.ModelSerializer):
+class ElectricBillSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = ElectricBill
-#         exclude = ['delete', 'unit', 'status']
+    class Meta:
+        model = ElectricBill
+        exclude = ['delete', 'unit', 'no_of_unit', 'status']
 
-#     def to_representation(self, instance):
+    def to_representation(self, instance):
 
-#         return {
-#             'id': instance.pk,
-#             'branch': instance.eb_meter.branch.pk,
-#             'branch_name': instance.eb_meter.branch.name,
-#             'sub_branch_id': instance.eb_meter.sub_branch.pk if instance.eb_meter.sub_branch else None,
-#             'sub_branch_name': instance.eb_meter.sub_branch.name if instance.eb_meter.sub_branch else None,
-#             'opening_reading': instance.opening_reading,
-#             'closing_reading': instance.closing_reading,
-#             'number_of_units': instance.no_of_unit,
-#             'unit': instance.unit.code if instance.unit else None,
-#             'date': instance.date,
-#             'created': instance.created
-#         }
+        return {
+            'id': instance.pk,
+            'branch': instance.eb_meter.branch.pk,
+            'branch_name': instance.eb_meter.branch.name,
+            'sub_branch_id': instance.eb_meter.sub_branch.pk if instance.eb_meter.sub_branch else None,
+            'sub_branch_name': instance.eb_meter.sub_branch.name if instance.eb_meter.sub_branch else None,
+            'meter': instance.eb_meter.id,
+            'meter_name': instance.eb_meter.meter,
+            'opening_reading': instance.opening_reading,
+            'closing_reading': instance.closing_reading,
+            'number_of_units': instance.no_of_unit,
+            'unit': instance.unit.code if instance.unit else None,
+            'date': instance.date,
+            'created': instance.created
+        }
 
 
 

@@ -471,33 +471,6 @@ class BranchSpecificFreeBillAPIView(generics.ListAPIView):
         return freebill_data
 
 
-# class BranchSpecificElectricBillAPIView(generics.ListAPIView):
-#     queryset = ElectricBill.objects.filter(delete=False, status=True)
-#     serializer_class = ElectricBillSerializer
-
-#     def get_queryset(self):
-#         try:
-#             start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
-#             stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
-#         except:
-#             start = None
-#             stop = None
-
-#         branch = self.kwargs['pk']
-
-#         if start == None:
-#             if branch == 0:
-#                 electricbill_data = ElectricBill.objects.filter(delete=False, status=True)
-#             else:
-#                 electricbill_data = ElectricBill.objects.filter(branch=self.kwargs['pk'], delete=False, status=True)
-#         else:
-#             if branch == 0:
-#                 electricbill_data = ElectricBill.objects.filter(date__range=[start, stop], delete=False, status=True)
-#             else:
-#                 electricbill_data = ElectricBill.objects.filter(date__range=[start, stop], branch=self.kwargs['pk'], delete=False, status=True)
-#         return electricbill_data
-
-
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True)
     serializer_class = ComplaintSerializer
@@ -663,26 +636,36 @@ class AttendanceUserListAPIView(generics.ListAPIView):
         return branch_user
 
 
-# class BranchSpecificUserListAPIView(generics.ListAPIView):
-#     queryset = BaseUser.objects.filter(is_active=True)
-#     serializer_class = UserSerializer
+class BranchSpecificUserListAPIView(generics.ListAPIView):
+    queryset = BaseUser.objects.filter(is_active=True)
+    serializer_class = UserSerializer
 
-#     def get_queryset(self):
-#         return BaseUser.objects.filter(branch=self.kwargs["branch_id"])
-
-
-# class ElectricBillAPIView(viewsets.ModelViewSet):
-#     queryset = ElectricBill.objects.exclude(delete=True)
-#     serializer_class = ElectricBillSerializer
-#     # permission_class = (AllowAny,)
+    def get_queryset(self):
+        return BaseUser.objects.filter(branch=self.kwargs["branch_id"])
 
 
-#     def perform_create(self, serializer):
-#         serializer.save(branch=self.request.user.branch)
+class ElectricBillAPIView(viewsets.ModelViewSet):
+    queryset = ElectricBill.objects.exclude(delete=True)
+    serializer_class = ElectricBillSerializer
+    # permission_class = (AllowAny,)
 
-#     def destroy(self, request, *args, **kwargs):
-#         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
-#         return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return ElectricBill.objects.filter(delete=False, status=True)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
+
+class BranchSpecificElectricBillAPIView(generics.ListAPIView):
+    queryset = ElectricBill.objects.filter(delete=False, status=True)
+    serializer_class = ElectricBillSerializer
+
+    def get_queryset(self):
+        ElectricBill_data = ElectricBill.objects.filter(date__date=self.kwargs['date'], delete=False, status=True)
+        return ElectricBill_data
 
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
