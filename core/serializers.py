@@ -778,7 +778,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FreeBill
-        exclude = ['delete', 'status', 'branch']
+        exclude = ['delete', 'status', 'branch', 'billed_by', 'billed_for']
 
     def to_representation(self, instance):
         return{
@@ -788,7 +788,7 @@ class FreeBillSerializer(serializers.ModelSerializer):
             'amount': instance.amount,
             'billed_by': instance.billed_by.pk,
             'billed_by_name': instance.billed_by.first_name,
-            'billed_for': instance.billed_for.name,
+            # 'billed_for': instance.billed_for.name,
             'date': instance.date,
             'description': instance.description
         }

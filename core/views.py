@@ -455,7 +455,7 @@ class FreeBillAPIView(viewsets.ModelViewSet):
         return FreeBill.objects.filter(branch=self.request.user.branch, delete=False, status=True)
 
     def perform_create(self, serializer):
-        serializer.save(branch=serializer.validated_data['billed_by'].branch)
+        serializer.save(branch=self.request.user.branch, billed_by=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         destroy = FreeBill.objects.filter(pk=kwargs['pk']).update(status=False)
