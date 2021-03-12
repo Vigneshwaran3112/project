@@ -1073,39 +1073,14 @@ class ElectricBillSerializer(serializers.ModelSerializer):
 class ElectricBillMeterSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
-        date = self.context['date']
         branch = self.context['branch']
-        try:
-            query = ElectricBill.objects.get(eb_meter__branch__pk=branch, date__date=date)
-            pk = query.pk
-            opening_reading = query.opening_reading
-            closing_reading = query.closing_reading
-        except:
-            pk = None
-            try:
-                query = ElectricBill.objects.filter(branch__pk=branch).latest('date')
-                opening_stock = query.closing_stock
-                closing_stock = ""
-            except:
-                opening_stock = 0
-                closing_stock = ""
 
-        received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
-        is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
-        return{
-            'id': pk, 
-            'key': pk,
-            'product': instance.pk,
-            'name': instance.name,
-            'unit': instance.unit.pk if instance.unit else None,
-            'unit_name': instance.unit.name if instance.unit else None,
-            'unit_symbol': instance.unit.symbol if instance.unit else None,
-            'opening_stock': opening_stock,
-            'received_stock': received_stock['total_received_stock'],
-            'closing_stock': closing_stock,
-            'error':"",
-            'is_editable': is_editable,
-        }
+        today = datetime.date.today()
+        date = today - datetime.timedelta(days=1)
+
+
+        query = ElectricBill.objects.get(eb_meter__branch__pk=branch, date__date=date)
+
 
     # def to_representation(self, instance):
     #     date = self.context['date']
@@ -1529,7 +1504,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
             'used_oil': instance.used_oil,
             'wastage_oil': instance.wastage_oil,
             'unit': instance.unit.code if instance.unit else None,
-            'date': instance.date.strftime("%d-%m-%Y")
+            'date': instance.date
         }
 
 

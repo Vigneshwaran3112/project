@@ -672,7 +672,7 @@ class ElectricBillMeterList(generics.ListAPIView):
 
     def list(self, request, date, classification):
         query = ElectricBill.objects.get(branch=self.request.user.branch).order_by('-id')
-        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk}, many=True).data)
 
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
