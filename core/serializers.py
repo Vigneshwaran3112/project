@@ -1440,7 +1440,6 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
                 inventory.taken -= data.on_hand
                 inventory.on_hand += data.on_hand
                 inventory.save()
-
             else:
                 taken = data.on_hand - data.closing_stock
                 inventory.taken -= taken
@@ -1450,6 +1449,7 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
             data.closing_stock=validated_data['closing_stock']
             data.save()
         else:
+            
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], on_hand=validated_data['on_hand'],  opening_stock=validated_data['opening_stock'])
         return data
 
