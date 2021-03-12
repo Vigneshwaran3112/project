@@ -560,7 +560,7 @@ class SlickposProducts(BaseModel):
 
 class FoodWastage(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_food_wastage')
-    sub_branch = models.ManyToManyField(SubBranch, blank=True, null=True, related_name='sub_branch_food_wastage')
+    sub_branch = models.ForeignKey(SubBranch, on_delete=models.CASCADE, blank=True, null=True, related_name='sub_branch_food_wastage')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_food_wastage')
     wasted_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_food_wastage')
     quantity = models.PositiveIntegerField(default=0)

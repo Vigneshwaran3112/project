@@ -868,7 +868,12 @@ class BranchProductInventoryList(generics.ListAPIView):
     def get_queryset(self):
         start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
         stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
-        return ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk).order_by('-id')
+        if self.kwargs['pk']==1:
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code__in=[2,3]).order_by('-id')
+        elif self.kwargs['pk']==2:
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code=4).order_by('-id')
+
+        return query
 
 
 class OilConsumptionListCreate(generics.ListCreateAPIView):
