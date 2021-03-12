@@ -1045,27 +1045,27 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
         }
 
 
-class ElectricBillSerializer(serializers.ModelSerializer):
+# class ElectricBillSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = ElectricBill
-        exclude = ['delete', 'unit', 'branch', 'status']
+#     class Meta:
+#         model = ElectricBill
+#         exclude = ['delete', 'unit', 'status']
 
-    def to_representation(self, instance):
+#     def to_representation(self, instance):
 
-        return {
-            'id': instance.pk,
-            'branch': instance.branch.pk,
-            'branch_name': instance.branch.name,
-            'sub_branch_id': instance.sub_branch.pk if instance.sub_branch else None,
-            'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
-            'opening_reading': instance.opening_reading,
-            'closing_reading': instance.closing_reading,
-            'number_of_units': instance.closing_reading - instance.opening_reading,
-            'unit': instance.unit.code if instance.unit else None,
-            'date': instance.date,
-            'created': instance.created
-        }
+#         return {
+#             'id': instance.pk,
+#             'branch': instance.eb_meter.branch.pk,
+#             'branch_name': instance.eb_meter.branch.name,
+#             'sub_branch_id': instance.eb_meter.sub_branch.pk if instance.eb_meter.sub_branch else None,
+#             'sub_branch_name': instance.eb_meter.sub_branch.name if instance.eb_meter.sub_branch else None,
+#             'opening_reading': instance.opening_reading,
+#             'closing_reading': instance.closing_reading,
+#             'number_of_units': instance.no_of_unit,
+#             'unit': instance.unit.code if instance.unit else None,
+#             'date': instance.date,
+#             'created': instance.created
+#         }
 
 
 
@@ -1258,7 +1258,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         bills_data = {
                     'free_bills': {'id':7, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'wrong_bills':{'id':8, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    # 'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
         cash_data = {
                     'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':False},
