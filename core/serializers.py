@@ -1269,8 +1269,8 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':False}
                 }
         department_inventory_data = {
-                    'department_sales_count': {'id':14, 'name':"department_sales_count", 'completed_status':False},
-                    'inventory':{'id':15, 'name':"inventory", 'completed_status':False}
+                    'department_sales_count': {'id':16, 'name':"department_sales_count", 'completed_status':False},
+                    'inventory':{'id':17, 'name':"inventory", 'completed_status':False}
                 }
 
         inventory_count, bill_count, cash_count, department_count = 0, 0, 0 ,0
