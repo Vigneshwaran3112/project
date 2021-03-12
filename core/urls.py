@@ -136,4 +136,6 @@ urlpatterns = [
 
     path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
 
+    path('raw_operational_product_list/', views.RawOperationalProductList.as_view()),
+
 ]

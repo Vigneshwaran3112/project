@@ -1070,24 +1070,20 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         }
 
 
-class ElectricBillMeterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = EBMeter
-        exclude = ['delete', 'status']
+class ElectricBillMeterSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         date = self.context['date']
         branch = self.context['branch']
         try:
-            query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.pk)
+            query = ElectricBill.objects.get(eb_meter__branch__pk=branch, date__date=date)
             pk = query.pk
-            opening_stock = query.opening_stock
-            closing_stock = query.closing_stock
+            opening_reading = query.opening_reading
+            closing_reading = query.closing_reading
         except:
             pk = None
             try:
-                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
+                query = ElectricBill.objects.filter(branch__pk=branch).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
             except:
@@ -1524,7 +1520,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
             'used_oil': instance.used_oil,
             'wastage_oil': instance.wastage_oil,
             'unit': instance.unit.code if instance.unit else None,
-            'date': instance.date
+            'date': instance.date.strftime("%d-%m-%Y")
         }
 
 
@@ -1549,4 +1545,27 @@ class FoodWastageSerializer(serializers.ModelSerializer):
             'mrp_price': instance.mrp_price,
             'date': instance.date,
             'description': instance.description
+        }
+
+
+class RawOperationalProductListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        exclude = ['delete', 'branch', 'status']
+
+    def to_representation(self,instance):
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'unit': instance.unit.pk if instance.unit else None,
+            'unit_name': instance.unit.name if instance.unit else None,
+            'unit_symbol': instance.unit.symbol if instance.unit else None,
+            'department': instance.department.pk if instance.department else None,
+            'department_name': instance.department.name if instance.department else None,
+            'classification': instance.classification.pk,
+            'classification_name': instance.classification.name,
+            'reorder_level': instance.reorder_level,
+            'sort_order': instance.sort_order,
+            'status': instance.status
         }
