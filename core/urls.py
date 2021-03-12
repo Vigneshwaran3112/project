@@ -132,8 +132,10 @@ urlpatterns = [
     path('oil_consumption_create/', views.OilConsumptionCreate.as_view()),
     path('oil_consumption_update/<int:pk>/', views.OilConsumptionUpdate.as_view()),
 
-    path('electric_bill_meter_list/<str:date>/', views.ElectricBillMeterList.as_view()),
+    path('electric_bill_meter_list/', views.ElectricBillMeterList.as_view()),
 
     path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
+
+    path('raw_operational_product_list/', views.RawOperationalProductList.as_view()),
 
 ]

@@ -672,7 +672,7 @@ class ElectricBillMeterList(generics.ListAPIView):
 
     def list(self, request, date, classification):
         query = ElectricBill.objects.get(branch=self.request.user.branch).order_by('-id')
-        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk}, many=True).data)
 
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
@@ -883,8 +883,6 @@ class OilConsumptionCreate(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
 
-
-
 class OilConsumptionUpdate(generics.UpdateAPIView):
     queryset = OilConsumption.objects.exclude(delete=True)
     serializer_class = OilConsumptionSerializer
@@ -912,3 +910,11 @@ class FoodWastageList(generics.ListAPIView):
     def get_queryset(self):
         foodwastage_data = FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
         return foodwastage_data
+
+
+
+class RawOperationalProductList(generics.ListAPIView):
+    serializer_class = RawOperationalProductListSerializer
+
+    def get_queryset(self):
+        return Product.objects.filter(classification__code__in=[2,3], status=True, delete=False)
