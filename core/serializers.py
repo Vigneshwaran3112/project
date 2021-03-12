@@ -1070,6 +1070,25 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         }
 
 
+class ElectricBillMeterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EBMeter
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        date = self.context['date']
+        branch = self.context['branch']
+
+        return{
+            'id':instance.id
+        #     'meter': instance.meter,
+        #     'opening_reading': ElectricBill.objects.get(eb_meter__pk=instance.meter.pk),
+        #     'closing_reading': ,
+        #     'no_of_unit': 
+        }
+
+
 
 class ProductPricingBatchSerializer(serializers.ModelSerializer):
 
@@ -1457,7 +1476,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OilConsumption
-        exclude = ['delete', 'date', 'status', 'branch']
+        exclude = ['delete', 'status', 'branch']
 
     def to_representation(self, instance):
         
@@ -1469,5 +1488,30 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
             'fresh_oil': instance.fresh_oil,
             'used_oil': instance.used_oil,
             'wastage_oil': instance.wastage_oil,
+            'unit': instance.unit.code if instance.unit else None,
             'date': instance.date
+        }
+
+
+class FoodWastageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoodWastage
+        exclude = ['delete', 'branch', 'status']
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'sub_branch_id': instance.sub_branch.pk if instance.sub_branch else None,
+            'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
+            'product': instance.product.pk,
+            'product_name': instance.product.name,
+            'wasted_by': instance.wasted_by.pk,
+            'wasted_by_name': instance.wasted_by.first_name,
+            'quantity': instance.quantity,
+            'mrp_price': instance.mrp_price,
+            'date': instance.date,
+            'description': instance.description
         }
