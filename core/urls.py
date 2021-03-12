@@ -18,6 +18,7 @@ router.register(r'recipe_item', views.ProductRecipeItemViewset, basename='recipe
 # router.register(r'product/(?P<pk>\d+)', views.BranchProductViewset, basename='branch_product')
 router.register(r'wrong_bill', views.WrongBillAPIView, basename='wrong_bill')
 router.register(r'free_bill', views.FreeBillAPIView, basename='free_bill')
+router.register(r'foodwastage_bill', views.FoodWastageAPIView, basename='foodwastage_bill')
 router.register(r'electric_bill', views.ElectricBillAPIView, basename='electric_bill')
 router.register(r'product_price_batch', views.ProductPricingBatchAPIView, basename='product_price_batch')
 router.register(r'product_inventory', views.ProductInventoryAPIView, basename='product_inventory')
@@ -129,5 +130,9 @@ urlpatterns = [
 
     path('oil_consumption_list_create/<str:date>/', views.OilConsumptionListCreate.as_view()),
     path('oil_consumption_update/<int:pk>/', views.OilConsumptionUpdate.as_view()),
+
+    path('electric_bill_meter_list/<str:date>/', views.ElectricBillMeterList.as_view()),
+
+    path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
 
 ]

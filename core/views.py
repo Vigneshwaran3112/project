@@ -667,6 +667,13 @@ class BranchSpecificElectricBillAPIView(generics.ListAPIView):
         ElectricBill_data = ElectricBill.objects.filter(date__date=self.kwargs['date'], delete=False, status=True)
         return ElectricBill_data
 
+class ElectricBillMeterList(generics.ListAPIView):
+    serializer_class = ElectricBillMeterSerializer
+
+    def list(self, request, date, classification):
+        query = ElectricBill.objects.get(branch=self.request.user.branch).order_by('-id')
+        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
     queryset = ProductPricingBatch.objects.filter(delete=False)
@@ -873,3 +880,27 @@ class OilConsumptionListCreate(generics.ListCreateAPIView):
 class OilConsumptionUpdate(generics.UpdateAPIView):
     queryset = OilConsumption.objects.exclude(delete=True)
     serializer_class = OilConsumptionSerializer
+
+
+class FoodWastageAPIView(viewsets.ModelViewSet):
+    queryset = FoodWastage.objects.filter(delete=False, status=True)
+    serializer_class = FoodWastageSerializer
+
+    def get_queryset(self):
+        return FoodWastage.objects.filter(branch=self.request.user.branch, delete=False, status=True)
+
+    def perform_create(self, serializer):
+        serializer.save(branch=serializer.validated_data['wasted_by'].branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = FoodWastage.objects.filter(pk=kwargs['pk']).update(status=False)
+        return Response({'message':'food wastage deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class FoodWastageList(generics.ListAPIView):
+    queryset = FoodWastage.objects.filter(delete=False, status=True)
+    serializer_class = FoodWastageSerializer
+
+    def get_queryset(self):
+        foodwastage_data = FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
+        return foodwastage_data
