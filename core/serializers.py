@@ -1418,7 +1418,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         except:
             pk = None
             try:
-                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
+                query = InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
             except:
@@ -1426,6 +1426,10 @@ class ProductInventoryControlSerializer(serializers.Serializer):
                 closing_stock = ""
 
         received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+        try:
+            on_hand = ProductInventory.objects.get(branch__pk=branch, product__pk=instance.pk).on_hand
+        except:
+            on_hand = 0
         is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
         return{
             'id': pk, 
@@ -1437,6 +1441,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'unit_symbol': instance.unit.symbol if instance.unit else None,
             'opening_stock': opening_stock,
             'received_stock': received_stock['total_received_stock'],
+            'on_hand': on_hand,
             'closing_stock': closing_stock,
             'error':"",
             'is_editable': is_editable,
@@ -1448,7 +1453,7 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InventoryControl
-        fields = ('id', 'product', 'opening_stock', 'closing_stock')
+        fields = ('id', 'product', 'opening_stock', 'closing_stock', 'on_hand')
 
     def create(self, validated_data):
 
@@ -1457,23 +1462,15 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
         date = datetime.datetime.combine(date, now.time())
 
         if validated_data.get('id', None):
-            data = InventoryControl.objects.filter(pk=int(validated_data['id'])).update(closing_stock=validated_data['closing_stock'])
+            data = InventoryControl.objects.get(pk=int(validated_data['id']))
+            inventory = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])
+            taken = data.on_hand - data.closing_stock
 
-#--------------------------------model create logic implemented here for update method--------------------------------#
-            inventory_product = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])
-            if validated_data['closing_stock'] == 0:
-                inventory_product.taken = inventory_product.received
-                inventory_product.on_hand = 0
-                inventory_product.save()
-            else:
-                inventory_product.taken = inventory_product.received-validated_data['closing_stock']
-                inventory_product.on_hand = validated_data['closing_stock']
-                inventory_product.received -= inventory_product.taken 
-                inventory_product.save()
-#--------------------------------model create logic implemented here for update method--------------------------------#
-            
+            data.closing_stock=validated_data['closing_stock']
+            print(validated_data['closing_stock'])
+            data.save()
         else:
-            data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], opening_stock=validated_data['opening_stock'])
+            data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], on_hand=validated_data['on_hand'],  opening_stock=validated_data['opening_stock'])
         return data
 
 
