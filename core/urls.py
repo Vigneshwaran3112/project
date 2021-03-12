@@ -128,7 +128,8 @@ urlpatterns = [
     path('branch_product_inventory_create/', views.BranchProductInventoryCreate.as_view()),
     path('branch_product_inventory_list/<int:pk>/', views.BranchProductInventoryList.as_view()),
 
-    path('oil_consumption_list_create/<str:date>/', views.OilConsumptionListCreate.as_view()),
+    path('oil_consumption_list/<str:date>/', views.OilConsumptionList.as_view()),
+    path('oil_consumption_create/', views.OilConsumptionCreate.as_view()),
     path('oil_consumption_update/<int:pk>/', views.OilConsumptionUpdate.as_view()),
 
     path('electric_bill_meter_list/<str:date>/', views.ElectricBillMeterList.as_view()),

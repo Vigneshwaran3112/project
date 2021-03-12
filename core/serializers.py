@@ -1479,7 +1479,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OilConsumption
-        exclude = ['delete', 'date', 'status', 'branch']
+        exclude = ['delete', 'status', 'branch']
 
     def to_representation(self, instance):
         
@@ -1491,6 +1491,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
             'fresh_oil': instance.fresh_oil,
             'used_oil': instance.used_oil,
             'wastage_oil': instance.wastage_oil,
+            'unit': instance.unit.code if instance.unit else None,
             'date': instance.date
         }
 

@@ -604,5 +604,10 @@ class OilConsumption(BaseModel):
     fresh_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     used_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     wastage_oil = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_oliconsumption') 
     date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.unit = Unit.objects.get(code=3)
+        super(OilConsumption, self).save(*args, **kwargs)
 
