@@ -1079,14 +1079,49 @@ class ElectricBillMeterSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         date = self.context['date']
         branch = self.context['branch']
+        try:
+            query = InventoryControl.objects.get(branch__pk=branch, date__date=date, product__pk=instance.pk)
+            pk = query.pk
+            opening_stock = query.opening_stock
+            closing_stock = query.closing_stock
+        except:
+            pk = None
+            try:
+                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
+                opening_stock = query.closing_stock
+                closing_stock = ""
+            except:
+                opening_stock = 0
+                closing_stock = ""
 
+        received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+        is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
         return{
-            'id':instance.id
-        #     'meter': instance.meter,
-        #     'opening_reading': ElectricBill.objects.get(eb_meter__pk=instance.meter.pk),
-        #     'closing_reading': ,
-        #     'no_of_unit': 
+            'id': pk, 
+            'key': pk,
+            'product': instance.pk,
+            'name': instance.name,
+            'unit': instance.unit.pk if instance.unit else None,
+            'unit_name': instance.unit.name if instance.unit else None,
+            'unit_symbol': instance.unit.symbol if instance.unit else None,
+            'opening_stock': opening_stock,
+            'received_stock': received_stock['total_received_stock'],
+            'closing_stock': closing_stock,
+            'error':"",
+            'is_editable': is_editable,
         }
+
+    # def to_representation(self, instance):
+    #     date = self.context['date']
+    #     branch = self.context['branch']
+
+    #     return{
+    #         'id':instance.id
+    #     #     'meter': instance.meter,
+    #     #     'opening_reading': ElectricBill.objects.get(eb_meter__pk=instance.meter.pk),
+    #     #     'closing_reading': ,
+    #     #     'no_of_unit': 
+    #     }
 
 
 
@@ -1279,7 +1314,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         bills_data = {
                     'free_bills': {'id':7, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'wrong_bills':{'id':8, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    # 'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
         cash_data = {
                     'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':False},
@@ -1485,7 +1520,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OilConsumption
-        exclude = ['delete', 'status', 'branch']
+        exclude = ['delete', 'unit', 'status', 'branch']
 
     def to_representation(self, instance):
         
