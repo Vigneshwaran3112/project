@@ -835,13 +835,16 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
 
     def create(self, request, date):
         for inventory_data in request.data:
-            if inventory_data['closing_stock'] > inventory_data['on_hand']:
-                return Response({'message': 'Closing stock is greater then inventory stock'})
+            if inventory_data['is_editable']:
+                if inventory_data['closing_stock'] > inventory_data['on_hand']:
+                    return Response({'message': 'Closing stock is greater then inventory stock'})
+                else:
+                    serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
             else:
-                serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-                return Response({'message': 'Data Saved!'})
+                continue
+        return Response({'message': 'Data Saved!'})
 
 
 class BranchProductInventoryCreate(generics.CreateAPIView):
