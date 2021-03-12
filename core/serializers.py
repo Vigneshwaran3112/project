@@ -1061,7 +1061,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
             'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
             'opening_reading': instance.opening_reading,
             'closing_reading': instance.closing_reading,
-            'number_of_units': instance.closing_reading - instance.opening_reading,
+            'number_of_units': instance.no_of_unit,
             'unit': instance.unit.code if instance.unit else None,
             'date': instance.date,
             'created': instance.created
@@ -1251,9 +1251,9 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         inventory_data =  {
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
                     'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
-                    'food_wastage':{'id':9, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'oil_consumption':{'id':9, 'name':"oil_consumption", 'completed_status':OilConsumption.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'vegetable_purchase':{'id':4, 'name':"vegetable_purchase", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False, product__classification__code=4).exists()},
+                    'food_wastage':{'id':10, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'oil_consumption':{'id':9, 'name':"oil_consumption", 'completed_status':OilConsumption.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
         bills_data = {
                     'free_bills': {'id':21, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
