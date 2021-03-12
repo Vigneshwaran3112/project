@@ -1247,21 +1247,34 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         branch = self.context['branch']
         date = self.context['date']
 
-        inventory_list, bills_list = [],[]
+        inventory_list, bills_list, cash_list, department_list = [],[],[],[]
         inventory_data =  {
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
                     'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
                     'vegetable_purchase':{'id':4, 'name':"vegetable_purchase", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False, product__classification__code=4).exists()},
-                    'food_wastage':{'id':10, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'oil_consumption':{'id':9, 'name':"oil_consumption", 'completed_status':OilConsumption.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'food_wastage':{'id':5, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'oil_consumption':{'id':6, 'name':"oil_consumption", 'completed_status':OilConsumption.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
         bills_data = {
-                    'free_bills': {'id':21, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'wrong_bills':{'id':22, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'eb_bills':{'id':23, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    'free_bills': {'id':7, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'wrong_bills':{'id':8, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                }
+        cash_data = {
+                    'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':False},
+                    'credit_sales':{'id':11, 'name':"credit_sales", 'completed_status':False},
+                    'credit_settlements':{'id':12, 'name':"credit_settlements", 'completed_status':False},
+                    'store_cash_managements': {'id':13, 'name':"store_cash_managements", 'completed_status':False},
+                    'denomiation':{'id':14, 'name':"denomiation", 'completed_status':False},
+                    'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':False}
+                }
+        department_inventory_data = {
+                    'department_sales_count': {'id':14, 'name':"department_sales_count", 'completed_status':False},
+                    'inventory':{'id':15, 'name':"inventory", 'completed_status':False}
                 }
 
-        inventory_count, bill_count = 0, 0
+        inventory_count, bill_count, cash_count, department_count = 0, 0, 0 ,0
+
         for key,value in inventory_data.items():
             if value['completed_status']:
                 inventory_count = inventory_count + 1
@@ -1271,6 +1284,16 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
             if value['completed_status']:
                 bill_count = bill_count + 1
             bills_list.append(value)
+
+        for key,value in cash_data.items():
+            if value['completed_status']:
+                cash_count = cash_count + 1
+            cash_list.append(value)
+
+        for key,value in department_inventory_data.items():
+            if value['completed_status']:
+                department_count = department_count + 1
+            department_list.append(value)
 
 
         inventory = {
@@ -1287,9 +1310,25 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                 'sub_menu': bills_list
         }
 
+        cash = {
+                'name': "cash_details",
+                'total_count': len(cash_list),
+                'completed_count': cash_count,
+                'sub_menu': cash_list
+                }
+
+        department_inventory = {
+                'name': "department_inventory",
+                'total_count': len(department_list),
+                'completed_count': department_count,
+                'sub_menu': department_list
+        }
+
         l = []
         l.append(inventory)
         l.append(bills)
+        l.append(cash)
+        l.append(department_inventory)
 
         return {
             'data': l

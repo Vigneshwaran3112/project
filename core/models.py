@@ -513,16 +513,24 @@ class CreditSales(BaseModel):
     description = models.TextField(blank=True)
 
 
+class EBMeter(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_meter')
+    sub_branch = models.ForeignKey(SubBranch, on_delete=models.CASCADE, blank=True, null=True,  related_name='sub_branch_meter')
+    meter = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+
 class ElectricBill(BaseModel):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_electric_bill')
-    sub_branch = models.ForeignKey(SubBranch, on_delete=models.CASCADE, blank=True, null=True,  related_name='sub_branch_electric_bill')
+    eb_meter = models.ForeignKey(EBMeter, on_delete=models.CASCADE, related_name='meter_EB')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
+    no_of_unit = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_EB') 
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
         self.unit = Unit.objects.get(code=4)
+        self.no_of_unit = self.closing_reading - self.opening_reading
         super(ElectricBill, self).save(*args, **kwargs)
 
     def __str__(self):
