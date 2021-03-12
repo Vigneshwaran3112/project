@@ -71,14 +71,14 @@ class FreeBillAdmin(admin.ModelAdmin):
     list_display = ('pk', 'bill_no', 'amount', 'billed_by', 'date', 'description', )
 
 
-# @admin.register(ElectricBill)
-# class ElectricBillAdmin(admin.ModelAdmin):
-#     list_display = ('pk','eb_meter', 'opening_reading', 'closing_reading', 'unit', 'date')
+@admin.register(ElectricBill)
+class ElectricBillAdmin(admin.ModelAdmin):
+    list_display = ('pk','eb_meter', 'opening_reading', 'closing_reading', 'unit', 'date')
 
 
-# @admin.register(EBMeter)
-# class EBMeterAdmin(admin.ModelAdmin):
-#     list_display = ('pk','branch', 'sub_branch', 'meter', 'description')
+@admin.register(EBMeter)
+class EBMeterAdmin(admin.ModelAdmin):
+    list_display = ('pk','branch', 'sub_branch', 'meter', 'description')
 
 
 
