@@ -798,7 +798,7 @@ class BranchProductList(generics.ListAPIView):
     def get_queryset(self):
         if self.kwargs['classification']==0:
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-            products = query.filter(classification__code__in=[2,3])
+            products = query.filter(classification__code__in=[2,3,4])
 
         else:
             query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
