@@ -435,18 +435,16 @@ class OrderStatus(BaseModel):
         return self.name
 
 
-
 class Customer(BaseModel):
-    class Payment(models.IntegerChoices):
-        cash = 1
-        bank = 2
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20, db_index=True)
-    address = models.TextField(blank=True)
-    payment_type = models.IntegerField(choices=Payment.choices)
+    phone1 = models.CharField(max_length=20, db_index=True)
+    phone2 = models.CharField(max_length=20, null=True, blank=True)
+    address1 = models.TextField(blank=True)
+    address2 = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+
 
 class BulkOrder(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_bulk_order')
@@ -508,12 +506,14 @@ class FreeBill(BaseModel):
 
 
 class CreditSaleCustomer(BaseModel):
+    class Payment(models.IntegerChoices):
+        cash = 1
+        bank = 2
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_sale_customer')
     name = models.CharField(max_length=100)
-    phone1 = models.CharField(max_length=20, db_index=True)
-    phone2 = models.CharField(max_length=20, null=True, blank=True)
-    address1 = models.TextField(blank=True)
-    address2 = models.TextField(blank=True)
+    phone = models.CharField(max_length=20, db_index=True)
+    address = models.TextField(blank=True)
+    payment_type = models.IntegerField(choices=Payment.choices)
 
     def __str__(self):
         return self.name
@@ -523,6 +523,14 @@ class CreditSales(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_sale')
     customer = models.ForeignKey(CreditSaleCustomer, on_delete=models.CASCADE, related_name='customer_credit_sale')
     bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+    description = models.TextField(blank=True)
+
+
+class CreditSettlement(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_settlement')
+    customer = models.ForeignKey(CreditSaleCustomer, on_delete=models.CASCADE, related_name='customer_credit_settlement')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
     description = models.TextField(blank=True)

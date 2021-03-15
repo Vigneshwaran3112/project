@@ -167,14 +167,14 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
 
 
-@admin.register(CreditSaleCustomer)
-class CreditSaleCustomerAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'branch' )
+# @admin.register(CreditSaleCustomer)
+# class CreditSaleCustomerAdmin(admin.ModelAdmin):
+#     list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'branch' )
 
 
-@admin.register(CreditSales)
-class CreditSalesAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
+# @admin.register(CreditSales)
+# class CreditSalesAdmin(admin.ModelAdmin):
+#     list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
 
 
 @admin.register(BranchExpenses)
