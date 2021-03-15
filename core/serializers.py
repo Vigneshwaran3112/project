@@ -1046,54 +1046,56 @@ class CreditSaleCustomerSerializer(serializers.ModelSerializer):
 
 
 class ElectricBillSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False,  allow_null=True)
 
     class Meta:
         model = ElectricBill
-        exclude = ['delete', 'unit', 'no_of_unit', 'status']
+        fields = ('id', 'opening_reading', 'closing_reading', 'meter')
 
-    def to_representation(self, instance):
+    def create(self, validated_data):
+        date = datetime.datetime.strptime(self.context['date'], '%Y-%m-%d')
+        now = datetime.datetime.now()
+        date = datetime.datetime.combine(date, now.time())
 
-        return {
-            'id': instance.pk,
-            'branch': instance.eb_meter.branch.pk,
-            'branch_name': instance.eb_meter.branch.name,
-            'sub_branch_id': instance.eb_meter.sub_branch.pk if instance.eb_meter.sub_branch else None,
-            'sub_branch_name': instance.eb_meter.sub_branch.name if instance.eb_meter.sub_branch else None,
-            'meter': instance.eb_meter.id,
-            'meter_name': instance.eb_meter.meter,
-            'opening_reading': instance.opening_reading,
-            'closing_reading': instance.closing_reading,
-            'number_of_units': instance.no_of_unit,
-            'unit': instance.unit.code if instance.unit else None,
-            'date': instance.date,
-            'created': instance.created
-        }
+        if validated_data.get('id', None):
+            data = ElectricBill.objects.get(pk=int(validated_data['id']))            
+            data.closing_reading=validated_data['closing_reading']
+            data.save()
+        else:
+            data = ElectricBill.objects.create(meter=validated_data['meter'], date=date, closing_reading=validated_data['closing_reading'],  opening_reading=validated_data['opening_reading'])
+        return data
 
 
 class ElectricBillMeterSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
+        date = self.context['date']
         branch = self.context['branch']
 
-        today = datetime.date.today()
-        date = today - datetime.timedelta(days=1)
-
-
-        query = ElectricBill.objects.get(eb_meter__branch__pk=branch, date__date=date)
-
-
-    # def to_representation(self, instance):
-    #     date = self.context['date']
-    #     branch = self.context['branch']
-
-    #     return{
-    #         'id':instance.id
-    #     #     'meter': instance.meter,
-    #     #     'opening_reading': ElectricBill.objects.get(eb_meter__pk=instance.meter.pk),
-    #     #     'closing_reading': ,
-    #     #     'no_of_unit': 
-    #     }
-
+        try:
+            query = ElectricBill.objects.get(eb_meter__pk=instance.pk, date__date=date, eb_meter__branch=branch)
+            pk = query.pk
+            opening_reading = query.opening_reading
+            closing_reading = query.closing_reading
+        except:
+            pk = None
+            try:
+                query = ElectricBill.objects.filter(eb_meter__pk=instance.pk, date__date=date, eb_meter__branch=branch).latest('date')
+                opening_reading = query.closing_reading
+                closing_reading = ""
+            except:
+                opening_reading = 0
+                closing_reading = ""
+        
+        return {
+            'id': pk,
+            'key': pk,
+            'meter': instance.id,
+            'meter_name': instance.meter,
+            'opening_reading': opening_reading,
+            'closing_reading': closing_reading,
+            'error':""
+        }
 
 
 class ProductPricingBatchSerializer(serializers.ModelSerializer):
@@ -1402,6 +1404,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         except:
             on_hand = 0
         is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
+
         return{
             'id': pk, 
             'key': pk,
@@ -1452,7 +1455,6 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
             
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], on_hand=validated_data['on_hand'],  opening_stock=validated_data['opening_stock'])
         return data
-
 
 
 class BranchProductInventoryCreateSerializer(serializers.ModelSerializer):

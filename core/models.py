@@ -535,7 +535,7 @@ class EBMeter(BaseModel):
 
 
 class ElectricBill(BaseModel):
-    eb_meter = models.ForeignKey(EBMeter, on_delete=models.CASCADE, related_name='meter_EB')
+    meter = models.ForeignKey(EBMeter, on_delete=models.CASCADE, related_name='meter_EB')
     opening_reading = models.DecimalField(max_digits=10, decimal_places=2)
     closing_reading = models.DecimalField(max_digits=10, decimal_places=2)
     no_of_unit = models.DecimalField(max_digits=10, decimal_places=2)

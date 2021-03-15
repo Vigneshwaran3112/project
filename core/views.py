@@ -659,20 +659,32 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
-class BranchSpecificElectricBillAPIView(generics.ListAPIView):
-    queryset = ElectricBill.objects.filter(delete=False, status=True)
+
+# class BranchSpecificElectricBillAPIView(generics.ListAPIView):
+#     queryset = ElectricBill.objects.filter(delete=False, status=True)
+#     serializer_class = ElectricBillSerializer
+
+#     def get_queryset(self):
+#         return EBMeter.objects.filter(Branch=self.request.user.branch, delete=False, status=True)
+
+
+class ElectricBillCreate(generics.CreateAPIView):
     serializer_class = ElectricBillSerializer
 
-    def get_queryset(self):
-        ElectricBill_data = ElectricBill.objects.filter(date__date=self.kwargs['date'], delete=False, status=True)
-        return ElectricBill_data
+    def create(self, request, date):
+        for eb_data in request.data:
+            serializer = self.serializer_class(data=eb_data, context={'branch': self.request.user.branch.pk, 'date': date})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})
+
 
 class ElectricBillMeterList(generics.ListAPIView):
     serializer_class = ElectricBillMeterSerializer
 
-    def list(self, request, date, classification):
-        query = ElectricBill.objects.get(branch=self.request.user.branch).order_by('-id')
-        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch.pk}, many=True).data)
+    def list(self, request, date):
+        query = EBMeter.objects.filter(branch=self.request.user.branch).order_by('-id')
+        return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch,'date':self.kwargs['date']}, many=True).data)
 
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
@@ -913,7 +925,6 @@ class FoodWastageList(generics.ListAPIView):
     def get_queryset(self):
         foodwastage_data = FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
         return foodwastage_data
-
 
 
 class RawOperationalProductList(generics.ListAPIView):
