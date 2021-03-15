@@ -139,4 +139,8 @@ urlpatterns = [
 
     path('raw_operational_product_list/', views.RawOperationalProductList.as_view()),
 
+    path('branch_specific_user_list/', views.BranchSpecificUserListAPIView.as_view()),
+
+    path('all_product_list/', views.AllProductListAPIView.as_view()),
+
 ]
