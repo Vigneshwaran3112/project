@@ -219,9 +219,11 @@ class UserSalaryPerDay(BaseModel):
 
         #case5
         elif self.time_spend < b:
-            self.attendance = 1
-            self.salary = 0
-            self.ut_time_spend = 0
+            quater_of_salary = user_salary.per_hour/4
+            trunc_value = math.trunc(self.time_spend/15)
+            self.salary = quater_of_salary * trunc_value
+            self.attendance = 2
+            self.ut_time_spend = user_salary.work_minutes - self.time_spend
 
         super(UserSalaryPerDay, self).save(*args, **kwargs)
 
@@ -433,16 +435,18 @@ class OrderStatus(BaseModel):
         return self.name
 
 
+
 class Customer(BaseModel):
+    class Payment(models.IntegerChoices):
+        cash = 1
+        bank = 2
     name = models.CharField(max_length=100)
-    phone1 = models.CharField(max_length=20, db_index=True)
-    phone2 = models.CharField(max_length=20, null=True, blank=True)
-    address1 = models.TextField(blank=True)
-    address2 = models.TextField(blank=True)
+    phone = models.CharField(max_length=20, db_index=True)
+    address = models.TextField(blank=True)
+    payment_type = models.IntegerField(choices=Payment.choices)
 
     def __str__(self):
         return self.name
-
 
 class BulkOrder(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_bulk_order')
@@ -491,7 +495,7 @@ class FreeBillCustomer(BaseModel):
 
     def __str__(self):
         return self.name
-    
+
 
 class FreeBill(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_free_bill')
