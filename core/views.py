@@ -881,7 +881,6 @@ class BranchProductInventoryList(generics.ListAPIView):
             query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code__in=[2,3]).order_by('-id')
         elif self.kwargs['pk']==2:
             query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code=4).order_by('-id')
-
         return query
 
 

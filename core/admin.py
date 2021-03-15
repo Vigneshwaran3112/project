@@ -102,9 +102,9 @@ class OrderStatusAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code')
 
 
-@admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', )
+# @admin.register(Customer)
+# class CustomerAdmin(admin.ModelAdmin):
+#     list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', )
 
 
 @admin.register(BulkOrder)

@@ -1145,8 +1145,8 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 class BulkAttendanceSerializer(serializers.Serializer):
     id = serializers.CharField()
     existing = serializers.BooleanField()
-    start = serializers.DateTimeField()
-    stop = serializers.DateTimeField(required=False)
+    start = serializers.TimeField()
+    stop = serializers.TimeField(required=False)
     date = serializers.DateField()
 
     def create(self, validated_data):
@@ -1160,8 +1160,8 @@ class BulkAttendanceSerializer(serializers.Serializer):
 class BulkBreakTimeSerializer(serializers.Serializer):
     id = serializers.CharField()
     existing = serializers.BooleanField()
-    start = serializers.DateTimeField()
-    stop = serializers.DateTimeField(required=False, allow_null=True)
+    start = serializers.TimeField()
+    stop = serializers.TimeField(required=False, allow_null=True)
     date = serializers.DateField()
 
     def create(self, validated_data):
