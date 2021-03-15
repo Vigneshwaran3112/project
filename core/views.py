@@ -168,7 +168,7 @@ class UserSalaryList(generics.ListAPIView):
         return UserSalary.objects.filter(pk=data)
 
 
-class UserSalaryReport(generics.RetrieveAPIView):  # Important
+class UserSalaryReport(generics.RetrieveAPIView):
     serializer_class = UserSalaryReportSerializer
     # permission_class = (IsAdminUser, )
 
@@ -558,7 +558,7 @@ class BranchProductMappingDelete(generics.DestroyAPIView):
 class ComplaintStatusViewSet(viewsets.ModelViewSet):
     queryset = ComplaintStatus.objects.exclude(delete=True)
     serializer_class = ComplaintStatusSerializer
-    # permission_classes = (IsAdmin,)1
+    # permission_classes = (IsAdmin,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ComplaintStatus.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -930,3 +930,11 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
         user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
         data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
         return data
+
+
+
+class AllProductListAPIView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    
+    def get_queryset(self):
+        return Product.objects.filter(classification__in=[1,2,3,5] , status=True, delete=False).order_by('-id') 
