@@ -1146,7 +1146,7 @@ class BulkAttendanceSerializer(serializers.Serializer):
     id = serializers.CharField()
     existing = serializers.BooleanField()
     start = serializers.TimeField()
-    stop = serializers.TimeField(required=False)
+    stop = serializers.TimeField(required=False, allow_null=True)
     date = serializers.DateField()
 
     def create(self, validated_data):
