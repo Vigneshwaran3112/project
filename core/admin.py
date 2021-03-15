@@ -102,9 +102,9 @@ class OrderStatusAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code')
 
 
-# @admin.register(Customer)
-# class CustomerAdmin(admin.ModelAdmin):
-#     list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', )
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', )
 
 
 @admin.register(BulkOrder)
@@ -167,14 +167,19 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name' )
 
 
-# @admin.register(CreditSaleCustomer)
-# class CreditSaleCustomerAdmin(admin.ModelAdmin):
-#     list_display = ('pk', 'name', 'phone1', 'phone2', 'address1', 'address2', 'branch' )
+@admin.register(CreditSaleCustomer)
+class CreditSaleCustomerAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'name', 'phone', 'address', 'payment_type' )
 
 
-# @admin.register(CreditSales)
-# class CreditSalesAdmin(admin.ModelAdmin):
-#     list_display = ('pk', 'bill_no', 'amount', 'branch', 'customer', 'description', 'date')
+@admin.register(CreditSales)
+class CreditSalesAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'customer', 'bill_no', 'amount', 'date', 'description')
+
+
+@admin.register(CreditSettlement)
+class CreditSettlementAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'customer', 'amount', 'date', 'description')
 
 
 @admin.register(BranchExpenses)
