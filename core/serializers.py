@@ -1073,14 +1073,14 @@ class ElectricBillMeterSerializer(serializers.Serializer):
         branch = self.context['branch']
 
         try:
-            query = ElectricBill.objects.get(eb_meter__pk=instance.pk, date__date=date, eb_meter__branch=branch)
+            query = ElectricBill.objects.get(meter__pk=instance.pk, date__date=date, meter__branch=branch)
             pk = query.pk
             opening_reading = query.opening_reading
             closing_reading = query.closing_reading
         except:
             pk = None
             try:
-                query = ElectricBill.objects.filter(eb_meter__pk=instance.pk, date__date=date, eb_meter__branch=branch).latest('date')
+                query = ElectricBill.objects.filter(meter__pk=instance.pk, date__date=date, meter__branch=branch).latest('date')
                 opening_reading = query.closing_reading
                 closing_reading = ""
             except:
@@ -1287,7 +1287,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         bills_data = {
                     'free_bills': {'id':7, 'name':"free_bills", 'completed_status':FreeBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'wrong_bills':{'id':8, 'name':"wrong_bills", 'completed_status':WrongBill.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(eb_meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
         cash_data = {
                     'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':False},
