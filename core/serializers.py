@@ -1275,7 +1275,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':PettyCash.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'credit_sales':{'id':11, 'name':"credit_sales", 'completed_status':CreditSales.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'credit_settlements':{'id':12, 'name':"credit_settlements", 'completed_status':CreditSettlement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'branch_cash_managements': {'id':13, 'name':"store_cash_managements", 'completed_status':BranchCashManagement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'cash_managements': {'id':13, 'name':"store_cash_managements", 'completed_status':BranchCashManagement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'denomiation':{'id':14, 'name':"denomiation", 'completed_status':Denomination.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':BankCashReceivedDetails.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
@@ -1742,7 +1742,13 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
             'id': instance.pk,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
-            'quantity': instance.quantity,
-            'amount': instance.amount,
-            'date': instance.date,
+            'opening_cash': instance.opening_cash,
+            'closing_cash': instance.closing_cash,
+            'expenses': instance.expenses,
+            'incentive': instance.incentive,
+            'sky_cash': instance.sky_cash,
+            'credit_sales': instance.credit_sales,
+            'bank_cash': instance.bank_cash,
+            'total_sales': instance.total_sales,
+            'date': instance.date
         }

@@ -703,4 +703,4 @@ class BranchCashManagement(BaseModel):
 
     def save(self, *args, **kwargs):
         self.total_sales = self.expenses+self.incentive+self.sky_cash+self.credit_sales+self.bank_cash
-        super(StoreCashManagement, self).save(*args, **kwargs)
+        super(BranchCashManagement, self).save(*args, **kwargs)
