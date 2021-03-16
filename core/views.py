@@ -511,12 +511,15 @@ class BranchProductMappingList(generics.ListAPIView):
     serializer_class = ProductBranchMappingSerializer
 
     def list(self, request, classification):
-        product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.values_list('pk', flat=True)
+        try:
+            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.values_list('pk', flat=True)
+        except:
+            product_mapping = [0]
         if self.kwargs['classification']==0:
             product = Product.objects.filter(classification__in=[2,3,5] , status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         else:
             product = Product.objects.filter(classification__code=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
-        return Response(ProductSerializer(product.exclude(pk__in=product_mapping, delete=True), many=True).data, status=status.HTTP_201_CREATED)
+        return Response(ProductSerializer(product, many=True).data, status=status.HTTP_201_CREATED)
 
 
 class BranchProductMappingCreate(generics.CreateAPIView):
@@ -807,15 +810,19 @@ class VendorAPIView(viewsets.ModelViewSet):
 class BranchProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
 
-    def get_queryset(self):
-        if self.kwargs['classification']==0:
-            query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-            products = query.filter(classification__code__in=[2,3,4])
+    def list(self, request, classification):
+        try:
+            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch)
+            if self.kwargs['classification']==0:
+                query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+                products = query.filter(classification__code__in=[2,3,4])
 
-        else:
-            query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-            products = query.filter(classification__code=self.kwargs['classification'])
-        return products
+            else:
+                query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+                products = query.filter(classification__code=self.kwargs['classification'])
+            return products
+        except ProductBranchMapping.DoesNotExist:
+            return Response({'message': 'Data does not exist,This branch does not have any product'}, status=status.HTTP_200_OK)
 
 
 class InventoryRawProductList(generics.ListAPIView):
@@ -1032,6 +1039,11 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
+
+    # def perform_update(self, serializer):
+    #     # petty_cash = PettyCash.objects.get(pk=kwargs['pk'])
+    #     # petty_cash.save()
+    #     serializer.save()
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCash.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
