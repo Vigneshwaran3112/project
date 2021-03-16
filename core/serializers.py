@@ -1599,7 +1599,8 @@ class CreditSalesSerializer(serializers.ModelSerializer):
 
         return{
             'id': instance.pk,
-            'customer': instance.customer.name,
+            'customer': instance.customer.pk,
+            'customer_name': instance.customer.name,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
             'bill_no': instance.bill_no,
@@ -1619,7 +1620,8 @@ class CreditSettlementSerializer(serializers.ModelSerializer):
 
         return{
             'id': instance.pk,
-            'customer': instance.customer.name,
+            'customer': instance.customer.pk,
+            'customer_name': instance.customer.name,
             'branch': instance.branch.pk,
             'branch_name': instance.branch.name,
             'amount': instance.amount,
