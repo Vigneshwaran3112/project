@@ -1024,3 +1024,30 @@ class CreditSettlementListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return CreditSettlement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+
+
+class SalesCountCreateAPIView(generics.CreateAPIView):
+    serializer_class = SalesCountCreateSerializer
+
+    def create(self, request):
+        for salescount_data in request.data:
+            serializer = self.serializer_class(data=salescount_data, context={'branch': self.request.user.branch.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})
+
+
+class SalesCountListAPIView(generics.ListAPIView):
+    serializer_class = SalesCountlistSerializer
+
+    def get_queryset(self):
+        return SalesCount.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+class SalesCountDeleteAPIView(generics.DestroyAPIView):
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = SalesCount.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'sales count deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+

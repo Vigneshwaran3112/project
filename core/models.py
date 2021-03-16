@@ -551,7 +551,7 @@ class SalesCount(BaseModel):
     date = models.DateTimeField()
 
     def __str__(self):
-        return f'{self.branch.name} - {self.employee.name}'
+        return f'{self.branch.name} - {self.employee.get_full_name()}'
 
 
 class PettyCash(BaseModel):

@@ -150,4 +150,8 @@ urlpatterns = [
     path('credit_sale_list/<str:date>/', views.CreditSalesListAPIView.as_view()),
     path('credit_settlement_list/<str:date>/', views.CreditSettlementListAPIView.as_view()),
 
+    path('sales_count_create/', views.SalesCountCreateAPIView.as_view()),
+    path('sales_count_list/<str:date>/', views.SalesCountListAPIView.as_view()),
+    path('sales_count_delete/<int:pk>/', views.SalesCountDeleteAPIView.as_view()),
+
 ]

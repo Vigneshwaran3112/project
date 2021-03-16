@@ -230,3 +230,8 @@ class FoodWastageAdmin(admin.ModelAdmin):
 @admin.register(OilConsumption)
 class OilConsumptionAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'item', 'fresh_oil', 'used_oil', 'wastage_oil', 'date')
+
+
+@admin.register(SalesCount)
+class SalesCountAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'employee', 'section', 'product', 'quantity', 'date')

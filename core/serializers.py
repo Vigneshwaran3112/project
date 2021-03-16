@@ -1628,3 +1628,38 @@ class CreditSettlementSerializer(serializers.ModelSerializer):
             'date': instance.date,
             'description': instance.description
         }
+
+
+class SalesCountCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SalesCount
+        fields = ('id', 'employee', 'section', 'product', 'quantity', 'date')
+
+    def create(self, validated_data):
+        branch = self.context['branch']
+        data = SalesCount.objects.create(branch=Branch.objects.get(pk=self.context['branch']), employee=validated_data['employee'], section=validated_data['section'], product=validated_data['product'], quantity=validated_data['quantity'], date=validated_data['date'])
+        return data
+
+
+class SalesCountlistSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SalesCount
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+
+        return{
+            'id': instance.pk,
+            'employee': instance.employee.pk,
+            'employee_name': instance.employee.get_full_name(),
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'section': instance.section.pk,
+            'section_name': instance.section.name,
+            'product': instance.product.pk,
+            'product_name': instance.product.name,
+            'quantity': instance.quantity,
+            'date': instance.date
+        }
