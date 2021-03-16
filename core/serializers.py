@@ -1735,7 +1735,7 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BranchCashManagement
-        exclude = ['delete', 'status', 'branch',]
+        exclude = ['delete', 'status', 'branch', 'opening_cash']
 
     def to_representation(self, instance):
         return{
