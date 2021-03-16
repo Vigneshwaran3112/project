@@ -960,6 +960,9 @@ class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
     queryset = CreditSaleCustomer.objects.filter(delete=False, status=True)
     serializer_class = CreditSaleCustomerSerializer
 
+    def get_queryset(self):
+        return CreditSaleCustomer.objects.filter(branch=self.request.user.branch)
+
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
 
