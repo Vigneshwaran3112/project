@@ -913,7 +913,7 @@ class FoodWastageAPIView(viewsets.ModelViewSet):
         serializer.save(branch=serializer.validated_data['wasted_by'].branch)
 
     def destroy(self, request, *args, **kwargs):
-        destroy = FoodWastage.objects.filter(pk=kwargs['pk']).update(status=False)
+        destroy = FoodWastage.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
         return Response({'message':'food wastage deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -947,4 +947,77 @@ class AllProductListAPIView(generics.ListAPIView):
     serializer_class = ProductSerializer
     
     def get_queryset(self):
-        return Product.objects.filter(classification__in=[1,2,3,5] , status=True, delete=False).order_by('-id') 
+        return Product.objects.filter(classification__in=[1,2,3,5] , status=True, delete=False).order_by('-id')
+
+
+class CustomerAPIView(viewsets.ModelViewSet):
+    queryset = Customer.objects.filter(delete=False, status=True)
+    serializer_class = CustomerSerializer
+
+
+
+class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
+    queryset = CreditSaleCustomer.objects.filter(delete=False, status=True)
+    serializer_class = CreditSaleCustomerSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = CreditSaleCustomer.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'credit sale customer deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+# class CreditSalesListAPIView(generics.ListAPIView):
+#     serializer_class = CreditSaleslistSerializer
+#
+#     def get_queryset(self):
+#         return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date']).order_by('-id')
+#
+#
+# class CreditSalesCreateAPIView(generics.CreateAPIView):
+#     serializer_class = CreditSalesCreateSerializer
+#
+#     def create(self, request):
+#         for customer_data in request.data:
+#             serializer = self.serializer_class(data=customer_data, context={'branch': self.request.user.branch.pk})
+#             serializer.is_valid(raise_exception=True)
+#             serializer.save()
+#         return Response({'message': 'Data Saved!'})
+
+
+class CreditSalesAPIView(viewsets.ModelViewSet):
+    queryset = CreditSales.objects.filter(delete=False, status=True)
+    serializer_class = CreditSalesSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = CreditSales.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CreditSalesListAPIView(generics.ListAPIView):
+    serializer_class = CreditSalesSerializer
+
+    def get_queryset(self):
+        return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+
+
+class CreditSettlementAPIView(viewsets.ModelViewSet):
+    queryset = CreditSettlement.objects.filter(delete=False, status=True)
+    serializer_class = CreditSettlementSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = CreditSettlement.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CreditSettlementListAPIView(generics.ListAPIView):
+    serializer_class = CreditSettlementSerializer
+
+    def get_queryset(self):
+        return CreditSettlement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])

@@ -1027,24 +1027,6 @@ class AttendanceBreakSerializer(serializers.Serializer):
         }
 
 
-class CreditSaleCustomerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CreditSaleCustomer
-        exclude = ['delete']
-    
-    def to_representation(self, instance):
-        return{
-            'id': instance.pk,
-            'branch': instance.branch,
-            'name': instance.name,
-            'phone1': instance.phone1,
-            'phone2': instance.phone2,
-            'address1': instance.address1,
-            'address2': instance.address2,
-        }
-
-
 class ElectricBillSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,  allow_null=True)
 
@@ -1554,4 +1536,93 @@ class RawOperationalProductListSerializer(serializers.ModelSerializer):
             'reorder_level': instance.reorder_level,
             'sort_order': instance.sort_order,
             'status': instance.status
+        }
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Customer
+        exclude = ['delete', 'status']
+
+    def to_representation(self,instance):
+
+        return{
+            'id': instance.pk,
+            'name': instance.name,
+            'phone1': instance.phone1,
+            'phone2': instance.phone2,
+            'address1': instance.address1,
+            'address2': instance.address2
+        }
+
+
+# class CreditSalesCreateSerializer(serializers.ModelSerializer):
+#     id = serializers.IntegerField(required=False,  allow_null=True)
+#     class Meta:
+#         model = CreditSales
+#         fields = ('id', 'customer', 'bill_no', 'amount', 'date', 'description',)
+#
+#     def create(self, validated_data):
+#         branch = self.context['branch']
+#         if validated_data.get('id', None):
+#             data = CreditSales.objects.filter(pk=validated_data['id']).update(customer=validated_data['customer'], bill_no=validated_data['bill_no'], amount=validated_data['amount'], date=validated_data['date'], description=validated_data['description'])
+#         else:
+#             data = CreditSales.objects.create(branch=Branch.objects.get(pk=self.context['branch']), customer=validated_data['customer'], bill_no=validated_data['bill_no'], amount=validated_data['amount'], date=validated_data['date'], description=validated_data['description'])
+#         return data
+
+
+class CreditSaleCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreditSaleCustomer
+        exclude = ['delete', 'status']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'name': instance.name,
+            'phone': instance.phone,
+            'address': instance.address,
+            'payment_type': instance.payment_type
+        }
+
+
+class CreditSalesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CreditSales
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+
+        return{
+            'id': instance.pk,
+            'customer': instance.customer.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'bill_no': instance.bill_no,
+            'amount': instance.amount,
+            'date': instance.date,
+            'description': instance.description
+        }
+
+
+class CreditSettlementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CreditSettlement
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+
+        return{
+            'id': instance.pk,
+            'customer': instance.customer.name,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'amount': instance.amount,
+            'date': instance.date,
+            'description': instance.description
         }

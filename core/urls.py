@@ -26,6 +26,10 @@ router.register(r'complaint_category', views.ComplaintTypeViewSet, basename='com
 router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='complaint_status')
 router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses')
 router.register(r'vendor', views.VendorAPIView, basename='vendor')
+router.register(r'customer', views.CustomerAPIView, basename='customer')
+router.register(r'credit_sale', views.CreditSalesAPIView, basename='creditsale')
+router.register(r'credit_settlement', views.CreditSettlementAPIView, basename='creditsettlement')
+router.register(r'credit_sale_customer', views.CreditSaleCustomerAPIView, basename='creditsalecustomer')
 # router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
 
 # router.register(r'product', views.BranchProductViewset, basename='products')
@@ -142,5 +146,8 @@ urlpatterns = [
     path('branch_specific_user_list/', views.BranchSpecificUserListAPIView.as_view()),
 
     path('all_product_list/', views.AllProductListAPIView.as_view()),
+
+    path('credit_sale_list/<str:date>/', views.CreditSalesListAPIView.as_view()),
+    path('credit_settlement_list/<str:date>/', views.CreditSettlementListAPIView.as_view()),
 
 ]
