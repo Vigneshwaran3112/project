@@ -1089,3 +1089,20 @@ class SalesCountDeleteAPIView(generics.DestroyAPIView):
         return Response({'message':'sales count deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
+    queryset = BankCashReceivedDetails.objects.filter(delete=False, status=True)
+    serializer_class = BankCashReceivedDetailsSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = BankCashReceivedDetails.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'bank cash received details deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
+    serializer_class = BankCashReceivedDetailsSerializer
+
+    def get_queryset(self):
+        return BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)

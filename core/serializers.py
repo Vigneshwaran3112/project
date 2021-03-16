@@ -1694,3 +1694,21 @@ class SalesCountlistSerializer(serializers.ModelSerializer):
             'quantity': instance.quantity,
             'date': instance.date
         }
+
+
+class BankCashReceivedDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BankCashReceivedDetails
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'amount': instance.amount,
+            'date': instance.date,
+            'name': instance.name
+        }
