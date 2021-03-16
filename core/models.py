@@ -676,18 +676,21 @@ class OilConsumption(BaseModel):
 
 
 class Denomination(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_denomination')
     quantity = models.PositiveIntegerField(default=0)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
 
 
 class BankCashReceivedDetails(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_bank_receive_details')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
     name = models.CharField(max_length=100)
 
 
-class StoreCashManagement(BaseModel):
+class BranchCashManagement(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_cash_management')
     opening_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
     closing_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
     expenses = models.PositiveIntegerField(null=True, blank=True, default=0)

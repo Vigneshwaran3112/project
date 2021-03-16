@@ -1627,6 +1627,20 @@ class PettyCashSerializer(serializers.ModelSerializer):
         }
 
 
+class PettyCashRemarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PettyCashRemark
+        exclude = ['delete', 'status', 'branch']
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'remark': instance.remark,
+            'amount': instance.amount,
+            'date': instance.date,
+        }
+
 class CreditSettlementSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -1039,10 +1039,29 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
 
 class PettyCashListAPIView(generics.ListAPIView):
-    serializer_class = PettyCashSerializer
+    serializer_class = PettyCashRemarkSerializer
 
     def get_queryset(self):
-        return PettyCash.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+
+
+class PettyCashRemarkAPIView(viewsets.ModelViewSet):
+    queryset = PettyCashRemark.objects.filter(delete=False, status=True)
+    serializer_class = PettyCashRemarkSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class PettyCashRemarkListAPIView(generics.ListAPIView):
+    serializer_class = PettyCashRemarkSerializer
+
+    def get_queryset(self):
+        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
 
 
 class SalesCountCreateAPIView(generics.CreateAPIView):
