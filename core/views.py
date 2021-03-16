@@ -820,7 +820,7 @@ class BranchProductList(generics.ListAPIView):
             else:
                 query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
                 products = query.filter(classification__code=self.kwargs['classification'])
-            return products
+            return Response(ProductSerializer(products, many=True).data)
         except ProductBranchMapping.DoesNotExist:
             return Response({'message': 'Data does not exist,This branch does not have any product'}, status=status.HTTP_200_OK)
 
