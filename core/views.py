@@ -1120,8 +1120,12 @@ class DenominationAPIView(viewsets.ModelViewSet):
     queryset = Denomination.objects.filter(delete=False, status=True)
     serializer_class = DenominationSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(branch=self.request.user.branch)
+    def create(self, request):
+        for denomination_data in request.data:
+            serializer = self.serializer_class(data=denomination_data, context={'branch': self.request.user.branch.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})
 
     def destroy(self, request, *args, **kwargs):
         destroy = Denomination.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1131,8 +1135,19 @@ class DenominationAPIView(viewsets.ModelViewSet):
 class DenominationListAPIView(generics.ListAPIView):
     serializer_class = DenominationSerializer
 
+    def list(self, request, date):
+        total = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
+                                    status=True).aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
+
+        data = DenominationSerializer(Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
+                                    status=True), many=True).data
+        return Response({
+            "data" : data,
+            "total": total['overall_amount']
+        })
+
     def get_queryset(self):
-        return Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+        return
 
 
 

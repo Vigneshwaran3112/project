@@ -1717,16 +1717,19 @@ class DenominationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Denomination
-        exclude = ['delete', 'status', 'branch',]
+        exclude = ['delete', 'status', 'branch', 'total']
+
+    def create(self, validated_data):
+        branch = self.context['branch']
+        data = Denomination.objects.create(branch=Branch.objects.get(pk=self.context['branch']), amount=validated_data['amount'], quantity=validated_data['quantity'], date=validated_data['date'])
+        return data
 
     def to_representation(self, instance):
+
         return{
             'id': instance.pk,
-            'branch': instance.branch.pk,
-            'branch_name': instance.branch.name,
-            'quantity': instance.quantity,
             'amount': instance.amount,
-            'date': instance.date
+            'quantity': instance.quantity,
         }
 
 
