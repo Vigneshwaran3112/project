@@ -668,3 +668,30 @@ class OilConsumption(BaseModel):
         self.unit = Unit.objects.get(code=3)
         super(OilConsumption, self).save(*args, **kwargs)
 
+
+class Denomination(BaseModel):
+    quantity = models.PositiveIntegerField(default=0)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+
+
+class BankCashReceivedDetails(BaseModel):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+    name = models.CharField(max_length=100)
+
+
+class StoreCashManagement(BaseModel):
+    opening_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    closing_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    expenses = models.PositiveIntegerField(null=True, blank=True, default=0)
+    incentive = models.PositiveIntegerField(null=True, blank=True, default=0)
+    sky_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    credit_sales = models.PositiveIntegerField(null=True, blank=True, default=0)
+    bank_cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    total_sales = models.PositiveIntegerField(null=True, blank=True, default=0)
+    date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.total_sales = self.expenses+self.incentive+self.sky_cash+self.credit_sales+self.bank_cash
+        super(StoreCashManagement, self).save(*args, **kwargs)
