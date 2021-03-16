@@ -232,6 +232,21 @@ class OilConsumptionAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'item', 'fresh_oil', 'used_oil', 'wastage_oil', 'date')
 
 
+@admin.register(BranchCashManagement)
+class StoreCashManagementAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'opening_cash', 'closing_cash', 'expenses', 'incentive', 'sky_cash', 'credit_sales', 'bank_cash', 'total_sales', 'date')
+
+
+@admin.register(Denomination)
+class DenominationAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'quantity', 'amount', 'date')
+
+
+@admin.register(BankCashReceivedDetails)
+class BankCashReceivedDetailsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'amount', 'date', 'name')
+
+
 @admin.register(SalesCount)
 class SalesCountAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'employee', 'section', 'product', 'quantity', 'date')
