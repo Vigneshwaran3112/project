@@ -247,6 +247,16 @@ class BankCashReceivedDetailsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'amount', 'date', 'name')
 
 
+@admin.register(PettyCash)
+class PettyCashAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'opening_cash', 'recevied_cash', 'closing_cash', 'date')
+
+
+@admin.register(PettyCashRemark)
+class PettyCashRemarkAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'remark', 'amount', 'date')
+
+
 @admin.register(SalesCount)
 class SalesCountAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'employee', 'section', 'product', 'quantity', 'date')
