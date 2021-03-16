@@ -30,6 +30,8 @@ router.register(r'customer', views.CustomerAPIView, basename='customer')
 router.register(r'credit_sale', views.CreditSalesAPIView, basename='creditsale')
 router.register(r'credit_settlement', views.CreditSettlementAPIView, basename='creditsettlement')
 router.register(r'credit_sale_customer', views.CreditSaleCustomerAPIView, basename='creditsalecustomer')
+router.register(r'petty_cash', views.PettyCashAPIView, basename='PettyCash')
+
 # router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
 
 # router.register(r'product', views.BranchProductViewset, basename='products')
@@ -153,5 +155,7 @@ urlpatterns = [
     path('sales_count_create/', views.SalesCountCreateAPIView.as_view()),
     path('sales_count_list/<str:date>/', views.SalesCountListAPIView.as_view()),
     path('sales_count_delete/<int:pk>/', views.SalesCountDeleteAPIView.as_view()),
+
+    path('petty_cash_list/<str:date>/', views.PettyCashListAPIView.as_view()),
 
 ]

@@ -563,6 +563,12 @@ class PettyCash(BaseModel):
 
     def save(self, *args, **kwargs):
         remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
+        previous_day = self.date - datetime.timedelta(days=1)
+        try:
+            previous_day_data = PettyCash.objects.filter(date=previous_day, branch=self.branch).latest('date')
+            self.opening_cash = previous_day_data.closing_cash
+        except:
+            self.opening_cash = 0
         self.closing_cash = (self.opening_cash+self.recevied_cash)-remark_cash['overall_remark_cash']
         super(PettyCash, self).save(*args, **kwargs)
 

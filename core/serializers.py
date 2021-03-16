@@ -1613,8 +1613,8 @@ class CreditSalesSerializer(serializers.ModelSerializer):
 class PettyCashSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CreditSettlement
-        exclude = ['delete', 'status', 'branch',]
+        model = PettyCash
+        exclude = ['delete', 'status', 'branch', 'opening_cash', 'closing_cash']
 
     def to_representation(self, instance):
         return{
