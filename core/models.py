@@ -527,6 +527,9 @@ class CreditSales(BaseModel):
     date = models.DateTimeField()
     description = models.TextField(blank=True)
 
+    def __str__(self):
+        return f'{self.branch.name} - {self.customer.name}'
+
 
 class CreditSettlement(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_credit_settlement')
@@ -534,6 +537,47 @@ class CreditSettlement(BaseModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.branch.name} - {self.customer.name}'
+
+
+class SalesCount(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_salaes_count')
+    employee = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    section = models.ForeignKey(EmployeeRole, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+    date = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.branch.name} - {self.employee.name}'
+
+
+class PettyCash(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_petty_cast')
+    opening_cash = models.DecimalField(max_digits=10, decimal_places=2)
+    recevied_cash = models.DecimalField(max_digits=10, decimal_places=2)
+    closing_cash = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
+        self.closing_cash = (self.opening_cash+self.recevied_cash)-remark_cash['overall_remark_cash']
+        super(PettyCash, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.branch.name} - {self.date}'
+
+
+class PettyCashRemark(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_petty_cast_remark')
+    remark = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.branch.name} - {self.date}'
 
 
 class EBMeter(BaseModel):
