@@ -32,6 +32,9 @@ router.register(r'credit_settlement', views.CreditSettlementAPIView, basename='c
 router.register(r'credit_sale_customer', views.CreditSaleCustomerAPIView, basename='creditsalecustomer')
 router.register(r'petty_cash', views.PettyCashAPIView, basename='pettycash')
 router.register(r'petty_cash_remark', views.PettyCashRemarkAPIView, basename='pettycashremark')
+router.register(r'bank_cash_received_details', views.BankCashReceivedDetailsAPIView, basename='bankcashreceiveddetails')
+router.register(r'denomination', views.DenominationAPIView, basename='denomination')
+router.register(r'branch_cash_management', views.BranchCashManagementAPIView, basename='branchcashmanagement')
 
 # router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
 
@@ -159,5 +162,10 @@ urlpatterns = [
 
     path('petty_cash_list/<str:date>/', views.PettyCashListAPIView.as_view()),
     path('petty_cash_remark_list/<str:date>/', views.PettyCashRemarkListAPIView.as_view()),
+
+    path('bank_cash_received_details_list/<str:date>/', views.BankCashReceivedDetailsListAPIView.as_view()),
+
+    path('denomination_list/<str:date>/', views.DenominationListAPIView.as_view()),
+    path('branch_cash_management_list/<str:date>/', views.BranchCashManagementListAPIView.as_view()),
 
 ]
