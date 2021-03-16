@@ -1106,3 +1106,42 @@ class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+class DenominationAPIView(viewsets.ModelViewSet):
+    queryset = Denomination.objects.filter(delete=False, status=True)
+    serializer_class = DenominationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = Denomination.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'denomination deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class DenominationListAPIView(generics.ListAPIView):
+    serializer_class = DenominationSerializer
+
+    def get_queryset(self):
+        return Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+
+class BranchCashManagementAPIView(viewsets.ModelViewSet):
+    queryset = BranchCashManagement.objects.filter(delete=False, status=True)
+    serializer_class = BranchCashManagementSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = BranchCashManagement.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'denomination deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class BranchCashManagementListAPIView(generics.ListAPIView):
+    serializer_class = BranchCashManagementSerializer
+
+    def get_queryset(self):
+        return BranchCashManagement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)

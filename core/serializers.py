@@ -1272,16 +1272,15 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'eb_bills':{'id':9, 'name':"eb_bills", 'completed_status':ElectricBill.objects.filter(meter__branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
         cash_data = {
-                    'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':False},
-                    'credit_sales':{'id':11, 'name':"credit_sales", 'completed_status':False},
-                    'credit_settlements':{'id':12, 'name':"credit_settlements", 'completed_status':False},
-                    'store_cash_managements': {'id':13, 'name':"store_cash_managements", 'completed_status':False},
-                    'denomiation':{'id':14, 'name':"denomiation", 'completed_status':False},
-                    'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':False}
+                    'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':PettyCash.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'credit_sales':{'id':11, 'name':"credit_sales", 'completed_status':CreditSales.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'credit_settlements':{'id':12, 'name':"credit_settlements", 'completed_status':CreditSettlement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'branch_cash_managements': {'id':13, 'name':"store_cash_managements", 'completed_status':BranchCashManagement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'denomiation':{'id':14, 'name':"denomiation", 'completed_status':Denomination.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':BankCashReceivedDetails.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
                 }
         department_inventory_data = {
-                    'department_sales_count': {'id':16, 'name':"department_sales_count", 'completed_status':False},
-                    'inventory':{'id':17, 'name':"inventory", 'completed_status':False}
+                    'department_sales_count': {'id':16, 'name':"department_sales_count", 'completed_status':SalesCount.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
 
         inventory_count, bill_count, cash_count, department_count = 0, 0, 0 ,0
@@ -1711,4 +1710,39 @@ class BankCashReceivedDetailsSerializer(serializers.ModelSerializer):
             'amount': instance.amount,
             'date': instance.date,
             'name': instance.name
+        }
+
+
+class DenominationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Denomination
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'quantity': instance.quantity,
+            'amount': instance.amount,
+            'date': instance.date
+        }
+
+
+
+class BranchCashManagementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BranchCashManagement
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'quantity': instance.quantity,
+            'amount': instance.amount,
+            'date': instance.date,
         }
