@@ -822,7 +822,7 @@ class BranchProductList(generics.ListAPIView):
                 products = query.filter(classification__code=self.kwargs['classification'])
             return Response(ProductSerializer(products, many=True).data)
         except ProductBranchMapping.DoesNotExist:
-            return Response({'message': 'Data does not exist,This branch does not have any product'}, status=status.HTTP_200_OK)
+            return Response([], status=status.HTTP_200_OK)
 
 
 class InventoryRawProductList(generics.ListAPIView):
