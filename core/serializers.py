@@ -1040,7 +1040,7 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         date = datetime.datetime.combine(date, now.time())
 
         if validated_data.get('id', None):
-            data = ElectricBill.objects.get(pk=int(validated_data['id']))            
+            data = ElectricBill.objects.get(pk=int(validated_data['id']))
             data.closing_reading=validated_data['closing_reading']
             data.save()
         else:
@@ -1068,7 +1068,7 @@ class ElectricBillMeterSerializer(serializers.Serializer):
             except:
                 opening_reading = 0
                 closing_reading = ""
-        
+
         return {
             'id': pk,
             'key': pk,
@@ -1607,6 +1607,23 @@ class CreditSalesSerializer(serializers.ModelSerializer):
             'amount': instance.amount,
             'date': instance.date,
             'description': instance.description
+        }
+
+
+class PettyCashSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CreditSettlement
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'opening_cash': instance.opening_cash,
+            'recevied_cash': instance.recevied_cash,
+            'closing_cash': instance.closing_cash,
+            'date': instance.date,
         }
 
 
