@@ -686,7 +686,12 @@ class Denomination(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_denomination')
     quantity = models.PositiveIntegerField(default=0)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.total = self.amount * self.quantity
+        super(Denomination, self).save(*args, **kwargs)
 
 
 class BankCashReceivedDetails(BaseModel):

@@ -904,6 +904,7 @@ class OilConsumptionCreate(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
 
+
 class OilConsumptionUpdate(generics.UpdateAPIView):
     queryset = OilConsumption.objects.exclude(delete=True)
     serializer_class = OilConsumptionSerializer
@@ -1039,11 +1040,6 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
-
-    # def perform_update(self, serializer):
-    #     # petty_cash = PettyCash.objects.get(pk=kwargs['pk'])
-    #     # petty_cash.save()
-    #     serializer.save()
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCash.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
