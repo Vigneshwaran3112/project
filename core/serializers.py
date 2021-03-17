@@ -237,11 +237,11 @@ class RoleSerializer(serializers.ModelSerializer):
         return {
             'id': instance.id,
             'name': instance.name,
-            'code': instance.code,
+            # 'code': instance.code,
             'description': instance.description,
-            'status': instance.status,
-            'updated': instance.updated,
-            'created': instance.created
+            # 'status': instance.status,
+            # 'updated': instance.updated,
+            # 'created': instance.created
         }
 
 
@@ -1754,4 +1754,13 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
             'bank_cash': instance.bank_cash,
             'total_sales': instance.total_sales,
             'date': instance.date
+        }
+
+class RolesSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'name': instance.get_full_name(),
+            'employee_role_data': RoleSerializer(instance.employee_role, many=True).data
         }

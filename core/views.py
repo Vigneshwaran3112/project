@@ -382,6 +382,15 @@ class ProductDepartmentListAPIView(generics.ListAPIView):
     serializer_class = BranchProductDepartmentSerializer
 
 
+class UserRoleListAPIView(generics.ListAPIView):
+    serializer_class = RolesSerializer
+
+    def get_queryset(self):
+        user = BaseUser.objects.filter(pk=self.kwargs['pk']).exclude(employee_role__code__in=[1]).distinct()
+        print(user)
+        return user
+
+
 class ProductRecipeItemViewset(viewsets.ModelViewSet):
     queryset = ProductRecipeItem.objects.filter(delete=False)
     serializer_class = ProductRecipeItemSerializer
