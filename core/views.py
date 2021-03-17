@@ -946,7 +946,8 @@ class RawOperationalProductList(generics.ListAPIView):
     serializer_class = RawOperationalProductListSerializer
 
     def get_queryset(self):
-        return Product.objects.filter(classification__code__in=[2,3], status=True, delete=False)
+        products = ProductBranchMapping.objects.get(branch=self.request.user.branch).product
+        return products.filter(classification__code__in=[2,3], status=True, delete=False)
 
 
 class BranchSpecificUserListAPIView(generics.ListAPIView):
