@@ -1143,19 +1143,12 @@ class DenominationListAPIView(generics.ListAPIView):
     serializer_class = DenominationSerializer
 
     def list(self, request, date):
-        total = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
-                                    status=True).aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
-
-        data = DenominationSerializer(Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
-                                    status=True), many=True).data
+        query = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+        total = query.aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
         return Response({
-            "data" : data,
+            "data" : DenominationSerializer(query, many=True).data,
             "total": total['overall_amount']
         })
-
-    def get_queryset(self):
-        return
-
 
 
 class BranchCashManagementAPIView(viewsets.ModelViewSet):
@@ -1181,3 +1174,11 @@ class BranchCashManagementListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return BranchCashManagement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+# class BranchProductTransferOutAPIView(generics.UpdateAPIView):
+#     serializer_class = BranchProductTransferOutSerializer
+#
+#     def partial_update(self, request, pk):
+#         transfer_product = ProductInventory.objects.get(pk=pk)
+#         return transfer_product

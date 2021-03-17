@@ -1754,3 +1754,11 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
             'total_sales': instance.total_sales,
             'date': instance.date
         }
+
+
+# class BranchProductTransferOutSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#          model = ProductInventory
+#          exclude = ['delete', 'status', 'product', 'taken', 'received', 'on_hand']
+#
