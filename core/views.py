@@ -386,6 +386,7 @@ class UserRoleListAPIView(generics.ListAPIView):
     serializer_class = RolesSerializer
 
     def get_queryset(self):
+        user = BaseUser.objects.filter(pk=self.kwargs['pk']).exclude(employee_role__code__in=[1]).distinct()
         return user
 
 
