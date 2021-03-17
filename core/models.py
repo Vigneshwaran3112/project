@@ -562,14 +562,16 @@ class PettyCash(BaseModel):
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
-        previous_day = self.date - datetime.timedelta(days=1)
         try:
+            previous_day = self.date - datetime.timedelta(days=1)
             previous_day_data = PettyCash.objects.filter(date=previous_day, branch=self.branch).latest('date')
             self.opening_cash = previous_day_data.closing_cash
         except:
             self.opening_cash = 0
-        self.closing_cash = (self.opening_cash+self.recevied_cash)-remark_cash['overall_remark_cash']
+        remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date__date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
+        print(remark_cash['overall_remark_cash'])
+        data = (self.opening_cash+self.recevied_cash)-remark_cash['overall_remark_cash']
+        self.closing_cash = data
         super(PettyCash, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -582,12 +584,10 @@ class PettyCashRemark(BaseModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
 
-    # def save(self, *args, **kwargs):
-    #     # remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
-    #     petty_cash = PettyCash.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).latest('date')
-    #     # petty_cash.closing_cash = (petty_cash.opening_cash+petty_cash.recevied_cash)-remark_cash['overall_remark_cash']
-    #     petty_cash.save()
-    #     super(PettyCashRemark, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        super(PettyCashRemark, self).save(*args, **kwargs)
+        petty_cash = PettyCash.objects.filter(branch=self.branch, date__date=self.date, status=True, delete=False).latest('date')
+        petty_cash.save()
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'
