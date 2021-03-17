@@ -1762,3 +1762,13 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
 #          model = ProductInventory
 #          exclude = ['delete', 'status', 'product', 'taken', 'received', 'on_hand']
 #
+
+class UserProfileSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        user = BaseUser.objects.get(pk=self.request.user.pk)
+        return {
+                'username': user.get_full_name(),
+                'email': user.email if user.email else None,
+                'phone': user.phone
+            }

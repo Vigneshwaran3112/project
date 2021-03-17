@@ -140,8 +140,7 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SubBranchSerializer
 
     def retrieve(self, request, pk):
-        sub_branch = SubBranchSerializer(Branch.objects.get(pk=pk).sub_branch.filter(delete=False), many=True)
-        return Response(sub_branch.data)
+        return Response(SubBranchSerializer(Branch.objects.get(pk=pk).sub_branch.filter(delete=False), many=True).data)
 
     def partial_update(self, request, pk):
         instance = self.get_object()
@@ -329,19 +328,19 @@ class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
 
 
 class GSTListAPIView(generics.ListAPIView):
-    queryset = GST.objects.filter(delete=False)
+    queryset = GST.objects.filter(delete=False, status=True)
     serializer_class = GSTSerializer
     # permission_classes = (IsAdminUser, )
 
 
 class UnitListAPIView(generics.ListAPIView):
-    queryset = Unit.objects.filter(delete=False)
+    queryset = Unit.objects.filter(delete=False, status=True)
     serializer_class = UnitSerializer
     # permission_classes = (IsAdminUser, )
 
 
 class UnitUpdateAPIView(generics.UpdateAPIView):
-    queryset = Unit.objects.filter(delete=False)
+    queryset = Unit.objects.filter(delete=False, status=True)
     serializer_class = UnitSerializer
     # permission_classes = (IsAdminUser, )
 
@@ -353,7 +352,7 @@ class RoleUpdateAPIView(generics.UpdateAPIView):
 
 
 class BranchProductClassificationViewset(viewsets.ModelViewSet):
-    queryset = BranchProductClassification.objects.exclude(delete=True)
+    queryset = BranchProductClassification.objects.exclude(delete=True, status=False)
     serializer_class = BranchProductClassificationSerializer
     # permission_classes = (IsAdminUser, )
 
@@ -368,7 +367,7 @@ class ProductClassificationListAPIView(generics.ListAPIView):
 
 
 class BranchProductDepartmentViewset(viewsets.ModelViewSet):
-    queryset = BranchProductDepartment.objects.exclude(delete=True)
+    queryset = BranchProductDepartment.objects.exclude(delete=True, status=False)
     serializer_class = BranchProductDepartmentSerializer
     # permission_classes = (IsAdminUser, )
 
@@ -418,7 +417,7 @@ class ProductCreate(generics.CreateAPIView):
 
 
 class ProductRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.exclude(delete=True).order_by('-id')
+    queryset = Product.objects.exclude(delete=True, status=False).order_by('-id')
     serializer_class = ProductSerializer
 
     def destroy(self, request, *args, **kwargs):
@@ -450,7 +449,7 @@ class BranchSpecificWrongBillAPIView(generics.ListAPIView):
 
 
 class FreeBillCustomerListAPIView(generics.ListAPIView):
-    queryset = FreeBillCustomer.objects.exclude(delete=True)
+    queryset = FreeBillCustomer.objects.exclude(delete=True, status=False)
     serializer_class = FreeBillCustomerSerializer
 
 
@@ -479,7 +478,7 @@ class BranchSpecificFreeBillAPIView(generics.ListAPIView):
 
 
 class ComplaintListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Complaint.objects.exclude(delete=True)
+    queryset = Complaint.objects.exclude(delete=True, status=False )
     serializer_class = ComplaintSerializer
 
     def perform_create(self, serializer):
@@ -487,12 +486,12 @@ class ComplaintListCreateAPIView(generics.ListCreateAPIView):
 
 
 class BulkOrderItemListAPIView(generics.ListAPIView):
-    queryset = BulkOrderItem.objects.exclude(delete=True)
+    queryset = BulkOrderItem.objects.exclude(delete=True, status=False)
     serializer_class = BulkOrderItemSerializer
 
 
 class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
-    queryset = BulkOrder.objects.exclude(delete=True)
+    queryset = BulkOrder.objects.exclude(delete=True, status=False)
     serializer_class = BulkOrderSerializer
 
     def get_serializer_context(self):
@@ -502,15 +501,15 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
             'view': self,
         }
     def get_queryset(self):
-        return BulkOrder.objects.filter(branch=self.request.user.branch, delete=False)
+        return BulkOrder.objects.filter(branch=self.request.user.branch, delete=False, status=True)
 
 class OrderStatusListAPIView(generics.ListAPIView):
-    queryset = OrderStatus.objects.exclude(delete=True)
+    queryset = OrderStatus.objects.exclude(delete=True, status=False)
     serializer_class = OrderStatusSerializer
 
 
 class CustomerListAPIView(generics.ListAPIView):
-    queryset = Customer.objects.exclude(delete=True)
+    queryset = Customer.objects.exclude(delete=True, status=False)
     serializer_class = CustomerSerializer
 
 
@@ -566,7 +565,7 @@ class BranchProductMappingDelete(generics.DestroyAPIView):
 
 
 class ComplaintStatusViewSet(viewsets.ModelViewSet):
-    queryset = ComplaintStatus.objects.exclude(delete=True)
+    queryset = ComplaintStatus.objects.exclude(delete=True, status=False)
     serializer_class = ComplaintStatusSerializer
     # permission_classes = (IsAdmin,)
 
@@ -577,7 +576,7 @@ class ComplaintStatusViewSet(viewsets.ModelViewSet):
 
 
 class ComplaintTypeViewSet(viewsets.ModelViewSet):
-    queryset = ComplaintType.objects.exclude(delete=True)
+    queryset = ComplaintType.objects.exclude(delete=True, status=False)
     serializer_class = ComplaintTypeSerializer
 
     def destroy(self, request, *args, **kwargs):
@@ -1048,10 +1047,10 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
 
 class PettyCashListAPIView(generics.ListAPIView):
-    serializer_class = PettyCashRemarkSerializer
+    serializer_class = PettyCashSerializer
 
     def get_queryset(self):
-        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+        return PettyCash.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashRemarkAPIView(viewsets.ModelViewSet):
@@ -1176,3 +1175,8 @@ class BranchCashManagementListAPIView(generics.ListAPIView):
 #     def partial_update(self, request, pk):
 #         transfer_product = ProductInventory.objects.get(pk=pk)
 #         return transfer_product
+
+class UserProfileAPIView(generics.ListAPIView):
+    serializer_class = UserProfileSerializer
+
+

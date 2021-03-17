@@ -170,4 +170,6 @@ urlpatterns = [
     path('denomination_list/<str:date>/', views.DenominationListAPIView.as_view()),
     path('branch_cash_management_list/<str:date>/', views.BranchCashManagementListAPIView.as_view()),
 
+    path('user_profile/', views.UserProfileAPIView.as_view()),
+
 ]
