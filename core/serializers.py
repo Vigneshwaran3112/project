@@ -1388,7 +1388,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
 
         return{
             'id': pk, 
-            'key': pk,
+            'key': instance.pk,
             'product': instance.pk,
             'name': instance.name,
             'unit': instance.unit.pk if instance.unit else None,

@@ -582,12 +582,12 @@ class PettyCashRemark(BaseModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()
 
-    def save(self, *args, **kwargs):
-        remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
-        petty_cash = PettyCash.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).latest('date')
-        petty_cash.closing_cash = (petty_cash.opening_cash+petty_cash.recevied_cash)-remark_cash['overall_remark_cash']
-        petty_cash.save()
-        super(PettyCashRemark, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
+    #     petty_cash = PettyCash.objects.filter(branch=self.branch, date=self.date, status=True, delete=False).latest('date')
+    #     # petty_cash.closing_cash = (petty_cash.opening_cash+petty_cash.recevied_cash)-remark_cash['overall_remark_cash']
+    #     petty_cash.save()
+    #     super(PettyCashRemark, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'
