@@ -111,7 +111,9 @@ urlpatterns = [
 
     path('classification_list/', views.ProductClassificationListAPIView.as_view()),
     path('department_list/', views.ProductDepartmentListAPIView.as_view()),
-    
+
+    path('user_role_list/<int:pk>/', views.UserRoleListAPIView.as_view()),
+
     path('sub_branch/<int:pk>/', views.SubBranchRetUpdDelAPIView.as_view()),
     path('sub_branch_update/<int:pk>/', views.SubBranchUpdateApiView.as_view()),
     path('sub_branch_create/<int:pk>/', views.SubBranchCreate.as_view()),
