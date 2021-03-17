@@ -383,11 +383,10 @@ class ProductDepartmentListAPIView(generics.ListAPIView):
 
 
 class UserRoleListAPIView(generics.ListAPIView):
-    serializer_class = RolesSerializer
+    serializer_class = RoleSerializer
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(pk=self.kwargs['pk']).exclude(employee_role__code__in=[1]).distinct()
-        return user
+        return BaseUser.objects.get(pk=self.kwargs['pk']).employee_role.exclude(code=1)
 
 
 class ProductRecipeItemViewset(viewsets.ModelViewSet):
