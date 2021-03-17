@@ -819,14 +819,11 @@ class BranchProductList(generics.ListAPIView):
 
     def list(self, request, classification):
         try:
-            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch)
+            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
             if self.kwargs['classification']==0:
-                query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-                products = query.filter(classification__code__in=[2,3,4])
-
+                products = product_mapping.filter(classification__code__in=[2,3,4])
             else:
-                query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-                products = query.filter(classification__code=self.kwargs['classification'])
+                products = product_mapping.filter(classification__code=self.kwargs['classification'])
             return Response(ProductSerializer(products, many=True).data)
         except ProductBranchMapping.DoesNotExist:
             return Response([], status=status.HTTP_200_OK)
@@ -885,16 +882,15 @@ class BranchProductInventoryCreate(generics.CreateAPIView):
 
 
 class BranchProductInventoryList(generics.ListAPIView):
-    queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
     serializer_class = BranchProductInventoryListSerializer
 
     def get_queryset(self):
         start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
         stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
         if self.kwargs['pk']==1:
-            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code__in=[2,3]).order_by('-id')
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code__in=[2,3], delete=False, status=True).order_by('-id')
         elif self.kwargs['pk']==2:
-            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code=4).order_by('-id')
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code=4, delete=False, status=True).order_by('-id')
         return query
 
 
@@ -902,7 +898,7 @@ class OilConsumptionList(generics.ListAPIView):
     serializer_class = OilConsumptionSerializer
 
     def get_queryset(self):
-        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date']).order_by('-id')
+        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
 
 
 class OilConsumptionCreate(generics.CreateAPIView):
@@ -913,7 +909,7 @@ class OilConsumptionCreate(generics.CreateAPIView):
 
 
 class OilConsumptionUpdate(generics.UpdateAPIView):
-    queryset = OilConsumption.objects.exclude(delete=True)
+    queryset = OilConsumption.objects.exclude(delete=True, status=False)
     serializer_class = OilConsumptionSerializer
 
 
@@ -933,12 +929,10 @@ class FoodWastageAPIView(viewsets.ModelViewSet):
 
 
 class FoodWastageList(generics.ListAPIView):
-    queryset = FoodWastage.objects.filter(delete=False, status=True)
     serializer_class = FoodWastageSerializer
 
     def get_queryset(self):
-        foodwastage_data = FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
-        return foodwastage_data
+        return FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
 
 
 class RawOperationalProductList(generics.ListAPIView):
@@ -952,7 +946,7 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
+        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True, delete=False, status=True)
         data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
         return data
 
@@ -976,7 +970,7 @@ class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
     serializer_class = CreditSaleCustomerSerializer
 
     def get_queryset(self):
-        return CreditSaleCustomer.objects.filter(branch=self.request.user.branch)
+        return CreditSaleCustomer.objects.filter(branch=self.request.user.branch, delete=False, status=True)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1019,7 +1013,7 @@ class CreditSalesListAPIView(generics.ListAPIView):
     serializer_class = CreditSalesSerializer
 
     def get_queryset(self):
-        return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+        return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class CreditSettlementAPIView(viewsets.ModelViewSet):
@@ -1031,7 +1025,7 @@ class CreditSettlementAPIView(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         destroy = CreditSettlement.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message':'credit settlement deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CreditSettlementListAPIView(generics.ListAPIView):
@@ -1050,14 +1044,14 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCash.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message':'petty cash deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class PettyCashListAPIView(generics.ListAPIView):
     serializer_class = PettyCashRemarkSerializer
 
     def get_queryset(self):
-        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashRemarkAPIView(viewsets.ModelViewSet):
@@ -1069,14 +1063,14 @@ class PettyCashRemarkAPIView(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message':'credit sale deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message':'petty cash remark deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class PettyCashRemarkListAPIView(generics.ListAPIView):
     serializer_class = PettyCashRemarkSerializer
 
     def get_queryset(self):
-        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'])
+        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class SalesCountCreateAPIView(generics.CreateAPIView):
