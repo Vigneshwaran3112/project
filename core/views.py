@@ -1144,6 +1144,19 @@ class DenominationListAPIView(generics.ListAPIView):
         })
 
 
+class DenominationUpdateAPIView(generics.UpdateAPIView):
+    queryset = Denomination.objects.filter(delete=False)
+    serializer_class = DenominationUpdateSerializer
+
+    def partial_update(self, request):
+        for denomination_data in request.data:
+            query = Denomination.objects.get(pk=denomination_data['id'])
+            query.amount = denomination_data['amount']
+            query.quantity = denomination_data['quantity']
+            query.save()
+        return Response({'message': 'Updated Successfully'}, status=status.HTTP_202_ACCEPTED)
+
+
 class BranchCashManagementAPIView(viewsets.ModelViewSet):
     queryset = BranchCashManagement.objects.filter(delete=False, status=True)
     serializer_class = BranchCashManagementSerializer
@@ -1176,7 +1189,11 @@ class BranchCashManagementListAPIView(generics.ListAPIView):
 #         transfer_product = ProductInventory.objects.get(pk=pk)
 #         return transfer_product
 
-class UserProfileAPIView(generics.ListAPIView):
-    serializer_class = UserProfileSerializer
+# class UserProfileAPIView(generics.ListAPIView):
+#     # queryset = BaseUser.objects.all()
+#     serializer_class = UserProfileSerializer
+#
+#     def get_queryset(self):
+#         return self.request.user
 
 
