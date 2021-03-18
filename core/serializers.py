@@ -616,7 +616,6 @@ class UserAttendanceListSerializer(serializers.Serializer):
             abscent = UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).latest('updated').abscent
         except:
             abscent = False
-        print(abscent)
         return {
             'id': instance.pk,
             'key': instance.pk,
