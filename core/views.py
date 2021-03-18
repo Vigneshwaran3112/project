@@ -1053,6 +1053,12 @@ class PettyCashListAPIView(generics.ListAPIView):
         return PettyCash.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
+# class PettyCashCreate(generics.CreateAPIView):
+#     serializer_class = PettyCashDetailSerializer
+#
+#     def create(self):
+
+
 # class PettyCashRemarkAPIView(viewsets.ModelViewSet):
 #     queryset = PettyCashRemark.objects.filter(delete=False, status=True)
 #     serializer_class = PettyCashRemarkSerializer
@@ -1070,6 +1076,13 @@ class PettyCashCreateAPIView(generics.CreateAPIView):
 
     def get_queryset(self):
         return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+    def create(self, request):
+        for inventory_data in request.data:
+            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})
 
 
 class PettyCashRemarkListAPIView(generics.ListAPIView):
@@ -1192,11 +1205,11 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
         return Response({'message':'denomination deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class BranchCashManagementListAPIView(generics.ListAPIView):
+class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
 
-    def get_queryset(self):
-        return BranchCashManagement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+    def get_object(self):
+        return BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
