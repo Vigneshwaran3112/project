@@ -129,8 +129,9 @@ class UserSalary(BaseModel):
 
 class UserAttendance(BaseModel):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_attendances')
-    start = models.TimeField()
+    start = models.TimeField(null=True, blank=True)
     stop = models.TimeField(null=True, blank=True)
+    abscent = models.BooleanField(default=False)
     date = models.DateField()
     time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -139,24 +140,35 @@ class UserAttendance(BaseModel):
 
 
     def save(self, *args, **kwargs):
-        if self.stop:
+
+        print(self.abscent)
+
+        if self.abscent==True:
+            print("hai")
+            self.time_spend = 0
+
+        elif self.stop:
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
+            print(stop_start)
             self.time_spend = decimal.Decimal((stop_start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
-                self.salary = user_salary.per_day
-                self.ot_salary = round(user_salary.ot_per_minute * self.ot_time_spend)
             else:
                 self.ot_time_spend = 0
-                self.ot_salary = 0
-                self.salary = round(user_salary.per_minute * self.time_spend)
         super(UserAttendance, self).save(*args, **kwargs)
 
-        if self.stop:
-            queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
-            total_time_spend = queryset.aggregate(overall_time_spend=Coalesce(Sum('time_spend'), V(0)))
-            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date) 
+        queryset =  UserAttendance.objects.filter(date=self.date, user=self.user, status=True, delete=False)
+        total_time_spend = queryset.aggregate(overall_time_spend=Coalesce(Sum('time_spend'), V(0)))
+        if self.abscent:
+            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date)
+            obj.time_spend = total_time_spend['overall_time_spend']
+            obj.user = self.user
+            obj.date = self.date
+            obj.save()
+
+        elif self.stop:
+            obj, created = UserSalaryPerDay.objects.get_or_create(user=self.user, date=self.date)
             obj.time_spend = total_time_spend['overall_time_spend']
             obj.user = self.user
             obj.date = self.date
@@ -218,12 +230,18 @@ class UserSalaryPerDay(BaseModel):
             self.ut_time_spend = 0
 
         #case5
-        elif self.time_spend < b:
+        elif self.time_spend < b and self.time_spend >0:
             quater_of_salary = user_salary.per_hour/4
             trunc_value = math.trunc(self.time_spend/15)
             self.salary = quater_of_salary * trunc_value
             self.attendance = 2
             self.ut_time_spend = user_salary.work_minutes - self.time_spend
+
+        # case6
+        elif self.time_spend == 0:
+            self.salary = 0
+            self.attendance = 1
+            self.ut_time_spend = 0
 
         super(UserSalaryPerDay, self).save(*args, **kwargs)
 
