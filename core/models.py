@@ -140,17 +140,12 @@ class UserAttendance(BaseModel):
 
 
     def save(self, *args, **kwargs):
-
-        print(self.abscent)
-
         if self.abscent==True:
-            print("hai")
             self.time_spend = 0
 
         elif self.stop:
             user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
             stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
-            print(stop_start)
             self.time_spend = decimal.Decimal((stop_start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
                 self.ot_time_spend = self.time_spend - user_salary.work_minutes
@@ -587,7 +582,6 @@ class PettyCash(BaseModel):
         except:
             self.opening_cash = 0
         remark_cash = PettyCashRemark.objects.filter(branch=self.branch, date__date=self.date, status=True, delete=False).aggregate(overall_remark_cash=Coalesce(Sum('amount'), V(0)))
-        print(remark_cash['overall_remark_cash'])
         data = (self.opening_cash+self.recevied_cash)-remark_cash['overall_remark_cash']
         self.closing_cash = data
         super(PettyCash, self).save(*args, **kwargs)
