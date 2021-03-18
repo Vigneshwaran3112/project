@@ -1633,12 +1633,35 @@ class CreditSalesSerializer(serializers.ModelSerializer):
             'description': instance.description
         }
 
+class PettyCashSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False,  allow_null=True)
+
+    class Meta:
+        model = PettyCash
+        exclude = ['delete', 'status', 'branch', 'opening_cash', 'closing_cash']
+
+    def to_representation(self, instance):
+        return{
+        'id': instance.pk,
+        'branch': instance.branch.pk,
+        'opening_cash': instance.opening_cash,
+        'recevied_cash': instance.recevied_cash,
+        'closing_cash': instance.closing_cash,
+        'date': instance.date,
+        }
+
+
 class PettyCashRemarkSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,  allow_null=True)
 
     class Meta:
         model = PettyCashRemark
         exclude = ['delete', 'status', 'branch']
+
+    # def create(self, validated_data):
+    #     pettycase_data = validated_data.pop('PettyCashSerializer')
+
+
 
     def to_representation(self, instance):
         return{
@@ -1680,6 +1703,13 @@ class PettyCashSerializer(serializers.ModelSerializer):
         return query
     def to_representation(self, instance):
         return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'opening_cash': instance.opening_cash,
+            'recevied_cash': instance.recevied_cash,
+            'closing_cash': instance.closing_cash,
+            'date': instance.date,
+            'expensive': PettyCashRemarkSerializer(PettyCashRemark.objects.filter(branch=instance.branch.pk, date__date=instance.date, delete=False, status=True), many=True).data
         'id': instance.pk,
         # 'branch': instance.branch.pk,
         'opening_cash': instance.opening_cash,
