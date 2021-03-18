@@ -740,7 +740,7 @@ class CashHandover(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_cash_handover')
     bill_no = models.PositiveIntegerField(null=True, blank=True, default=0)
     name = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_cash_handover')
-    cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    amount = models.PositiveIntegerField(null=True, blank=True, default=0)
     time = models.TimeField()
     date = models.DateTimeField()
 
