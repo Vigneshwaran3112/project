@@ -630,7 +630,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'check_out': attendance_data,
             'break_in':break_in,
             'break_out': attendance_break_data,
-            'abscent':False,
+            # 'abscent':False,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
             'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk).order_by('-pk'), many=True).data
@@ -1003,6 +1003,7 @@ class AttendanceSerializer(serializers.Serializer):
             'date': instance.date,
             'stop_availability': False if instance.stop else True,
             'time_spend': time_spend_hours,
+            'abscent': False,
             # 'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
             # 'ot_salary': instance.ot_salary,
