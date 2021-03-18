@@ -630,10 +630,10 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'pan_number': instance.pan_number,
             'date_of_resignation': instance.date_of_resignation,
             'reason_of_resignation': instance.reason_of_resignation,
-            'check_in':not attendance_data,
-            'check_out': attendance_data,
-            'break_in':break_in,
-            'break_out': attendance_break_data,
+            'check_in':False if abscent==True else not attendance_data,
+            'check_out':False if abscent==True else  attendance_data,
+            'break_in':False if abscent==True else break_in,
+            'break_out':False if abscent==True else  attendance_break_data,
             'abscent':abscent,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
@@ -1635,7 +1635,7 @@ class CreditSalesSerializer(serializers.ModelSerializer):
 
 
 class PettyCashSerializer(serializers.ModelSerializer):
-
+    id = serializers.IntegerField(required=False,  allow_null=True)
     class Meta:
         model = PettyCash
         exclude = ['delete', 'status', 'branch', 'opening_cash', 'closing_cash']
@@ -1652,9 +1652,15 @@ class PettyCashSerializer(serializers.ModelSerializer):
 
 
 class PettyCashRemarkSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False,  allow_null=True)
+    petty_cash = PettyCashSerializer()
+
     class Meta:
         model = PettyCashRemark
         exclude = ['delete', 'status', 'branch']
+
+    # def create(self, validated_data):
+
 
     def to_representation(self, instance):
         return{

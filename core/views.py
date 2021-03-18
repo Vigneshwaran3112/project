@@ -1053,16 +1053,23 @@ class PettyCashListAPIView(generics.ListAPIView):
         return PettyCash.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
-class PettyCashRemarkAPIView(viewsets.ModelViewSet):
-    queryset = PettyCashRemark.objects.filter(delete=False, status=True)
+# class PettyCashRemarkAPIView(viewsets.ModelViewSet):
+#     queryset = PettyCashRemark.objects.filter(delete=False, status=True)
+#     serializer_class = PettyCashRemarkSerializer
+#
+#     def perform_create(self, serializer):
+#         serializer.save(branch=self.request.user.branch)
+#
+#     def destroy(self, request, *args, **kwargs):
+#         destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+#         return Response({'message':'petty cash remark deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class PettyCashCreateAPIView(generics.CreateAPIView):
     serializer_class = PettyCashRemarkSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(branch=self.request.user.branch)
-
-    def destroy(self, request, *args, **kwargs):
-        destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message':'petty cash remark deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashRemarkListAPIView(generics.ListAPIView):
