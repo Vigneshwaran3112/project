@@ -260,3 +260,8 @@ class PettyCashRemarkAdmin(admin.ModelAdmin):
 @admin.register(SalesCount)
 class SalesCountAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'employee', 'section', 'product', 'quantity', 'date')
+
+
+@admin.register(CashHandover)
+class CashHandoverAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'branch', 'bill_no', 'name', 'amount', 'time', 'date')
