@@ -716,3 +716,15 @@ class BranchCashManagement(BaseModel):
     def save(self, *args, **kwargs):
         self.total_sales = self.expenses+self.incentive+self.sky_cash+self.credit_sales+self.bank_cash
         super(BranchCashManagement, self).save(*args, **kwargs)
+
+
+class CashHandover(BaseModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_cash_handover')
+    bill_no = models.PositiveIntegerField(null=True, blank=True, default=0)
+    name = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='user_cash_handover')
+    cash = models.PositiveIntegerField(null=True, blank=True, default=0)
+    time = models.TimeField()
+    date = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.bill_no} - {self.name.get_full_name()}'
