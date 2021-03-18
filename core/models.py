@@ -582,7 +582,7 @@ class PettyCash(BaseModel):
     def save(self, *args, **kwargs):
         try:
             previous_day = self.date - datetime.timedelta(days=1)
-            previous_day_data = PettyCash.objects.filter(date=previous_day, branch=self.branch).latest('date')
+            previous_day_data = PettyCash.objects.filter(date=previous_day, branch=self.branch, status=True, delete=False).latest('date')
             self.opening_cash = previous_day_data.closing_cash
         except:
             self.opening_cash = 0
@@ -598,6 +598,7 @@ class PettyCash(BaseModel):
 
 class PettyCashRemark(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_petty_cast_remark')
+    # petty_cash = models.ForeignKey(PettyCash, on_delete=models.CASCADE, related_name='petty_cast_for_remark')
     remark = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField()

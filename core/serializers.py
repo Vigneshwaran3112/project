@@ -1640,11 +1640,6 @@ class PettyCashRemarkSerializer(serializers.ModelSerializer):
         model = PettyCashRemark
         exclude = ['delete', 'status', 'branch']
 
-    # def create(self, validated_data):
-    #     pettycase_data = validated_data.pop('PettyCashSerializer')
-
-
-
     def to_representation(self, instance):
         return{
             'id': instance.pk,
@@ -1657,23 +1652,42 @@ class PettyCashRemarkSerializer(serializers.ModelSerializer):
 
 class PettyCashSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,  allow_null=True)
-    petty_cash = PettyCashRemarkSerializer()
+    petty_cash_remark_data = PettyCashRemarkSerializer(many=True)
 
     class Meta:
         model = PettyCash
         exclude = ['delete', 'status', 'branch', 'opening_cash', 'closing_cash']
 
+    def create(self, validated_data):
+        pettycase_remark = validated_data.pop('petty_cash_remark_data')
+        branch = self.context['request'].user.branch
+        if validated_data.get('id', None):
+            petty_cash = PettyCash.objects.get(pk=validated_data['id'])
+            petty_cash.recevied_cash = validated_data['recevied_cash']
+            petty_cash.save()
+        else:
+            petty_cash = PettyCash.objects.create(recevied_cash=validated_data['recevied_cash'], branch=branch, date=validated_data['date'])
+        for pettycash_remark in pettycase_remark:
+            if dict(pettycash_remark).get('id', None):
+                petty_cash_remark = PettyCashRemark.objects.get(pk=pettycash_remark['id'])
+                petty_cash_remark.remark = pettycash_remark['remark']
+                petty_cash_remark.amount = pettycash_remark['amount']
+                petty_cash_remark.date = pettycash_remark['date']
+                petty_cash_remark.save()
+            else:
+                petty_cash_remark = PettyCashRemark.objects.create(remark=pettycash_remark['remark'], amount=pettycash_remark['amount'], date=pettycash_remark['date'], branch=branch)
+        query = PettyCash.objects.get(pk=petty_cash.pk)
+        return query
     def to_representation(self, instance):
         return{
         'id': instance.pk,
-        'branch': instance.branch.pk,
+        # 'branch': instance.branch.pk,
         'opening_cash': instance.opening_cash,
         'recevied_cash': instance.recevied_cash,
         'closing_cash': instance.closing_cash,
         'date': instance.date,
+        'petty_cash_remark': PettyCashRemarkSerializer(PettyCashRemark.objects.filter(date=instance.date, branch=instance.branch, status=True, delete=False).order_by('-pk'), many=True).data
         }
-
-
 
 
 class PettyCashListSerializer(serializers.Serializer):
