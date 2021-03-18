@@ -503,6 +503,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'start': instance.start,
             'stop': instance.stop,
             'date': instance.date,
+            'abscent': instance.abscent,
             'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend,
             # 'salary': instance.salary,
@@ -629,6 +630,7 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'check_out': attendance_data,
             'break_in':break_in,
             'break_out': attendance_break_data,
+            'abscent':False,
             'role': RoleSerializer(instance.employee_role, many=True).data,
             'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
             'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk).order_by('-pk'), many=True).data
@@ -1127,15 +1129,33 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 class BulkAttendanceSerializer(serializers.Serializer):
     id = serializers.CharField()
     existing = serializers.BooleanField()
-    start = serializers.TimeField()
+    start = serializers.TimeField(required=False, allow_null=True)
     stop = serializers.TimeField(required=False, allow_null=True)
+    abscent = serializers.BooleanField(default=False, required=False)
     date = serializers.DateField()
 
     def create(self, validated_data):
+
         if validated_data['existing']:
-            data = UserAttendance.objects.filter(pk=int(validated_data['id']), user=self.context['user']).update(start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
+            if validated_data['abscent']:
+                data = UserAttendance.objects.get(pk=int(validated_data['id']), user=self.context['user'])
+                data.start = None
+                data.stop = None
+                data.abscent = validated_data['abscent']
+                data.date = validated_data['date']
+                data.save()
+            else:
+                data = UserAttendance.objects.get(pk=int(validated_data['id']), user=self.context['user'])
+                data.start = validated_data['start']
+                data.stop = validated_data.get('stop', None)
+                data.date = validated_data['date']
+                data.abscent = validated_data['abscent']
+                data.save()
         else:
-            data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
+            if validated_data['abscent']:
+                data = UserAttendance.objects.create(user=self.context['user'], abscent=validated_data['abscent'], date=validated_data['date'])
+            else:
+                data = UserAttendance.objects.create(user=self.context['user'], start=validated_data['start'], stop=validated_data.get('stop', None), date=validated_data['date'])
         return data
 
 
