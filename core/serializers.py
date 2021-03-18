@@ -1665,6 +1665,15 @@ class PettyCashRemarkSerializer(serializers.ModelSerializer):
             'date': instance.date,
         }
 
+
+class PettyCashListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'closing_cash': instance.closing_cash
+        }
+
 class CreditSettlementSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -1795,6 +1804,30 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
             'total_sales': instance.total_sales,
             'date': instance.date
         }
+
+
+class CashHandoverDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CashHandover
+        exclude = ['delete', 'status', 'branch',]
+
+    def to_representation(self, instance):
+
+        return{
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'bill_no': instance.bill_no,
+            'name': instance.name.get_full_name(),
+            'amount': instance.amount,
+            'time': instance.time,
+            'date': instance.date
+        }
+
+
+
+
 
 
 # class BranchProductTransferOutSerializer(serializers.ModelSerializer):

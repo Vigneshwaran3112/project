@@ -1072,6 +1072,16 @@ class PettyCashRemarkListAPIView(generics.ListAPIView):
         return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
+class PettyCashPreviousListAPIView(generics.ListAPIView):
+    serializer_class = PettyCashListSerializer
+
+    def get_queryset(self):
+        today = datetime.datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
+        yesterday = today - datetime.timedelta(days=1)
+        data = PettyCash.objects.filter(branch=self.request.user.branch, date__date=yesterday.date(), delete=False, status=True)
+        return data
+
+
 class SalesCountCreateAPIView(generics.CreateAPIView):
     serializer_class = SalesCountCreateSerializer
 
@@ -1180,6 +1190,33 @@ class BranchCashManagementListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return BranchCashManagement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
+    queryset = CashHandover.objects.filter(delete=False, status=True)
+    serializer_class = CashHandoverDetailsSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = CashHandover.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message':'cash handover details deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CashHandoverDetailsListAPIView(generics.ListAPIView):
+    serializer_class = CashHandoverDetailsSerializer
+
+    def get_queryset(self):
+        return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+
+
+
+
+
+
+
+
 
 
 # class BranchProductTransferOutAPIView(generics.UpdateAPIView):
