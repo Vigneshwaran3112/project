@@ -1079,13 +1079,13 @@ class PettyCashRemarkListAPIView(generics.ListAPIView):
         return PettyCashRemark.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
-class PettyCashPreviousListAPIView(generics.ListAPIView):
+class PettyCashPreviousListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashListSerializer
 
-    def get_queryset(self):
+    def get_object(self):
         today = datetime.datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
         yesterday = today - datetime.timedelta(days=1)
-        data = PettyCash.objects.filter(branch=self.request.user.branch, date__date=yesterday.date(), delete=False, status=True)
+        data = PettyCash.objects.get(branch=self.request.user.branch, date__date=yesterday.date(), delete=False, status=True)
         return data
 
 
@@ -1218,7 +1218,13 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
         return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
+class UserProfileAPIView(generics.RetrieveAPIView):
+    # queryset = BaseUser.objects.all()
+    serializer_class = UserProfileSerializer
 
+    def get_object(self):
+        user = BaseUser.objects.get(pk=self.request.user.pk)
+        return user
 
 
 
@@ -1233,11 +1239,6 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
 #         transfer_product = ProductInventory.objects.get(pk=pk)
 #         return transfer_product
 
-# class UserProfileAPIView(generics.ListAPIView):
-#     # queryset = BaseUser.objects.all()
-#     serializer_class = UserProfileSerializer
-#
-#     def get_queryset(self):
-#         return self.request.user
+
 
 

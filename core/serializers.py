@@ -1847,16 +1847,15 @@ class CashHandoverDetailsSerializer(serializers.ModelSerializer):
 #          exclude = ['delete', 'status', 'product', 'taken', 'received', 'on_hand']
 #
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = BaseUser
-#         fields ='__all__'
-#
-#     def to_representation(self, instance):
-#         # user = BaseUser.objects.get(pk=instance.pk)
-#         return {
-#                 'username': instance.get_full_name(),
-#                 'email': instance.email if user.email else None,
-#                 'phone': instance.phone
-#             }
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BaseUser
+        fields ='__all__'
+
+    def to_representation(self, instance):
+        return {
+                'username': instance.get_full_name(),
+                'email': instance.email if instance.email else None,
+                'phone': instance.phone
+            }

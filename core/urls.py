@@ -178,6 +178,6 @@ urlpatterns = [
 
     path('opening_petty_cash_previous_list/<str:date>/', views.PettyCashPreviousListAPIView.as_view()),
 
-    # path('user_profile/', views.UserProfileAPIView.as_view()),
+    path('user_profile/', views.UserProfileAPIView.as_view()),
 
 ]
