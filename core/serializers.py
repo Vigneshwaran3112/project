@@ -1703,15 +1703,7 @@ class PettyCashSerializer(serializers.ModelSerializer):
         return query
     def to_representation(self, instance):
         return{
-            'id': instance.pk,
-            'branch': instance.branch.pk,
-            'opening_cash': instance.opening_cash,
-            'recevied_cash': instance.recevied_cash,
-            'closing_cash': instance.closing_cash,
-            'date': instance.date,
-            'expensive': PettyCashRemarkSerializer(PettyCashRemark.objects.filter(branch=instance.branch.pk, date__date=instance.date, delete=False, status=True), many=True).data
         'id': instance.pk,
-        # 'branch': instance.branch.pk,
         'opening_cash': instance.opening_cash,
         'recevied_cash': instance.recevied_cash,
         'closing_cash': instance.closing_cash,

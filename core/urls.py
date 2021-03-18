@@ -165,8 +165,8 @@ urlpatterns = [
     path('sales_count_delete/<int:pk>/', views.SalesCountDeleteAPIView.as_view()),
 
     path('petty_cash_list/<str:date>/', views.PettyCashListAPIView.as_view()),
-    path('petty_cash_remark_list/<str:date>/', views.PettyCashRemarkListAPIView.as_view()),
-    path('petty_cash_create/', views.PettyCashCreateAPIView.as_view()),
+    # path('petty_cash_remark_list/<str:date>/', views.PettyCashRemarkListAPIView.as_view()),
+    # path('petty_cash_create/', views.PettyCashCreateAPIView.as_view()),
     path('petty_cash_remark_delete/<int:pk>/', views.PettyCashRemarkDeleteAPIView.as_view()),
 
     path('bank_cash_received_details_list/<str:date>/', views.BankCashReceivedDetailsListAPIView.as_view()),
