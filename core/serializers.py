@@ -1753,11 +1753,27 @@ class DenominationSerializer(serializers.ModelSerializer):
         }
 
 
+class DenominationUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Denomination
+        fields = ('amount', 'quantity')
+
+
+    # def to_representation(self, instance):
+    #
+    #     return{
+    #         'id': instance.pk,
+    #         'amount': instance.amount,
+    #         'quantity': instance.quantity,
+    #     }
+
+
 class BranchCashManagementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BranchCashManagement
-        exclude = ['delete', 'status', 'branch', 'opening_cash']
+        exclude = ('delete', 'status', 'branch', 'opening_cash')
 
     def to_representation(self, instance):
         return{
@@ -1782,3 +1798,17 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
 #          model = ProductInventory
 #          exclude = ['delete', 'status', 'product', 'taken', 'received', 'on_hand']
 #
+
+# class UserProfileSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = BaseUser
+#         fields ='__all__'
+#
+#     def to_representation(self, instance):
+#         # user = BaseUser.objects.get(pk=instance.pk)
+#         return {
+#                 'username': instance.get_full_name(),
+#                 'email': instance.email if user.email else None,
+#                 'phone': instance.phone
+#             }
