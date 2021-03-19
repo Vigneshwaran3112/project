@@ -945,7 +945,7 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
+        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True, delete=False, status=True)
         data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
         return data
 
@@ -1180,13 +1180,13 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
     serializer_class = BranchCashManagementSerializer
 
     def perform_create(self, serializer):
+        today = datetime.date.today()
+        date = today - datetime.timedelta(days=1)
         try:
-            today = datetime.date.today()
-            date = today - datetime.timedelta(days=1)
-            data = BranchCashManagement.objects.get(date__date=date ,delete=False, status=True)
-            serializer.save(branch=self.request.user.branch, opening_cash=data.closing_cash)
-        except:
-            serializer.save(branch=self.request.user.branch)
+            closing_cash = BranchCashManagement.objects.get(date__date=date ,delete=False, status=True).closing_cash
+        except BranchCashManagement.DoesNotExist:
+            closing_cash = 0
+        serializer.save(branch=self.request.user.branch, opening_cash=closing_cash)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BranchCashManagement.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1196,8 +1196,11 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
 class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
 
-    def get_object(self):
-        return BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            return Response(self.serializer_class(BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)).data)
+        except BranchCashManagement.DoesNotExist:
+            return Response([])
 
 
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
