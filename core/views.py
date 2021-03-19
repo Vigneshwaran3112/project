@@ -852,6 +852,15 @@ class ProductInventoryControlList(generics.ListAPIView):
         return Response(ProductInventoryControlSerializer(products, context = {'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
 
 
+class ProductInventoryControlListByBranch(generics.ListAPIView):
+    serializer_class = ProductInventoryControlSerializer
+
+    def list(self, request, date, classification, branch):
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        products = query.filter(classification__code=classification).order_by('-id')
+        return Response(ProductInventoryControlSerializer(products, context = {'branch': branch, 'date': date}, many=True).data)
+
+
 class ProductInventoryControlCreate(generics.CreateAPIView):
     serializer_class = ProductInventoryControlCreateSerializer
 
