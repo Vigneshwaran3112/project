@@ -386,19 +386,23 @@ class InventoryControl(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_inventory_control')
     opening_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
+    usage = models.PositiveIntegerField(null=True, blank=True, default=0)
     closing_stock = models.PositiveIntegerField(null=True, blank=True, default=0)
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
         data = ProductInventory.objects.get(branch=self.branch, product=self.product)
         if self.closing_stock == 0:
+            self.usage = data.on_hand
             data.taken += data.on_hand
             data.on_hand = self.closing_stock
             data.save()
         else:
-            data.taken += data.on_hand - self.closing_stock
+            self.usage = data.on_hand - self.closing_stock
+            data.taken += self.usage
             data.on_hand = self.closing_stock
             data.save()
+        super(InventoryControl, self).save(*args, **kwargs)
 
 
         # if self.closing_stock == 0:
@@ -408,9 +412,8 @@ class InventoryControl(BaseModel):
         # else:
         #     data.taken = data.received-self.closing_stock
         #     data.on_hand = self.closing_stock
-        #     data.received -= data.taken 
+        #     data.received -= data.taken
             # data.save()
-        super(InventoryControl, self).save(*args, **kwargs)
 
 
 class ComplaintStatus(BaseModel):

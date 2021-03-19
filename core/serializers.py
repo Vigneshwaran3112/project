@@ -1395,15 +1395,19 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             pk = query.pk
             opening_stock = query.opening_stock
             closing_stock = query.closing_stock
+            usage = query.usage
         except:
             pk = None
             try:
                 query = InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
+                usage = query.usage
+
             except:
                 opening_stock = 0
                 closing_stock = ""
+                usage = 0
 
         received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
         try:
@@ -1412,6 +1416,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             on_hand = 0
         is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
 
+        branch = Branch.objects.get(pk=branch)
         return{
             'id': pk, 
             'key': instance.pk,
@@ -1424,7 +1429,10 @@ class ProductInventoryControlSerializer(serializers.Serializer):
             'received_stock': received_stock['total_received_stock'],
             'on_hand': on_hand,
             'closing_stock': closing_stock,
-            'error':"",
+            'usage': usage,
+            'branch':branch.pk,
+            'branch__name':branch.name,
+             'error':"",
             'is_editable': is_editable,
         }
 

@@ -138,6 +138,9 @@ urlpatterns = [
 
     path('product_inventory_control/<str:date>/<int:classification>/', views.ProductInventoryControlList.as_view()),
 
+    path('product_inventory_control_list/<str:date>/<int:classification>/<int:branch>/', views.ProductInventoryControlListByBranch.as_view()),
+
+
     path('product_inventory_control_create/<str:date>/', views.ProductInventoryControlCreate.as_view()),
 
     path('branch_product_inventory_create/', views.BranchProductInventoryCreate.as_view()),
