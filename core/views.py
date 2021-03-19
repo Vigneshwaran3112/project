@@ -1202,11 +1202,11 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
         return Response({'message':'denomination deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class BranchCashManagementListAPIView(generics.ListAPIView):
+class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
 
-    def get_queryset(self):
-        return BranchCashManagement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+    def get_object(self):
+        return BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
