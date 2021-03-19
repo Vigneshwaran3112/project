@@ -1,5 +1,5 @@
 import json, os
-from core.models import SlickposProducts
+# from core.models import SlickposProducts
 
 headers = {
   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
@@ -20,7 +20,7 @@ products = requests.get('https://api.slickpos.com/api/product/list?accountId=737
 orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
 
 # print(products.text)
-print('hai')
+print(get_receipt_by_date.text)
 
 # world_json = os.path.join(os.getcwd(), 'products.json')
 # with open(world_json) as f:
