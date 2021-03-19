@@ -1046,11 +1046,11 @@ class PettyCashAPIView(viewsets.ModelViewSet):
         return Response({'message':'petty cash deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class PettyCashListAPIView(generics.ListAPIView):
+class PettyCashListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashSerializer
 
-    def get_queryset(self):
-        return PettyCash.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
+    def get_object(self):
+        return PettyCash.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
