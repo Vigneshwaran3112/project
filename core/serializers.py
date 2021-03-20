@@ -1844,12 +1844,11 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
         model = BranchCashManagement
         exclude = ('delete', 'status', 'branch', 'opening_cash', 'total_sales')
 
-    # def validate(self, data):
-    #     try:
-    #         BranchCashManagement.objects.get(date__date=data['date'], delete=False, status=True)
-    #     except:
-    #         raise ValidationError('There is a date already exist!')
-
+    def validate(self, data):
+        if BranchCashManagement.objects.filter(date__date=data['date'], delete=False, status=True).count() == 0:
+            return data
+        else:
+            raise ValidationError('There is a date already exist!')
 
     def to_representation(self, instance):
         return{
