@@ -20,7 +20,7 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = '__all__'
-    
+
     def to_representation(self, instance):
         return {
             'id': instance.pk,
@@ -157,7 +157,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = BaseUser.objects.get(pk=instance.pk)
         user.email = validated_data.get('email', instance.email)
         user.first_name = validated_data.get('first_name', instance.first_name)
-        user.phone = validated_data.get('phone', instance.phone) 
+        user.phone = validated_data.get('phone', instance.phone)
         user.date_of_joining = validated_data.get('date_of_joining', instance.date_of_joining)
         user.branch = validated_data.get('branch', instance.branch)
         user.aadhaar_number = validated_data.get('aadhaar_number', instance.aadhaar_number)
@@ -181,7 +181,7 @@ class UserSerializer(serializers.ModelSerializer):
             pass
 
         return user
-        
+
     def to_representation(self, instance):
         try:
             salary_data = UserSalarySerializer(UserSalary.objects.filter(user=instance.pk, delete=False).order_by('-id'), many=True).data
@@ -560,7 +560,7 @@ class UserPunchBulkUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     class Meta:
         model = UserAttendance
-        fields = ( 'id', 'start', 'stop') 
+        fields = ( 'id', 'start', 'stop')
 
 
 
@@ -569,7 +569,7 @@ class UserPunchUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAttendance
         fields = ( 'data', 'status')
-    
+
 
 class UserAttendanceBreakInSerializer(serializers.ModelSerializer):
 
@@ -646,7 +646,7 @@ class GSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = GST
         exclude = ['delete', 'code']
-    
+
     def to_representation(self, instance):
         return{
             'id': instance.pk,
@@ -931,7 +931,7 @@ class ProductBranchMappingSerializer(serializers.ModelSerializer):
     #     return{
     #         'product': ProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
     #     }
-    
+
 
 class ComplaintStatusSerializer(serializers.ModelSerializer):
 
@@ -999,7 +999,7 @@ class AttendanceSerializer(serializers.Serializer):
             time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
         else:
             time_spend_hours = None
-            
+
         return {
             'id': instance.pk,
             'start': instance.start,
@@ -1418,7 +1418,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
 
         branch = Branch.objects.get(pk=branch)
         return{
-            'id': pk, 
+            'id': pk,
             'key': instance.pk,
             'product': instance.pk,
             'name': instance.name,
@@ -1452,7 +1452,7 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
 
         if validated_data.get('id', None):
             data = InventoryControl.objects.get(pk=int(validated_data['id']))
-            inventory = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])        
+            inventory = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])
 
             if data.closing_stock == 0:
                 inventory.taken -= data.on_hand
@@ -1463,11 +1463,11 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
                 inventory.taken -= taken
                 inventory.on_hand += taken
                 inventory.save()
-            
+
             data.closing_stock=validated_data['closing_stock']
             data.save()
         else:
-            
+
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], on_hand=validated_data['on_hand'],  opening_stock=validated_data['opening_stock'])
         return data
 
@@ -1491,7 +1491,7 @@ class BranchProductInventoryListSerializer(serializers.ModelSerializer):
         exclude = ['delete',]
 
     def to_representation(self, instance):
-        
+
         return{
             'product': instance.product.pk,
             'product_name': instance.product.name,
@@ -1511,7 +1511,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
         exclude = ['delete', 'unit', 'status', 'branch']
 
     def to_representation(self, instance):
-        
+
         return{
             'id': instance.pk,
             'branch': instance.branch.pk,
@@ -1843,6 +1843,12 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
     class Meta:
         model = BranchCashManagement
         exclude = ('delete', 'status', 'branch', 'opening_cash', 'total_sales')
+
+    def validate(self, data):
+        if BranchCashManagement.objects.filter(date__date=data['date'], delete=False, status=True).count() == 0:
+            return data
+        else:
+            raise ValidationError('There is a date already exist!')
 
     def to_representation(self, instance):
         return{
