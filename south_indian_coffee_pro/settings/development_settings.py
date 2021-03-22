@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_crontab',
     'core'
 ]
 
@@ -33,6 +34,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'south_indian_coffee_pro.urls'
+
+CRONJOBS = [
+    ('*/10 * * * * *', 'core.views.my_cron_job')
+]
 
 REST_FRAMEWORK = { 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
@@ -78,6 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
+
 
 AUTH_USER_MODEL = 'core.BaseUser'
 

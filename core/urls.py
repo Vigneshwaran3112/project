@@ -74,7 +74,7 @@ urlpatterns = [
     path('branch_specific_wrongbill/<str:date>/', views.BranchSpecificWrongBillAPIView.as_view()),
     path('branch_specific_freebill/<str:date>/', views.BranchSpecificFreeBillAPIView.as_view()),
     
-    path('electricbill_create/<str:date>/', views.ElectricBillCreate.as_view()),
+    # path('electricbill_create/<str:date>/', views.ElectricBillCreate.as_view()),
 
     path('unit_list/', views.UnitListAPIView.as_view()),
     path('unit_update/<int:pk>/', views.UnitUpdateAPIView.as_view()),
@@ -90,6 +90,8 @@ urlpatterns = [
 
     path('user_list/<int:branch_id>/', views.UserListAPIView.as_view()),
     path('admin_user/', views.AdminUserListAPIView.as_view()),
+
+
     
     
     path('daily_sheet/<str:date>/', views.InventoryRawProductList.as_view()),
