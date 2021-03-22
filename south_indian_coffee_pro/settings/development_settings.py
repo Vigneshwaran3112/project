@@ -2,7 +2,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = '@q^^01m#^v3u1*xpl-00m5h=0$n5c_@d)*_7%mp*v&@#(                       %rn$$'
+SECRET_KEY = '@q^^01m#^v3u1*xpl-00m5h=0$n5c_@d)*_7%mp*v&@#(%rn$$'
 
 DEBUG = True
 
@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_crontab',
+    "django_cron",
     'core'
 ]
 
@@ -35,11 +35,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'south_indian_coffee_pro.urls'
 
-CRONJOBS = [
-    ('1 * * * *', 'core.views.my_cron_job', '>> /home/ubuntu/southindiancoffee/crontab.log')
+CRON_CLASSES = [
+    "core.views.MyCronJob",
 ]
-
-CRONTAB_COMMAND_SUFFIX = '2>&1'
 
 REST_FRAMEWORK = { 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
@@ -47,7 +45,7 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'message',
     'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer', ],
     'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser', ]
-    }
+}
 
 TEMPLATES = [
     {
