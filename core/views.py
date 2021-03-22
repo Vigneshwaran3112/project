@@ -1258,22 +1258,6 @@ class UserProfileAPIView(generics.RetrieveAPIView):
         return user
 
 
-from django_cron import CronJobBase, Schedule
-
-class MyCronJob(CronJobBase):
-    RUN_EVERY_MINS = 1 # every 2 hours
-
-    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
-    code = 'my_app.my_cron_job'    # a unique code
-
-    def do(self):
-        Vendor.objects.create(name='nanda', company_name='vgts', address='vgts 1')
-        print("hai")  # do your thing here
-
-def my_cron_job():
-    Vendor.objects.create(name='nanda', company_name='vgts', address='vgts 1')
-    print("hai")
-
 
 # class BranchProductTransferOutAPIView(generics.UpdateAPIView):
 #     serializer_class = BranchProductTransferOutSerializer
