@@ -677,17 +677,6 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
 #         return EBMeter.objects.filter(Branch=self.request.user.branch, delete=False, status=True)
 
 
-class ElectricBillCreate(generics.CreateAPIView):
-    serializer_class = ElectricBillSerializer
-
-    def create(self, request, date):
-        for eb_data in request.data:
-            serializer = self.serializer_class(data=eb_data, context={'branch': self.request.user.branch.pk, 'date': date})
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-        return Response({'message': 'Data Saved!'})
-
-
 class ElectricBillMeterList(generics.ListAPIView):
     serializer_class = ElectricBillMeterSerializer
 
@@ -1265,7 +1254,8 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 
 
-
+def my_cron_job():
+    print("hai")
 
 
 # class BranchProductTransferOutAPIView(generics.UpdateAPIView):
@@ -1274,7 +1264,3 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 #     def partial_update(self, request, pk):
 #         transfer_product = ProductInventory.objects.get(pk=pk)
 #         return transfer_product
-
-
-
-
