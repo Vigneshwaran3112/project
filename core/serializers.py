@@ -1558,7 +1558,7 @@ class FoodWastageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoodWastage
-        exclude = ['delete', 'branch', 'status']
+        exclude = ['delete', 'branch', 'status' ]
 
     def to_representation(self, instance):
         return{
