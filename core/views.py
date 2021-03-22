@@ -957,11 +957,9 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True
-                                       )
+        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
         data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
         return data
-
 
 
 class AllProductListAPIView(generics.ListAPIView):
