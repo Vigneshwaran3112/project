@@ -1084,6 +1084,32 @@ class ElectricBillMeterSerializer(serializers.Serializer):
         }
 
 
+class EbMeterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EBMeter
+        exclude = ['delete', 'branch', 'status']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'sub_branch': instance.sub_branch.pk if instance.sub_branch else None,
+            'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
+            'meter': instance.meter,
+            'description': instance.description
+        }
+
+class SubBranchListSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'name': instance.name
+        }
+
+
 class ProductPricingBatchSerializer(serializers.ModelSerializer):
 
     class Meta:

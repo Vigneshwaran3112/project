@@ -36,6 +36,7 @@ router.register(r'bank_cash_received_details', views.BankCashReceivedDetailsAPIV
 router.register(r'denomination', views.DenominationAPIView, basename='denomination')
 router.register(r'branch_cash_management', views.BranchCashManagementAPIView, basename='branchcashmanagement')
 router.register(r'cash_handover', views.CashHandoverDetailsAPIView, basename='cashhandover')
+router.register(r'eb_meter', views.EbMeterAPIView, basename='ebmeter')
 
 
 # router.register(r'branch_incentive', views.BranchIncentiveViewSet, basename='branch_incentive',)
@@ -186,4 +187,6 @@ urlpatterns = [
     path('user_profile/', views.UserProfileAPIView.as_view()),
 
     path('petty_cash/', views.PettyCashCreateAPIView.as_view()),
+
+    path('sub_branch_list/', views.SubBranchlistAPIView.as_view()),
 ]

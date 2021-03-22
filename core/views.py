@@ -695,6 +695,27 @@ class ElectricBillMeterList(generics.ListAPIView):
         query = EBMeter.objects.filter(branch=self.request.user.branch).order_by('-id')
         return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch,'date':self.kwargs['date']}, many=True).data)
 
+class EbMeterAPIView(viewsets.ModelViewSet):
+    queryset = EBMeter.objects.filter(delete=False, status=True)
+    serializer_class = EbMeterSerializer
+
+    def get_queryset(self):
+        return EBMeter.objects.filter(branch=self.request.user.branch, delete=False, status=True)
+
+    def perform_create(self, serializer):
+        serializer.save(branch=self.request.user.branch)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = EBMeter.objects.filter(pk=kwargs['pk']).update(delete=True)
+        return Response({'message':'eb meter deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+class SubBranchlistAPIView(generics.ListAPIView):
+    serializer_class = SubBranchListSerializer
+
+    def list(self, request):
+        sub_branch = Branch.objects.get(pk=self.request.user.branch.pk).sub_branch.order_by('-id')
+        return Response(SubBranchListSerializer(sub_branch, many=True).data)
+
 
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
     queryset = ProductPricingBatch.objects.filter(delete=False)
