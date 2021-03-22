@@ -190,5 +190,5 @@ urlpatterns = [
 
     path('petty_cash/', views.PettyCashCreateAPIView.as_view()),
 
-    path('sub_branch_list/', views.SubBranchlistAPIView.as_view()),
+    path('sub_branch_list/<int:branch>/', views.SubBranchlistAPIView.as_view()),
 ]

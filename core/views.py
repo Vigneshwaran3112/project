@@ -702,8 +702,8 @@ class EbMeterAPIView(viewsets.ModelViewSet):
 class SubBranchlistAPIView(generics.ListAPIView):
     serializer_class = SubBranchListSerializer
 
-    def list(self, request):
-        sub_branch = Branch.objects.get(pk=self.request.user.branch.pk).sub_branch.order_by('-id')
+    def list(self, request, branch):
+        sub_branch = Branch.objects.get(pk=branch).sub_branch.order_by('-id')
         return Response(SubBranchListSerializer(sub_branch, many=True).data)
 
 
@@ -1220,9 +1220,11 @@ class BranchCashManagementListAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         try:
-            return Response(self.serializer_class(BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)).data)
+            queryset = BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'],
+                                                        delete=False, status=True)
         except BranchCashManagement.DoesNotExist:
-            return Response([])
+            queryset = BranchCashManagement(branch=self.request.user.branch, date=self.kwargs['date'], delete=False, status=True)
+        return Response(self.serializer_class(queryset).data)
 
 
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
