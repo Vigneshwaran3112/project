@@ -1220,10 +1220,12 @@ class BranchCashManagementListAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         try:
-            queryset = BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                                        delete=False, status=True)
+            queryset = BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
         except BranchCashManagement.DoesNotExist:
-            queryset = BranchCashManagement(branch=self.request.user.branch, date=self.kwargs['date'], delete=False, status=True)
+            previous_day_data = BranchCashManagement.objects.filter(branch=self.request.user.branch, delete=False, status=True).aggregate(total_closing_cash=Coalesce (Sum('closing_cash'), V(0)))
+            credit_sales_data = CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True).aggregate(total_amount=Coalesce (Sum('amount'), V(0)))
+            bank_cash_data = BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True).aggregate(total_amount=Coalesce (Sum('amount'), V(0)))
+            queryset = BranchCashManagement(branch=self.request.user.branch, date=self.kwargs['date'], opening_cash=previous_day_data['total_closing_cash'], credit_sales=credit_sales_data['total_amount'], bank_cash=bank_cash_data['total_amount'])
         return Response(self.serializer_class(queryset).data)
 
 
