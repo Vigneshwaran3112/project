@@ -1215,6 +1215,7 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
         return Response({'message':'denomination deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
+
 class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
 
