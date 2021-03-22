@@ -39,6 +39,8 @@ CRONJOBS = [
     ('1 * * * *', 'core.views.my_cron_job', '>> /home/ubuntu/southindiancoffee/crontab.log')
 ]
 
+CRONTAB_COMMAND_SUFFIX = '2>&1'
+
 REST_FRAMEWORK = { 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication', ],
