@@ -927,11 +927,6 @@ class ProductBranchMappingSerializer(serializers.ModelSerializer):
         model = ProductBranchMapping
         exclude = ['delete', 'branch', 'status']
 
-    # def to_representation(self, instance):
-    #     return{
-    #         'product': ProductSerializer(Product.objects.filter(pk__in=instance.product.values_list('pk', flat=True)).order_by('pk'),many=True).data,
-    #     }
-
 
 class ComplaintStatusSerializer(serializers.ModelSerializer):
 
@@ -1401,10 +1396,10 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         except:
             pk = None
             try:
-                query = InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__pk=instance.pk).latest('date')
+                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
-                usage = query.usage
+                usage = 0
 
             except:
                 opening_stock = 0
@@ -1455,7 +1450,6 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
         if validated_data.get('id', None):
             data = InventoryControl.objects.get(pk=int(validated_data['id']))
             inventory = ProductInventory.objects.get(branch=self.context['branch'], product=validated_data['product'])
-
             if data.closing_stock == 0:
                 inventory.taken -= data.on_hand
                 inventory.on_hand += data.on_hand
@@ -1469,7 +1463,6 @@ class ProductInventoryControlCreateSerializer(serializers.ModelSerializer):
             data.closing_stock=validated_data['closing_stock']
             data.save()
         else:
-
             data = InventoryControl.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], date=date, closing_stock=validated_data['closing_stock'], on_hand=validated_data['on_hand'],  opening_stock=validated_data['opening_stock'])
         return data
 

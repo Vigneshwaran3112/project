@@ -336,7 +336,7 @@ class PaymentMode(BaseModel):
 
 class ProductBranchMapping(BaseModel):
     branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
-    product = models.ManyToManyField(Product)
+    product = models.ManyToManyField(Product, related_name='branch')
 
     def __str__(self):
         return f'{self.branch.name} - {self.product.name}'

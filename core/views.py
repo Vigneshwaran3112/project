@@ -856,9 +856,12 @@ class ProductInventoryControlListByBranch(generics.ListAPIView):
     serializer_class = ProductInventoryControlSerializer
 
     def list(self, request, date, classification, branch):
-        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
-        products = query.filter(classification__code=classification).order_by('-id')
-        return Response(ProductInventoryControlSerializer(products, context = {'branch': branch, 'date': date}, many=True).data)
+        try:
+            query = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
+            products = query.filter(classification__code=classification).order_by('-id')
+            return Response(ProductInventoryControlSerializer(products, context = {'branch': branch, 'date': date}, many=True).data)
+        except ProductBranchMapping.DoesNotExist:
+            return Response([], status=status.HTTP_200_OK)
 
 
 class ProductInventoryControlCreate(generics.CreateAPIView):
@@ -868,7 +871,7 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
         for inventory_data in request.data:
             if inventory_data['is_editable']:
                 if int(inventory_data['closing_stock']) > int(inventory_data['on_hand']):
-                    return Response({'message': 'Closing stock is greater then inventory stock'})
+                    return Response({'message': 'Closing stock is greater then inventory stock'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
                     serializer.is_valid(raise_exception=True)
@@ -954,11 +957,9 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True
-                                       )
+        user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
         data = user.exclude(Q(is_superuser=True)|Q(is_staff=True))
         return data
-
 
 
 class AllProductListAPIView(generics.ListAPIView):
