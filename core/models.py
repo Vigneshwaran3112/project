@@ -633,7 +633,7 @@ class ElectricBill(BaseModel):
         super(ElectricBill, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.eb_meter.branch.name} - {self.date}'
+        return f'{self.meter.branch.name} - {self.date}'
 
 
 class BranchEmployeeIncentive(BaseModel):

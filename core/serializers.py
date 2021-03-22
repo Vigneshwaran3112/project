@@ -1042,9 +1042,11 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         fields = ('id', 'opening_reading', 'closing_reading', 'meter')
 
     def create(self, validated_data):
+        print(validated_data)
         date = datetime.datetime.strptime(self.context['date'], '%Y-%m-%d')
         now = datetime.datetime.now()
         date = datetime.datetime.combine(date, now.time())
+        # print(validated_data)
 
         if validated_data.get('id', None):
             data = ElectricBill.objects.get(pk=int(validated_data['id']))
