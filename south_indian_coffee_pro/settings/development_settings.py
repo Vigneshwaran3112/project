@@ -36,7 +36,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'south_indian_coffee_pro.urls'
 
 CRONJOBS = [
-    ('*/10 * * * * *', 'core.views.my_cron_job')
+    ('1 * * * *', 'core.views.my_cron_job')
 ]
 
 REST_FRAMEWORK = { 
