@@ -871,7 +871,7 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
         for inventory_data in request.data:
             if inventory_data['is_editable']:
                 if int(inventory_data['closing_stock']) > int(inventory_data['on_hand']):
-                    return Response({'message': 'Closing stock is greater then inventory stock'})
+                    return Response({'message': 'Closing stock is greater then inventory stock'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
                     serializer.is_valid(raise_exception=True)
