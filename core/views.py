@@ -698,6 +698,7 @@ class EbMeterAPIView(viewsets.ModelViewSet):
         destroy = EBMeter.objects.filter(pk=kwargs['pk']).update(delete=True)
         return Response({'message':'eb meter deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
+
 class SubBranchlistAPIView(generics.ListAPIView):
     serializer_class = SubBranchListSerializer
 
