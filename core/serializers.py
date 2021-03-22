@@ -1306,7 +1306,6 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
         branch = self.context['branch']
         date = self.context['date']
 
-        inventory_list, bills_list, cash_list, department_list = [],[],[],[]
         inventory_data =  {
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
                     'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
@@ -1323,10 +1322,13 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'petty_cash_details': {'id':10, 'name':"petty_cash_details", 'completed_status':PettyCash.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'credit_sales':{'id':11, 'name':"credit_sales", 'completed_status':CreditSales.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'credit_settlements':{'id':12, 'name':"credit_settlements", 'completed_status':CreditSettlement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'cash_managements': {'id':13, 'name':"cash_managements", 'completed_status':BranchCashManagement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'denomiation':{'id':14, 'name':"denomiation", 'completed_status':Denomination.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':BankCashReceivedDetails.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'cash_handover_details':{'id':17, 'name':"cash_handover_details", 'completed_status':CashHandover.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()}
+                    'cash_handover_details':{'id':17, 'name':"cash_handover_details", 'completed_status':CashHandover.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
+                    'cash_managements': {'id': 13, 'name': "cash_managements",
+                                 'completed_status': BranchCashManagement.objects.filter(branch__pk=branch,
+                                                                                         date__date=date, status=True,
+                                                                                         delete=False).exists()},
                 }
         department_inventory_data = {
                     'department_sales_count': {'id':16, 'name':"department_sales_count", 'completed_status':SalesCount.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
@@ -1334,63 +1336,69 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
 
         inventory_count, bill_count, cash_count, department_count = 0, 0, 0 ,0
 
-        for key,value in inventory_data.items():
+        for key, value in inventory_data.items():
             if value['completed_status']:
                 inventory_count = inventory_count + 1
-            inventory_list.append(value)
 
         for key,value in bills_data.items():
             if value['completed_status']:
                 bill_count = bill_count + 1
-            bills_list.append(value)
 
         for key,value in cash_data.items():
             if value['completed_status']:
                 cash_count = cash_count + 1
-            cash_list.append(value)
 
         for key,value in department_inventory_data.items():
             if value['completed_status']:
                 department_count = department_count + 1
-            department_list.append(value)
-
-
-        inventory = {
-                'name': "inventory",
-                'total_count': len(inventory_list),
-                'completed_count': inventory_count,
-                'sub_menu': inventory_list
-                }
-
-        bills = {
-                'name': "bills",
-                'total_count': len(bills_list),
-                'completed_count': bill_count,
-                'sub_menu': bills_list
-        }
-
-        cash = {
-                'name': "cash_details",
-                'total_count': len(cash_list),
-                'completed_count': cash_count,
-                'sub_menu': cash_list
-                }
-
-        department_inventory = {
-                'name': "department_inventory",
-                'total_count': len(department_list),
-                'completed_count': department_count,
-                'sub_menu': department_list
-        }
-
-        l = []
-        l.append(inventory)
-        l.append(bills)
-        l.append(cash)
-        l.append(department_inventory)
 
         return {
-            'data': l
+            'data': [
+                {
+                    'name': "inventory",
+                    'total_count': 5,
+                    'completed_count': inventory_count,
+                    'sub_menu': [
+                        inventory_data['operational_products'],
+                        inventory_data['raw_products'],
+                        inventory_data['vegetable_purchase'],
+                        inventory_data['food_wastage'],
+                        inventory_data['oil_consumption']
+                    ]
+                },
+                {
+                    'name': "bills",
+                    'total_count': 3,
+                    'completed_count': bill_count,
+                    'sub_menu': [
+                        bills_data['free_bills'],
+                        bills_data['wrong_bills'],
+                        bills_data['eb_bills']
+                    ]
+                },
+                {
+                    'name': "cash_details",
+                    'total_count': 7,
+                    'completed_count': cash_count,
+                    'sub_menu': [
+                        cash_data['petty_cash_details'],
+                        cash_data['credit_sales'],
+                        cash_data['credit_settlements'],
+                        cash_data['denomiation'],
+                        cash_data['bank_cash_details'],
+                        cash_data['cash_handover_details'],
+                        cash_data['cash_managements']
+                    ]
+                },
+                {
+                    'name': "department_inventory",
+                    'total_count': 1,
+                    'completed_count': department_count,
+                    'sub_menu': [
+                        department_inventory_data['department_sales_count']
+                    ]
+                }
+            ]
         }
 
 
