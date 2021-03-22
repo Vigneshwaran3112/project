@@ -636,8 +636,8 @@ class UserAttendanceListSerializer(serializers.Serializer):
             'break_out':False if abscent==True else  attendance_break_data,
             'abscent':abscent,
             'role': RoleSerializer(instance.employee_role, many=True).data,
-            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']).order_by('-pk'), many=True).data,
-            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk).order_by('-pk'), many=True).data
+            'user_attendance': AttendanceSerializer(UserAttendance.objects.filter(user__pk=instance.pk, date=self.context['date']), many=True).data,
+            'break_time': AttendanceBreakSerializer(UserAttendanceBreak.objects.filter(date=self.context['date'], user__pk=instance.pk), many=True).data
         }
 
 
