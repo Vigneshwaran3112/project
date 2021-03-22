@@ -1256,6 +1256,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 
 def my_cron_job():
+    Vendor.objects.create(name='nanda', company_name='vgts', address='vgts 1')
     print("hai")
 
 
