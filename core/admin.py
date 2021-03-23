@@ -124,7 +124,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductPricingBatch)
 class ProductPricingBatchAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'branch', 'product', 'mrp_price', 'date', 'quantity', 'rate', )
+    list_display = ('pk', 'branch', 'product', 'mrp_price', 'date', 'quantity', 'buying_price', )
 
 
 @admin.register(ProductInventory)

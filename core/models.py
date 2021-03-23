@@ -353,7 +353,7 @@ class ProductPricingBatch(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
-    rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True, related_name='vendor_product_batch')
     date = models.DateTimeField()
 

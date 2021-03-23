@@ -1509,7 +1509,7 @@ class BranchProductInventoryCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
-        fields = ('id', 'product', 'quantity', 'Buying_price', 'date', 'vendor')
+        fields = ('id', 'product', 'quantity', 'buying_price', 'date', 'vendor')
 
     def create(self, validated_data):
         branch = self.context['branch']
