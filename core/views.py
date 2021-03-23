@@ -1115,7 +1115,6 @@ class PettyCashListAPIView(generics.RetrieveAPIView):
 class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
     serializer_class = PettyCashSerializer
     # permission_classes = (IsSuperOrAdminUser,)
-    queryset = PettyCashRemark.objects.filter(delete=False, status=True)
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1317,13 +1316,6 @@ class UserProfileAPIView(generics.RetrieveAPIView):
     def get_object(self):
         user = BaseUser.objects.get(pk=self.request.user.pk)
         return user
-
-# class BranchProductTransferOutAPIView(generics.UpdateAPIView):
-#     serializer_class = BranchProductTransferOutSerializer
-#
-#     def partial_update(self, request, pk):
-#         transfer_product = ProductInventory.objects.get(pk=pk)
-#         return transfer_product
 
 
 class BranchSpecificBillAPIView(generics.ListAPIView):
