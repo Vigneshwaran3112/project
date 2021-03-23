@@ -326,7 +326,6 @@ class BaseUserSerializer(serializers.ModelSerializer):
             'is_active': instance.is_active,
             'is_employee': instance.is_employee,
             'is_superuser': instance.is_superuser,
-            # 'is_incharge': True if instance.employee_role.filter(code=1).Exists() else False,
             'is_incharge': instance.employee_role.filter(code=1).exists(),
             'is_admin': instance.is_staff,
             'date_of_joining': instance.date_of_joining,
@@ -336,35 +335,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
         }
 
 
-# class UserSalaryAttendanceSerializer(serializers.Serializer):  # Important
-
-#     def to_representation(self, instance):
-#         start = self.context['start']
-#         stop = self.context['stop']
-#         branch_id = self.context['branch_id']
-
-#         queryset = UserAttendance.objects.filter(branch=branch_id, date__gte=start, date__lte=stop, delete=False)
-#         user_daily_salary = queryset.aggregate(user=instance.user, total_salary_price=Coalesce(Sum('salary'), V(0)))
-#         user_total_time_spend = queryset.aggregate(user=instance.user, time_spend=Coalesce(Sum('time_spend'), V(0)))
-#         user_total_ot = queryset.aggregate(user=instance.user, overall_ot_price=Coalesce(Sum('ot_salary'), V(0)))
-#         total_salary = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
-#         return {
-#             'id': instance.pk,
-#             'staff_user': instance.user.pk,
-#             'staff_name': instance.user.name,
-#             'per_hour': instance.per_hour,
-#             'per_day': instance.per_day,
-#             'per_minute': instance.per_minute,
-#             'work_hours': instance.work_hours,
-#             'work_minutes': instance.work_minutes,
-#             'ot_per_hour': instance.ot_per_hour,
-#             'ot_per_minute': instance.ot_per_minute,
-#             'date': instance.date,
-#             'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None
-#         }
-
-
-class UserSalaryReportSerializer(serializers.Serializer):   # Important
+class UserSalaryReportSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         month = self.context['month']
@@ -372,7 +343,6 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
         branch_id = self.context['branch_id']
 
         queryset_data = UserSalaryPerDay.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
-        # queryset_data = UserAttendance.objects.filter(user=instance.pk, date__year=year, date__month=month, delete=False)
         user_daily_salary = queryset_data.aggregate( total_salary_price=Coalesce (Sum('salary'), 0))
         user_total_ot = queryset_data.aggregate(overall_ot_price=Coalesce (Sum('ot_salary'), 0))
         total_salary_data = user_daily_salary['total_salary_price'] + user_total_ot['overall_ot_price']
@@ -385,37 +355,16 @@ class UserSalaryReportSerializer(serializers.Serializer):   # Important
             'total_salary': total_salary_data
         }
 
-class UserSalaryAttendanceReportSerializer(serializers.Serializer):    # Important
+class UserSalaryAttendanceReportSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
 
         time_spend_hours , time_spend_minutes = divmod(instance.time_spend, 60)
         time_spend_hours = '%d:%02d Hr' % (time_spend_hours, time_spend_minutes)
 
-        # month = self.context['month']
-        # year = self.context['year']
-        # user_id = self.context['user_id']
-
-        # # queryset = UserSalaryPerDay.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
-
-
-        # # # queryset =  UserAttendance.objects.filter(date=instance.date, user=user_id, status=True, delete=False)
-        # # time_spend = queryset.aggregate(overall_time_spend=Coalesce (Sum('time_spend'), 0))
-        # # salary = queryset.aggregate(overall_salary=Coalesce (Sum('salary'), 0))
-        # # ot_salary = queryset.aggregate(overall_ot_salary=Coalesce (Sum('ot_salary'), 0))
-
-        # # time_spend_value = time_spend['overall_time_spend']
-        # # salary_value = salary['overall_salary']
-        # # ot_salary_value = ot_salary['overall_ot_salary']
-
-        # print(time_spend_value, instance.time_spend)
-        # print(salary_value, instance.salary)
-        # print(ot_salary_value, instance.ot_salary)
-
         return {
             'pk': instance.pk,
             'date': instance.date,
-            # 'time_spend': "{:.2f}{}".format(instance.time_spend/60, ' Hr'),
             'time_spend': time_spend_hours,
             'salary':'Rs {}'.format(instance.salary),
             'ot_salary':'Rs {}'.format(instance.ot_salary),
@@ -435,7 +384,7 @@ class UserAttendanceSerializer(serializers.Serializer):
             'formatted_punch_out': instance.stop.strftime("%I:%M %p") if instance.stop else None,
         }
 
-class UserSalaryAttendanceListSerializer(serializers.Serializer):   # Important
+class UserSalaryAttendanceListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         date = self.context['date']
@@ -488,8 +437,7 @@ class UserSalarySerializer(serializers.ModelSerializer):
             'ot_per_hour': instance.ot_per_hour,
             'ot_per_minute': instance.ot_per_minute,
             'date': instance.date,
-            'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None,
-            # 'salary_list': salary_list
+            'formated_date': instance.date.strftime("%d-%m-%Y")if instance.date else None
         }
 
 
@@ -509,9 +457,7 @@ class UserAttendanceInSerializer(serializers.ModelSerializer):
             'abscent': instance.abscent,
             'stop_availability': False if instance.stop else True,
             'time_spend': instance.time_spend,
-            # 'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            # 'ot_salary': instance.ot_salary,
             'break_time': UserAttendanceBreakInSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
@@ -531,11 +477,6 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             break_data.save()
         except:
             break_data = 0
-        # try:
-        #     total_salary = UserAttendance.objects.filter(date=instance.date, delete=False).aggregate(total=(Sum('salary')))
-        #     grand_salary = total_salary['total']
-        # except:
-        #     grand_salary = 0
         try:
             ot_hours , ot_minutes = divmod(instance.ot_time_spend, 60)
             ot_time_spend_hours = '%d:%02d Hr' % (ot_hours, ot_minutes)
@@ -551,11 +492,8 @@ class UserAttendanceOutSerializer(serializers.ModelSerializer):
             'stop_availability': False if instance.stop else True,
             'time_spend_minuts': instance.time_spend,
             'time_spend_hours': time_spend_hours,
-            # 'salary': instance.salary,
             'ot_time_spend_minuts': instance.ot_time_spend,
             'ot_time_spend_hours': ot_time_spend_hours,
-            # 'ot_salary': instance.ot_salary,
-            # 'grand_total_salary' : grand_salary,
             'break_time': UserAttendanceBreakOutSerializer(UserAttendanceBreak.objects.filter(date=instance.date, user=instance.user).order_by('-id'), many=True).data
         }
 
@@ -729,9 +667,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return{
-            # 'unit_data': UnitSerializer(instance.unit).data,
-            # 'department_data': BranchProductDepartmentSerializer(instance.department).data,
-            # 'classification_data': BranchProductClassificationSerializer(instance.classification).data,
             'id': instance.pk,
             'key': instance.pk,
             'name': instance.name,
@@ -742,7 +677,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'department_name': instance.department.name if instance.department else None,
             'classification': instance.classification.pk,
             'classification_name': instance.classification.name,
-            # 'product_code': instance.product_code,
             'reorder_level': instance.reorder_level,
             'sort_order': instance.sort_order,
             'status': instance.status,
@@ -767,7 +701,6 @@ class WrongBillSerializer(serializers.ModelSerializer):
             'date': instance.date,
             'description': instance.description
         }
-
 
 
 class FreeBillCustomerSerializer(serializers.ModelSerializer):
@@ -797,7 +730,6 @@ class FreeBillSerializer(serializers.ModelSerializer):
             'amount': instance.amount,
             'billed_by': instance.billed_by.pk,
             'billed_by_name': instance.billed_by.first_name,
-            # 'billed_for': instance.billed_for.name,
             'date': instance.date,
             'description': instance.description
         }
@@ -1006,9 +938,7 @@ class AttendanceSerializer(serializers.Serializer):
             'stop_availability': False if instance.stop else True,
             'time_spend': time_spend_hours,
             'abscent': instance.abscent,
-            # 'salary': instance.salary,
             'ot_time_spend': instance.ot_time_spend,
-            # 'ot_salary': instance.ot_salary,
             'existing': True
         }
 
@@ -1044,7 +974,6 @@ class ElectricBillSerializer(serializers.ModelSerializer):
         date = datetime.datetime.strptime(self.context['date'], '%Y-%m-%d')
         now = datetime.datetime.now()
         date = datetime.datetime.combine(date, now.time())
-        # print(validated_data)
 
         if validated_data.get('id', None):
             data = ElectricBill.objects.get(pk=int(validated_data['id']))
@@ -1283,26 +1212,6 @@ class VendorSerializer(serializers.ModelSerializer):
         }
 
 
-# class InventoryDataListSerializer(serializers.Serializer):
-
-#     def to_representation(self, instance):
-#         branch = self.context['branch']
-#         date = self.context['date']
-
-#         '''for i in range(4):
-#             print(i)
-#             if i==0:
-#                 name = "raw_products"
-#                 completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()
-#             if i==1:
-#                 name = "operational_products"
-#                 completed_status = InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()'''
-
-#         data = {'operational' : {'name' : "operational_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3).exists()}, 'raw' : {'name' : "raw_products",'completed_status' : InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=2).exists()}}
-#         print(InventoryControl.objects.filter(branch=branch, date=date, product__classification__code=3))
-#         return {'v':data['operational'], 'y': data['raw']}
-
-
 class DailySheetInventoryListSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
@@ -1509,7 +1418,6 @@ class BranchProductInventoryCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'product', 'quantity', 'buying_price', 'date', 'vendor')
 
     def create(self, validated_data):
-        branch = self.context['branch']
         data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], vendor=validated_data.get('vendor', None), date=validated_data['date'], quantity=validated_data['quantity'], buying_price=validated_data['buying_price'])
         return data
 
@@ -1620,21 +1528,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         }
 
 
-# class CreditSalesCreateSerializer(serializers.ModelSerializer):
-#     id = serializers.IntegerField(required=False,  allow_null=True)
-#     class Meta:
-#         model = CreditSales
-#         fields = ('id', 'customer', 'bill_no', 'amount', 'date', 'description',)
-#
-#     def create(self, validated_data):
-#         branch = self.context['branch']
-#         if validated_data.get('id', None):
-#             data = CreditSales.objects.filter(pk=validated_data['id']).update(customer=validated_data['customer'], bill_no=validated_data['bill_no'], amount=validated_data['amount'], date=validated_data['date'], description=validated_data['description'])
-#         else:
-#             data = CreditSales.objects.create(branch=Branch.objects.get(pk=self.context['branch']), customer=validated_data['customer'], bill_no=validated_data['bill_no'], amount=validated_data['amount'], date=validated_data['date'], description=validated_data['description'])
-#         return data
-
-
 class CreditSaleCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditSaleCustomer
@@ -1672,6 +1565,7 @@ class CreditSalesSerializer(serializers.ModelSerializer):
             'description': instance.description
         }
 
+
 class PettyCashSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,  allow_null=True)
 
@@ -1696,11 +1590,6 @@ class PettyCashRemarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = PettyCashRemark
         exclude = ['delete', 'status', 'branch']
-
-    # def create(self, validated_data):
-    #     pettycase_data = validated_data.pop('PettyCashSerializer')
-
-
 
     def to_representation(self, instance):
         return{
@@ -1786,7 +1675,6 @@ class SalesCountCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'employee', 'section', 'product', 'quantity', 'date')
 
     def create(self, validated_data):
-        branch = self.context['branch']
         data = SalesCount.objects.create(branch=Branch.objects.get(pk=self.context['branch']), employee=validated_data['employee'], section=validated_data['section'], product=validated_data['product'], quantity=validated_data['quantity'], date=validated_data['date'])
         return data
 
@@ -1839,7 +1727,6 @@ class DenominationSerializer(serializers.ModelSerializer):
         exclude = ['delete', 'status', 'branch', 'total']
 
     def create(self, validated_data):
-        branch = self.context['branch']
         data = Denomination.objects.create(branch=Branch.objects.get(pk=self.context['branch']), amount=validated_data['amount'], quantity=validated_data['quantity'], date=validated_data['date'])
         return data
 
@@ -1859,15 +1746,6 @@ class DenominationUpdateSerializer(serializers.ModelSerializer):
         fields = ('amount', 'quantity')
 
 
-    # def to_representation(self, instance):
-    #
-    #     return{
-    #         'id': instance.pk,
-    #         'amount': instance.amount,
-    #         'quantity': instance.quantity,
-    #     }
-
-
 class BranchCashManagementSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -1883,6 +1761,7 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
                 raise ValidationError('There is a date already exist!')
         else:
             return data
+
 
     def to_representation(self, instance):
         return{
@@ -1920,17 +1799,6 @@ class CashHandoverDetailsSerializer(serializers.ModelSerializer):
             'date': instance.date
         }
 
-
-
-
-
-
-# class BranchProductTransferOutSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#          model = ProductInventory
-#          exclude = ['delete', 'status', 'product', 'taken', 'received', 'on_hand']
-#
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
