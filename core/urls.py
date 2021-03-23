@@ -154,12 +154,13 @@ urlpatterns = [
     path('oil_consumption_update/<int:pk>/', views.OilConsumptionUpdate.as_view()),
 
     path('electric_bill_meter_list/<str:date>/', views.ElectricBillMeterList.as_view()),
-
     path('branch_ebmeter_list/<int:branch>/', views.BranchElectricBillMeterList.as_view()),
-
     path('eb_meter_create/<int:branch>/', views.EbMeterAPIView.as_view()),
-
     path('eb_meter_list/<int:branch>/', views.EbMeterAPIView.as_view()),
+    path('eb_meter_update/<int:pk>/', views.EbMeterUpdateAPIView.as_view()),
+    path('eb_meter_destroy/<int:pk>/', views.EbMeterDestroyAPIView.as_view()),
+
+
 
     path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
 

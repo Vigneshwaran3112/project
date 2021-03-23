@@ -689,10 +689,10 @@ class BranchElectricBillMeterList(generics.ListAPIView):
     serializer_class = EbMeterSerializer
 
     def list(self, request, branch):
-        if branch==0:
-            query = EBMeter.objects.all()
-        else:
-            query = EBMeter.objects.filter(branch=branch).order_by('-id')
+        # if branch==0:
+        #     query = EBMeter.objects.all()
+        # else:
+        query = EBMeter.objects.filter(branch=branch).order_by('-id')
         return Response(EbMeterSerializer(query, many=True).data)
 
 
@@ -722,7 +722,18 @@ class EbMeterAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(branch=Branch.objects.get(pk=self.kwargs['branch']))
 
+class EbMeterUpdateAPIView(generics.UpdateAPIView):
+    queryset = EBMeter.objects.filter(delete=False, status=True)
+    serializer_class = EbMeterSerializer
 
+
+class EbMeterDestroyAPIView(generics.DestroyAPIView):
+    queryset = EBMeter.objects.filter(delete=False, status=True)
+    serializer_class = EbMeterSerializer
+
+    def destroy(self, request, pk):
+        destroy = EBMeter.objects.filter(pk=pk).update(status=False, delete=True)
+        return Response({'message': 'eb meter deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
