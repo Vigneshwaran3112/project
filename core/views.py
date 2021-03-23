@@ -1355,6 +1355,33 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
                                            delete=False, status=True)
 
 
+
+class BranchSpecificBillAPIView(generics.ListAPIView):
+    serializer_class = BranchSpecificBillSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def list(self, request, *args, **kwargs):
+        id = self.kwargs['id']
+        date = self.kwargs['date']
+        branch = self.kwargs['branch']
+        if id == 1:
+            query = WrongBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = WrongBillSerializer(query, many=True)
+        elif id == 2:
+            query = FreeBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = FreeBillSerializer(query, many=True)
+        elif id == 3:
+            query = ElectricBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = ElectricBillMeterSerializer(query, many=True)
+        elif id == 4:
+            query = FoodWastage.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = FoodWastageSerializer(query, many=True)
+        else:
+            return Response({'message': 'No data found'})
+        return Response(serializer_data.data, status=status.HTTP_200_OK)
+
+
+
 class UserProfileAPIView(generics.RetrieveAPIView):
     # queryset = BaseUser.objects.all()
     serializer_class = UserProfileSerializer

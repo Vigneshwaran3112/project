@@ -1800,6 +1800,16 @@ class CashHandoverDetailsSerializer(serializers.ModelSerializer):
         }
 
 
+
+class BranchSpecificBillSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+        }
+
+
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
