@@ -1282,12 +1282,10 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
 class PettyCashListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_object(self):
-        return PettyCash.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
-                                     status=True)
+        return PettyCash.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
@@ -1302,7 +1300,6 @@ class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
 
 class PettyCashCreateAPIView(generics.CreateAPIView):
     serializer_class = PettyCashSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_serializer_context(self):
@@ -1322,20 +1319,17 @@ class PettyCashCreateAPIView(generics.CreateAPIView):
 
 class PettyCashPreviousListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashListSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_object(self):
         today = datetime.datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
         yesterday = today - datetime.timedelta(days=1)
-        data = PettyCash.objects.get(branch=self.request.user.branch, date__date=yesterday.date(), delete=False,
-                                     status=True)
+        data = PettyCash.objects.get(branch=self.request.user.branch, date__date=yesterday.date(), delete=False, status=True)
         return data
 
 
 class SalesCountCreateAPIView(generics.CreateAPIView):
     serializer_class = SalesCountCreateSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def create(self, request):
@@ -1347,13 +1341,11 @@ class SalesCountCreateAPIView(generics.CreateAPIView):
 
 
 class SalesCountListAPIView(generics.ListAPIView):
-    serializer_class = SalesCountlistSerializer
-
+    serializer_class = SalesCountlistSerialize
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return SalesCount.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
-                                         status=True)
+        return SalesCount.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class SalesCountDeleteAPIView(generics.DestroyAPIView):
@@ -1366,7 +1358,6 @@ class SalesCountDeleteAPIView(generics.DestroyAPIView):
 class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
     queryset = BankCashReceivedDetails.objects.filter(delete=False, status=True)
     serializer_class = BankCashReceivedDetailsSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -1380,7 +1371,6 @@ class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
 
 class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
     serializer_class = BankCashReceivedDetailsSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
@@ -1391,7 +1381,6 @@ class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
 class DenominationAPIView(viewsets.ModelViewSet):
     queryset = Denomination.objects.filter(delete=False, status=True)
     serializer_class = DenominationSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def create(self, request):
@@ -1408,7 +1397,6 @@ class DenominationAPIView(viewsets.ModelViewSet):
 
 class DenominationListAPIView(generics.ListAPIView):
     serializer_class = DenominationSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, date):
@@ -1424,7 +1412,6 @@ class DenominationListAPIView(generics.ListAPIView):
 class DenominationUpdateAPIView(generics.UpdateAPIView):
     queryset = Denomination.objects.filter(delete=False)
     serializer_class = DenominationUpdateSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def partial_update(self, request):
@@ -1439,7 +1426,6 @@ class DenominationUpdateAPIView(generics.UpdateAPIView):
 class BranchCashManagementAPIView(viewsets.ModelViewSet):
     queryset = BranchCashManagement.objects.filter(delete=False, status=True)
     serializer_class = BranchCashManagementSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -1458,36 +1444,22 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
 
 class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def retrieve(self, request, *args, **kwargs):
         try:
-            queryset = BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                                        delete=False, status=True)
+            queryset = BranchCashManagement.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
         except BranchCashManagement.DoesNotExist:
-            previous_day_data = BranchCashManagement.objects.filter(branch=self.request.user.branch, delete=False,
-                                                                    status=True).aggregate(
-                total_closing_cash=Coalesce(Sum('closing_cash'), V(0)))
-            credit_sales_data = CreditSales.objects.filter(branch=self.request.user.branch,
-                                                           date__date=self.kwargs['date'], delete=False,
-                                                           status=True).aggregate(
-                total_amount=Coalesce(Sum('amount'), V(0)))
-            bank_cash_data = BankCashReceivedDetails.objects.filter(branch=self.request.user.branch,
-                                                                    date__date=self.kwargs['date'], delete=False,
-                                                                    status=True).aggregate(
-                total_amount=Coalesce(Sum('amount'), V(0)))
-            queryset = BranchCashManagement(branch=self.request.user.branch, date=self.kwargs['date'],
-                                            opening_cash=previous_day_data['total_closing_cash'],
-                                            credit_sales=credit_sales_data['total_amount'],
-                                            bank_cash=bank_cash_data['total_amount'])
+            previous_day_data = BranchCashManagement.objects.filter(branch=self.request.user.branch, delete=False, status=True).aggregate(total_closing_cash=Coalesce(Sum('closing_cash'), V(0)))
+            credit_sales_data = CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+            bank_cash_data = BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+            queryset = BranchCashManagement(branch=self.request.user.branch, date=self.kwargs['date'], opening_cash=previous_day_data['total_closing_cash'], credit_sales=credit_sales_data['total_amount'], bank_cash=bank_cash_data['total_amount'])
         return Response(self.serializer_class(queryset).data)
 
 
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
     queryset = CashHandover.objects.filter(delete=False, status=True)
     serializer_class = CashHandoverDetailsSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -1500,7 +1472,6 @@ class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
 
 class CashHandoverDetailsListAPIView(generics.ListAPIView):
     serializer_class = CashHandoverDetailsSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
@@ -1511,7 +1482,6 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
 class UserProfileAPIView(generics.RetrieveAPIView):
     # queryset = BaseUser.objects.all()
     serializer_class = UserProfileSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_object(self):
