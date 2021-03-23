@@ -665,7 +665,7 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
         serializer.save()
 
     def destroy(self, request, *args, **kwargs):
-        destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True)
+        destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True, status=False)
         return Response({'message':'BaseUser deleted sucessfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -692,7 +692,7 @@ class BranchElectricBillMeterList(generics.ListAPIView):
         # if branch==0:
         #     query = EBMeter.objects.all()
         # else:
-        query = EBMeter.objects.filter(branch=branch).order_by('-id')
+        query = EBMeter.objects.filter(branch=branch, delete=False, status=True).order_by('-id')
         return Response(EbMeterSerializer(query, many=True).data)
 
 
