@@ -1352,3 +1352,14 @@ class UserProfileAPIView(generics.RetrieveAPIView):
     def get_object(self):
         user = BaseUser.objects.get(pk=self.request.user.pk)
         return user
+
+
+class ElectricBillCreate(generics.CreateAPIView):
+    serializer_class = ElectricBillSerializer
+
+    def create(self, request, date):
+        for eb_data in request.data:
+            serializer = self.serializer_class(data=eb_data, context={'branch': self.request.user.branch.pk, 'date': date})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})

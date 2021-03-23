@@ -75,8 +75,8 @@ urlpatterns = [
     path('branch_specific_wrongbill/<str:date>/', views.BranchSpecificWrongBillAPIView.as_view()),
     path('branch_specific_freebill/<str:date>/', views.BranchSpecificFreeBillAPIView.as_view()),
     
-    # path('electricbill_create/<str:date>/', views.ElectricBillCreate.as_view()),
-
+    path('electricbill_create/<str:date>/', views.ElectricBillCreate.as_view()),
+    #
     path('unit_list/', views.UnitListAPIView.as_view()),
     path('unit_update/<int:pk>/', views.UnitUpdateAPIView.as_view()),
 
