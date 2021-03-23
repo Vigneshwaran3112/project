@@ -1415,7 +1415,8 @@ class ProductInstockListSerializer(serializers.ModelSerializer):
         return{
             'id': instance.pk,
             'product_id': instance.product.pk,
-            'product_count': instance.on_hand
+            'product_count': instance.on_hand,
+            'mrp_price': instance.mrp_price if instance.mrp_price else 0
         }
 
 
