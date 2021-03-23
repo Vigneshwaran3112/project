@@ -669,6 +669,11 @@ class FoodWastage(BaseModel):
     description = models.CharField(max_length=100, null=True, blank=True)
     date = models.DateTimeField()
 
+    def save(self, *args, **kwargs):
+        product_price = ProductInventory.objects.get(branch=self.branch, product=self.product).mrp_price
+        self.mrp_price = product_price * self.quantity
+        super(FoodWastage, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return f'{self.branch.name} - {self.date}'
