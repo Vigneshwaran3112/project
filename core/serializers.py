@@ -89,7 +89,7 @@ class UserTokenSerializer(serializers.Serializer):
                     raise serializers.ValidationError({'user': "Entered Phone doesn't exist."})
                 except ValidationError:
                     raise serializers.ValidationError({'user': "Entered User ID doesn't exist."})
-        if user_data.is_superuser | user_data.is_staff == True:
+        if user_data.is_superuser | user_data.is_staff | user_data.employee_role.filter(code=1).exists()  == True:
             if user_data.check_password(data['password']):
                 user = authenticate(request=self.context.get('request'), username=user_data.username, password=data['password'])
             else:
