@@ -1881,6 +1881,8 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
                 return data
             else:
                 raise ValidationError('There is a date already exist!')
+        else:
+            return data
 
     def to_representation(self, instance):
         return{
