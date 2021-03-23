@@ -1084,6 +1084,7 @@ class ElectricBillMeterSerializer(serializers.Serializer):
         }
 
 
+
 class EbMeterSerializer(serializers.ModelSerializer):
 
     class Meta:

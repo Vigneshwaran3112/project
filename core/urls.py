@@ -155,6 +155,8 @@ urlpatterns = [
 
     path('electric_bill_meter_list/<str:date>/', views.ElectricBillMeterList.as_view()),
 
+    path('branch_ebmeter_list/<int:branch>/', views.BranchElectricBillMeterList.as_view()),
+
     path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
 
     path('raw_operational_product_list/', views.RawOperationalProductList.as_view()),
