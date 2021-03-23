@@ -681,7 +681,7 @@ class ElectricBillMeterList(generics.ListAPIView):
     serializer_class = ElectricBillMeterSerializer
 
     def list(self, request, date):
-        query = EBMeter.objects.filter(branch=self.request.user.branch).order_by('-id')
+        query = EBMeter.objects.filter(branch=self.request.user.branch, delete=False, status=True).order_by('-id')
         return Response(ElectricBillMeterSerializer(query, context = {'branch': self.request.user.branch,'date':self.kwargs['date']}, many=True).data)
 
 
