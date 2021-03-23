@@ -1126,7 +1126,6 @@ class SalesCountCreateAPIView(generics.CreateAPIView):
 class SalesCountListAPIView(generics.ListAPIView):
     serializer_class = SalesCountlistSerializer
 
-
     def get_queryset(self):
         return SalesCount.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
