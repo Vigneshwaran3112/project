@@ -119,17 +119,17 @@ class BulkOrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'unit', 'department', 'classification' )
+    list_display = ('pk', 'name', 'unit', 'department', 'classification', )
 
 
 @admin.register(ProductPricingBatch)
 class ProductPricingBatchAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'branch', 'product', 'mrp_price', 'date', 'quantity' )
+    list_display = ('pk', 'branch', 'product', 'mrp_price', 'date', 'quantity', 'rate', )
 
 
 @admin.register(ProductInventory)
 class ProductInventoryAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'branch', 'product', 'received', 'taken', 'on_hand' )
+    list_display = ('pk', 'branch', 'product', 'received', 'taken', 'on_hand')
 
 
 @admin.register(ProductBranchMapping)

@@ -12,22 +12,33 @@ class IsEmployee(IsAuthenticated):
 class IsIncharge(IsAuthenticated):
     
     def has_permission(self, request, view):
-        incharge_user = BaseUser.objects.filter(pk=request.user.id, is_active=True, is_employee=True , employee_role__pk=1).exists()
+        incharge_user = BaseUser.objects.filter(pk=request.user.id, is_active=True, is_employee=True, employee_role__pk=1).exists()
         return bool(incharge_user and request.user)
 
 
 class IsAdmin(IsAuthenticated):
 
     def has_permission(self, request, view):
-        # admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_staff=True).exists()
         return bool(request.user.is_staff and request.user)
 
 
 class IsSuperAdmin(IsAuthenticated):
 
     def has_permission(self, request, view):
-        # super_admin_user = BaseUser.objects.filter(pk=request.user.id, delete=False, is_superuser=True, is_staff=True).exists()
         return bool(request.user.is_superuser and request.user)
+
+
+class IsSuperAdminOrIsAdmin(IsAuthenticated):
+
+    def has_permission(self, request, view):
+        return bool(request.user.is_superuser | request.user.is_staff and request.user)
+
+
+class IsSuperAdminOrIsAdminOrIsIncharge(IsAuthenticated):
+
+    def has_permission(self, request, view):
+        incharge_user = BaseUser.objects.filter(pk=request.user.id, is_active=True, is_employee=True, employee_role__pk=1).exists()
+        return bool(incharge_user | request.user.is_superuser | request.user.is_staff and request.user)
 
 
 class CreateAndIsSuperAdmin(IsSuperAdmin):

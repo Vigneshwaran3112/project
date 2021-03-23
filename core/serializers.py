@@ -89,12 +89,15 @@ class UserTokenSerializer(serializers.Serializer):
                     raise serializers.ValidationError({'user': "Entered Phone doesn't exist."})
                 except ValidationError:
                     raise serializers.ValidationError({'user': "Entered User ID doesn't exist."})
-        if user_data.check_password(data['password']):
-            user = authenticate(request=self.context.get('request'), username=user_data.username, password=data['password'])
+        if user_data.is_superuser | user_data.is_staff == True:
+            if user_data.check_password(data['password']):
+                user = authenticate(request=self.context.get('request'), username=user_data.username, password=data['password'])
+            else:
+                raise serializers.ValidationError({'password': 'The Password entered is incorrect.'})
+            data['user'] = user
+            return data
         else:
-            raise serializers.ValidationError({'password': 'The Password entered is incorrect.'})
-        data['user'] = user
-        return data
+            raise serializers.ValidationError({'password': 'Permission Denied.'})
 
     # username = serializers.CharField(trim_whitespace=True, required=True)
     # password = serializers.CharField(trim_whitespace=False, required=True)
