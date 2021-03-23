@@ -684,16 +684,22 @@ class BranchElectricBillMeterList(generics.ListAPIView):
         return Response(EbMeterSerializer(query, many=True).data)
 
 
-class EbMeterAPIView(generics.ListCreateAPIView):
+class EbMeterCreateAPIView(generics.CreateAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
-    def get_queryset(self, branch):
-        return EBMeter.objects.filter(branch=branch, delete=False, status=True)
-
     def perform_create(self, serializer):
         serializer.save(branch=Branch.objects.get(pk=self.kwargs['branch']))
+
+
+class EbMeterListAPIView(generics.ListAPIView):
+    queryset = EBMeter.objects.filter(delete=False, status=True)
+    serializer_class = EbMeterSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def get_queryset(self):
+        return EBMeter.objects.filter(branch=Branch.objects.get(pk=self.kwargs['branch']), delete=False, status=True)
 
 
 class EbMeterUpdateAPIView(generics.UpdateAPIView):
