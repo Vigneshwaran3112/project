@@ -878,26 +878,26 @@ class ProductInstockCountList(generics.RetrieveAPIView):
     serializer_class = ProductInstockListSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
-    def get_object(self):
-        return ProductInventory.objects.get(branch=self.request.user.branch, product__pk=self.kwargs['product'])
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializer_class(ProductInventory.objects.get(branch=self.request.user.branch, product__pk=self.kwargs['product']))
+            return Response(serializer.data)
+        except ProductInventory.DoesNotExist:
+            return Response({'message': 'This Product Has No Existing Data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductInventoryControlList(generics.ListAPIView):
     serializer_class = ProductInventoryControlSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, date, classification):
         query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
         products = query.filter(classification__code=classification).order_by('-id')
-        return Response(
-            ProductInventoryControlSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date},
-                                              many=True).data)
+        return Response(ProductInventoryControlSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
 
 
 class ProductInventoryControlListByBranch(generics.ListAPIView):
     serializer_class = ProductInventoryControlSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, date, classification, branch):
@@ -912,18 +912,15 @@ class ProductInventoryControlListByBranch(generics.ListAPIView):
 
 class ProductInventoryControlCreate(generics.CreateAPIView):
     serializer_class = ProductInventoryControlCreateSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def create(self, request, date):
         for inventory_data in request.data:
             if inventory_data['is_editable']:
                 if int(inventory_data['closing_stock']) > int(inventory_data['on_hand']):
-                    return Response({'message': 'Closing stock is greater then inventory stock'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Closing stock is greater then inventory stock'}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    serializer = self.serializer_class(data=inventory_data,
-                                                       context={'branch': self.request.user.branch.pk, 'date': date})
+                    serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk, 'date': date})
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
             else:
@@ -933,7 +930,6 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
 
 class BranchProductInventoryCreate(generics.CreateAPIView):
     serializer_class = BranchProductInventoryCreateSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def create(self, request):
@@ -946,38 +942,28 @@ class BranchProductInventoryCreate(generics.CreateAPIView):
 
 class BranchProductInventoryList(generics.ListAPIView):
     serializer_class = BranchProductInventoryListSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
         start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
         stop = datetime.datetime.strptime(self.request.query_params.get('stop'), '%Y-%m-%d')
         if self.kwargs['pk'] == 1:
-            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop],
-                                                       branch=self.request.user.branch.pk,
-                                                       product__classification__code__in=[2, 3], delete=False,
-                                                       status=True).order_by('-id')
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code__in=[2, 3], delete=False, status=True).order_by('-id')
         elif self.kwargs['pk'] == 2:
-            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop],
-                                                       branch=self.request.user.branch.pk,
-                                                       product__classification__code=4, delete=False,
-                                                       status=True).order_by('-id')
+            query = ProductPricingBatch.objects.filter(date__date__range=[start, stop], branch=self.request.user.branch.pk, product__classification__code=4, delete=False, status=True).order_by('-id')
         return query
 
 
 class OilConsumptionList(generics.ListAPIView):
     serializer_class = OilConsumptionSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date'],
-                                             delete=False, status=True).order_by('-id')
+        return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
 
 
 class OilConsumptionCreate(generics.CreateAPIView):
     serializer_class = OilConsumptionSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -993,7 +979,6 @@ class OilConsumptionUpdate(generics.UpdateAPIView):
 class FoodWastageAPIView(viewsets.ModelViewSet):
     queryset = FoodWastage.objects.filter(delete=False, status=True)
     serializer_class = FoodWastageSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
@@ -1009,27 +994,22 @@ class FoodWastageAPIView(viewsets.ModelViewSet):
 
 class FoodWastageList(generics.ListAPIView):
     serializer_class = FoodWastageSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False,
-                                          status=True)
+        return FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
 
 
 class RawOperationalProductList(generics.ListAPIView):
     serializer_class = RawOperationalProductListSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product.filter(
-            classification__code__in=[2, 3], status=True, delete=False)
+        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product.filter(classification__code__in=[2, 3], status=True, delete=False)
 
 
 class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
@@ -1070,28 +1050,9 @@ class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
         return Response({'message': 'credit sale customer deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# class CreditSalesListAPIView(generics.ListAPIView):
-#     serializer_class = CreditSaleslistSerializer
-#
-#     def get_queryset(self):
-#         return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date']).order_by('-id')
-#
-#
-# class CreditSalesCreateAPIView(generics.CreateAPIView):
-#     serializer_class = CreditSalesCreateSerializer
-#
-#     def create(self, request):
-#         for customer_data in request.data:
-#             serializer = self.serializer_class(data=customer_data, context={'branch': self.request.user.branch.pk})
-#             serializer.is_valid(raise_exception=True)
-#             serializer.save()
-#         return Response({'message': 'Data Saved!'})
-
-
 class CreditSalesAPIView(viewsets.ModelViewSet):
     queryset = CreditSales.objects.filter(delete=False, status=True)
     serializer_class = CreditSalesSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -1104,18 +1065,15 @@ class CreditSalesAPIView(viewsets.ModelViewSet):
 
 class CreditSalesListAPIView(generics.ListAPIView):
     serializer_class = CreditSalesSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False,
-                                          status=True)
+        return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class CreditSettlementAPIView(viewsets.ModelViewSet):
     queryset = CreditSettlement.objects.filter(delete=False, status=True)
     serializer_class = CreditSettlementSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
@@ -1128,18 +1086,15 @@ class CreditSettlementAPIView(viewsets.ModelViewSet):
 
 class CreditSettlementListAPIView(generics.ListAPIView):
     serializer_class = CreditSettlementSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return CreditSettlement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                               delete=False, status=True)
+        return CreditSettlement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class PettyCashAPIView(viewsets.ModelViewSet):
     queryset = PettyCash.objects.filter(delete=False, status=True)
     serializer_class = PettyCashSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def perform_create(self, serializer):
