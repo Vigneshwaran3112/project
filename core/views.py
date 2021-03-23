@@ -697,19 +697,33 @@ class BranchElectricBillMeterList(generics.ListAPIView):
 
 
 
-class EbMeterAPIView(viewsets.ModelViewSet):
+# class EbMeterAPIView(viewsets.ModelViewSet):
+#     queryset = EBMeter.objects.filter(delete=False, status=True)
+#     serializer_class = EbMeterSerializer
+#
+#     def get_queryset(self):
+#         return EBMeter.objects.filter(branch=self.request.user.branch, delete=False, status=True)
+#
+#     def perform_create(self, serializer, branch):
+#         serializer.save(branch=)
+#
+#     def destroy(self, request, *args, **kwargs):
+#         destroy = EBMeter.objects.filter(pk=kwargs['pk']).update(delete=True)
+#         return Response({'message':'eb meter deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class EbMeterAPIView(generics.ListCreateAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
 
-    def get_queryset(self):
-        return EBMeter.objects.filter(branch=self.request.user.branch, delete=False, status=True)
+    def get_queryset(self, branch):
+        return EBMeter.objects.filter(branch=branch, delete=False, status=True)
 
     def perform_create(self, serializer):
-        serializer.save(branch=self.request.user.branch)
+        serializer.save(branch=Branch.objects.get(pk=self.kwargs['branch']))
 
-    def destroy(self, request, *args, **kwargs):
-        destroy = EBMeter.objects.filter(pk=kwargs['pk']).update(delete=True)
-        return Response({'message':'eb meter deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 class SubBranchlistAPIView(generics.ListAPIView):
