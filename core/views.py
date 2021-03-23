@@ -855,7 +855,6 @@ class VendorAPIView(viewsets.ModelViewSet):
 
 class BranchProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, classification):
