@@ -361,6 +361,7 @@ class ProductPricingBatch(BaseModel):
         data, created = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
         data.on_hand += self.quantity
+        data.mrp_price = self.mrp_price
         data.save()
         super(ProductPricingBatch, self).save(*args, **kwargs)
 
@@ -372,6 +373,7 @@ class ProductInventory(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_inventory')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_inventory')
     product_unique_id = models.CharField(max_length=100, null=True, blank=True)
+    mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     received = models.PositiveIntegerField(null=True, blank=True, default=0)
     taken = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)

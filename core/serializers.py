@@ -1118,7 +1118,7 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductPricingBatch
-        exclude = ['delete', 'branch', 'status', 'product_unique_id']
+        exclude = ['delete', 'branch', 'status' ]
 
     def to_representation(self, instance):
         return {
@@ -1130,7 +1130,6 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
             'quantity': instance.quantity,
             'mrp_price': instance.mrp_price,
             'buying_price': instance.buying_price,
-            # 'selling_price': instance.selling_price,
             'date': instance.date,
             'created': instance.created
         }
@@ -1140,7 +1139,7 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductInventory
-        exclude = ['delete', 'branch', 'status', 'on_hand']
+        exclude = ['delete', 'branch', 'status', 'on_hand', 'product_unique_id']
 
     def to_representation(self, instance):
         return {
@@ -1410,7 +1409,7 @@ class ProductInstockListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductInventory
-        exclude = ['delete',]
+        exclude = ['delete', 'product_unique_id']
 
     def to_representation(self, instance):
         return{
