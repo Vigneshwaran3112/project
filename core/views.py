@@ -904,8 +904,7 @@ class ProductInventoryControlListByBranch(generics.ListAPIView):
         try:
             query = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
             products = query.filter(classification__code=classification).order_by('-id')
-            return Response(
-                ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data)
+            return Response(ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data)
         except ProductBranchMapping.DoesNotExist:
             return Response([], status=status.HTTP_200_OK)
 
@@ -1308,33 +1307,6 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'],
                                            delete=False, status=True)
-
-
-
-class BranchSpecificBillAPIView(generics.ListAPIView):
-    serializer_class = BranchSpecificBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
-
-    def list(self, request, *args, **kwargs):
-        id = self.kwargs['id']
-        date = self.kwargs['date']
-        branch = self.kwargs['branch']
-        if id == 1:
-            query = WrongBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = WrongBillSerializer(query, many=True)
-        elif id == 2:
-            query = FreeBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = FreeBillSerializer(query, many=True)
-        elif id == 3:
-            query = ElectricBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = ElectricBillMeterSerializer(query, many=True)
-        elif id == 4:
-            query = FoodWastage.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = FoodWastageSerializer(query, many=True)
-        else:
-            return Response({'message': 'No data found'})
-        return Response(serializer_data.data, status=status.HTTP_200_OK)
-
 
 
 class UserProfileAPIView(generics.RetrieveAPIView):
