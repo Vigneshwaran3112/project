@@ -7,7 +7,6 @@ from . import views
 
 router = DefaultRouter()
 
-# router.register(r'role', views.RoleAPIViewset, basename='role')
 router.register(r'user', views.UserAPIView, basename='user')
 router.register(r'branch', views.BranchAPIViewset, basename='branch')
 router.register(r'user_salary', views.UserSalaryAPIViewset, basename='user_salary')
