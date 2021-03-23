@@ -1341,7 +1341,7 @@ class SalesCountCreateAPIView(generics.CreateAPIView):
 
 
 class SalesCountListAPIView(generics.ListAPIView):
-    serializer_class = SalesCountlistSerialize
+    serializer_class = SalesCountlistSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
