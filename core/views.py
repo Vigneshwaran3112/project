@@ -1324,3 +1324,39 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 #     def partial_update(self, request, pk):
 #         transfer_product = ProductInventory.objects.get(pk=pk)
 #         return transfer_product
+
+
+class BranchSpecificBillAPIView(generics.ListAPIView):
+    serializer_class = BranchSpecificBillSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def list(self, request, *args, **kwargs):
+        id = self.kwargs['id']
+        date = self.kwargs['date']
+        branch = self.kwargs['branch']
+        if id == 1:
+            query = WrongBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = WrongBillSerializer(query, many=True)
+        elif id == 2:
+            query = FreeBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = FreeBillSerializer(query, many=True)
+        elif id == 3:
+            query = ElectricBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = ElectricBillMeterSerializer(query, many=True)
+        elif id == 4:
+            query = FoodWastage.objects.filter(date__date=date, branch=branch, delete=False, status=True)
+            serializer_data = FoodWastageSerializer(query, many=True)
+        else:
+            return Response({'message': 'No data found'})
+        return Response(serializer_data.data, status=status.HTTP_200_OK)
+
+
+
+class UserProfileAPIView(generics.RetrieveAPIView):
+    # queryset = BaseUser.objects.all()
+    serializer_class = UserProfileSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def get_object(self):
+        user = BaseUser.objects.get(pk=self.request.user.pk)
+        return user
