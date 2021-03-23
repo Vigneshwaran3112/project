@@ -1129,7 +1129,7 @@ class ProductPricingBatchSerializer(serializers.ModelSerializer):
             'product_name': instance.product.name,
             'quantity': instance.quantity,
             'mrp_price': instance.mrp_price,
-            'Buying_price': instance.Buying_price,
+            'buying_price': instance.buying_price,
             # 'selling_price': instance.selling_price,
             'date': instance.date,
             'created': instance.created
@@ -1513,7 +1513,7 @@ class BranchProductInventoryCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         branch = self.context['branch']
-        data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], vendor=validated_data.get('vendor', None), date=validated_data['date'], quantity=validated_data['quantity'], Buying_price=validated_data['Buying_price'])
+        data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], vendor=validated_data.get('vendor', None), date=validated_data['date'], quantity=validated_data['quantity'], buying_price=validated_data['buying_price'])
         return data
 
 
@@ -1529,7 +1529,7 @@ class BranchProductInventoryListSerializer(serializers.ModelSerializer):
             'product': instance.product.pk,
             'product_name': instance.product.name,
             'unit': instance.product.unit.name,
-            'price': instance.Buying_price,
+            'price': instance.buying_price,
             'quantity': instance.quantity,
             'date': instance.date,
             'formatted_date': instance.date.strftime("%d-%m-%Y")
