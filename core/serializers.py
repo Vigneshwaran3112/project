@@ -1328,10 +1328,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'denomiation':{'id':14, 'name':"denomiation", 'completed_status':Denomination.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'bank_cash_details':{'id':15, 'name':"bank_cash_details", 'completed_status':BankCashReceivedDetails.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'cash_handover_details':{'id':17, 'name':"cash_handover_details", 'completed_status':CashHandover.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
-                    'cash_managements': {'id': 13, 'name': "cash_managements",
-                                 'completed_status': BranchCashManagement.objects.filter(branch__pk=branch,
-                                                                                         date__date=date, status=True,
-                                                                                         delete=False).exists()},
+                    'cash_managements': {'id': 13, 'name': "cash_managements", 'completed_status': BranchCashManagement.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                 }
         department_inventory_data = {
                     'department_sales_count': {'id':16, 'name':"department_sales_count", 'completed_status':SalesCount.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
