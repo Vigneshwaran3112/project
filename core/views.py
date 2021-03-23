@@ -613,7 +613,6 @@ class ProductForMappingList(generics.ListAPIView):
 class UserAttendanceListAPIView(generics.ListAPIView):
     queryset = BaseUser.objects.filter(is_active=True)
     serializer_class = UserAttendanceListSerializer
-    # permission_classes = (IsSuperAdminOrIsAdminOrIsIncharge, )
 
     def get_serializer_context(self):
         return {
@@ -624,8 +623,9 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
-        return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch)
+        user = BaseUser.objects.filter(is_superuser=False)
+        branch_user = user.filter(branch=self.request.user.branch)
+        return branch_user
 
 
 class AttendanceUserListAPIView(generics.ListAPIView):

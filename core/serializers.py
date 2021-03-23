@@ -1087,6 +1087,7 @@ class ElectricBillMeterSerializer(serializers.Serializer):
         }
 
 
+
 class EbMeterSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -1561,7 +1562,7 @@ class FoodWastageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoodWastage
-        exclude = ['delete', 'branch', 'status']
+        exclude = ['delete', 'branch', 'status' ]
 
     def to_representation(self, instance):
         return{
@@ -1877,10 +1878,14 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
         exclude = ('delete', 'status', 'branch', 'opening_cash', 'total_sales')
 
     def validate(self, data):
-        if BranchCashManagement.objects.filter(date__date=data['date'], delete=False, status=True).count() == 0:
-            return data
+        print(self.context['request'].method)
+        if self.context['request'].method == 'POST':
+            if BranchCashManagement.objects.filter(date__date=data['date'], delete=False, status=True).count() == 0:
+                return data
+            else:
+                raise ValidationError('There is a date already exist!')
         else:
-            raise ValidationError('There is a date already exist!')
+            return data
 
     def to_representation(self, instance):
         return{
