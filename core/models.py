@@ -352,14 +352,12 @@ class ProductPricingBatch(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_product_batch')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-    product_unique_id = models.CharField(max_length=100, null=True, blank=True)
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
-    Buying_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, blank=True, related_name='vendor_product_batch')
     date = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        self.product_unique_id = str(self.product.id) + str(int(datetime.datetime.utcnow().timestamp()))
         data, created = ProductInventory.objects.get_or_create(branch=self.branch, product=self.product)
         data.received += self.quantity
         data.on_hand += self.quantity
@@ -373,9 +371,14 @@ class ProductPricingBatch(BaseModel):
 class ProductInventory(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_inventory')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_inventory')
+    product_unique_id = models.CharField(max_length=100, null=True, blank=True)
     received = models.PositiveIntegerField(null=True, blank=True, default=0)
     taken = models.PositiveIntegerField(null=True, blank=True, default=0)
     on_hand = models.PositiveIntegerField(null=True, blank=True, default=0)
+
+    def save(self, *args, **kwargs):
+        self.product_unique_id = str(self.product.id) + str(int(datetime.datetime.utcnow().timestamp()))
+        super(ProductInventory, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.branch.name} - {self.product.name}'
@@ -403,17 +406,6 @@ class InventoryControl(BaseModel):
             data.on_hand = self.closing_stock
             data.save()
         super(InventoryControl, self).save(*args, **kwargs)
-
-
-        # if self.closing_stock == 0:
-        #     data.taken = data.received
-        #     data.on_hand = 0
-        #     data.save()
-        # else:
-        #     data.taken = data.received-self.closing_stock
-        #     data.on_hand = self.closing_stock
-        #     data.received -= data.taken
-            # data.save()
 
 
 class ComplaintStatus(BaseModel):
