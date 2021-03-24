@@ -823,7 +823,6 @@ class AdminUserListAPIView(generics.ListAPIView):
 class BranchIncentiveListAPIView(generics.ListAPIView):
     queryset = BranchEmployeeIncentive.objects.filter(delete=False)
     serializer_class = BranchEmployeeIncentiveSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
@@ -832,7 +831,6 @@ class BranchIncentiveListAPIView(generics.ListAPIView):
 
 class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
     serializer_class = BranchDepartmentIncentiveUpdateSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def update(self, request, *args, **kwargs):
@@ -840,11 +838,8 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         for data in serializer.validated_data:
             formated_data = dict(data)
-            BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(
-                incentive=formated_data['incentive'])
-        return Response(BranchEmployeeIncentiveSerializer(
-            BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False),
-            many=True).data)
+            BranchDepartmentIncentive.objects.filter(pk=formated_data['id'].pk).update(incentive=formated_data['incentive'])
+        return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False),many=True).data)
 
 
 class VendorAPIView(viewsets.ModelViewSet):
@@ -871,7 +866,6 @@ class BranchProductList(generics.ListAPIView):
 
 class InventoryRawProductList(generics.ListAPIView):
     serializer_class = DailySheetInventoryListSerializer
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, date):

@@ -489,7 +489,7 @@ class BulkOrderItem(BaseModel):
 
 class WrongBill(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_wrong_bill')
-    bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    bill_no = models.CharField(max_length=100, db_index=True)
     wrong_amount = models.DecimalField(max_digits=10, decimal_places=2)
     correct_amount = models.DecimalField(max_digits=10, decimal_places=2)
     billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
@@ -507,7 +507,7 @@ class FreeBillCustomer(BaseModel):
 
 class FreeBill(BaseModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_free_bill')
-    bill_no = models.CharField(max_length=100, unique=True, db_index=True)
+    bill_no = models.CharField(max_length=100, db_index=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     billed_by = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     billed_for = models.ForeignKey(FreeBillCustomer, on_delete=models.CASCADE, null=True, blank=True)

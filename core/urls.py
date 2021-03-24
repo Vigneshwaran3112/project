@@ -142,7 +142,6 @@ urlpatterns = [
 
     path('product_inventory_control_list/<str:date>/<int:classification>/<int:branch>/', views.ProductInventoryControlListByBranch.as_view()),
 
-
     path('product_inventory_control_create/<str:date>/', views.ProductInventoryControlCreate.as_view()),
 
     path('branch_product_inventory_create/', views.BranchProductInventoryCreate.as_view()),
@@ -158,8 +157,6 @@ urlpatterns = [
     path('eb_meter_list/<int:branch>/', views.EbMeterListAPIView.as_view()),
     path('eb_meter_update/<int:pk>/', views.EbMeterUpdateAPIView.as_view()),
     path('eb_meter_destroy/<int:pk>/', views.EbMeterDestroyAPIView.as_view()),
-
-
 
     path('food_wastage_list/<str:date>/', views.FoodWastageList.as_view()),
 

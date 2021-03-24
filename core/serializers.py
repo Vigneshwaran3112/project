@@ -689,6 +689,15 @@ class WrongBillSerializer(serializers.ModelSerializer):
         model = WrongBill
         exclude = ['delete', 'branch', 'billed_by']
 
+    def validate(self, data):
+        if self.context['request'].method == 'POST':
+            if WrongBill.objects.filter(bill_no=data['bill_no'], branch=self.context['request'].user.branch, delete=False, status=True).count() == 0:
+                return data
+            else:
+                raise ValidationError('This bill Number already exist!')
+        else:
+            return data
+
     def to_representation(self, instance):
         return{
             'id': instance.pk,
@@ -721,6 +730,15 @@ class FreeBillSerializer(serializers.ModelSerializer):
     class Meta:
         model = FreeBill
         exclude = ['delete', 'status', 'branch', 'billed_by', 'billed_for']
+
+    def validate(self, data):
+        if self.context['request'].method == 'POST':
+            if FreeBill.objects.filter(bill_no=data['bill_no'], branch=self.context['request'].user.branch, delete=False, status=True).count() == 0:
+                return data
+            else:
+                raise ValidationError('This bill Number already exist!')
+        else:
+            return data
 
     def to_representation(self, instance):
         return{
@@ -1753,9 +1771,8 @@ class BranchCashManagementSerializer(serializers.ModelSerializer):
         exclude = ('delete', 'status', 'branch', 'opening_cash', 'total_sales')
 
     def validate(self, data):
-        print(self.context['request'].method)
         if self.context['request'].method == 'POST':
-            if BranchCashManagement.objects.filter(date__date=data['date'], delete=False, status=True).count() == 0:
+            if BranchCashManagement.objects.filter(date__date=data['date'], branch=self.context['request'].user.branch, delete=False, status=True).count() == 0:
                 return data
             else:
                 raise ValidationError('There is a date already exist!')
