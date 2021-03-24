@@ -1034,6 +1034,24 @@ class ElectricBillMeterSerializer(serializers.Serializer):
         }
 
 
+class ElectricMeterElectricBillSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        bill_data = instance.meter_EB.get(date__date=self.context['date'], status=True, delete=False)
+        return {
+            'key': instance.pk,
+            'meter': instance.id,
+            'meter_name': instance.meter,
+            'branch': instance.branch.pk,
+            'branch_name': instance.branch.name,
+            'electric_bill': bill_data.pk,
+            'opening_reading': bill_data.opening_reading,
+            'closing_reading': bill_data.closing_reading,
+            'no_of_unit': bill_data.no_of_unit,
+            'unit': bill_data.unit.name,
+            'date': bill_data.date,
+            'error':""
+        }
 
 class EbMeterSerializer(serializers.ModelSerializer):
 

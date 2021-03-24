@@ -1130,13 +1130,6 @@ class PettyCashCreateAPIView(generics.CreateAPIView):
             'view': self,
         }
 
-    # def create(self, request):
-    #     for inventory_data in request.data:
-    #         serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk})
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save()
-    #     return Response({'message': 'Data Saved!'})
-
 
 class PettyCashPreviousListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashListSerializer
@@ -1227,8 +1220,7 @@ class DenominationListAPIView(generics.ListAPIView):
     # permission_classes = (IsSuperOrAdminUser,)
 
     def list(self, request, date):
-        query = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                            delete=False, status=True)
+        query = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
         total = query.aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
         return Response({
             "data": DenominationSerializer(query, many=True).data,
@@ -1302,12 +1294,10 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                           delete=False, status=True)
+        return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class UserProfileAPIView(generics.RetrieveAPIView):
-    # queryset = BaseUser.objects.all()
     serializer_class = UserProfileSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
@@ -1324,6 +1314,7 @@ class BranchSpecificBillAPIView(generics.ListAPIView):
         id = self.kwargs['id']
         date = self.kwargs['date']
         branch = self.kwargs['branch']
+
         if id == 1:
             query = WrongBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
             serializer_data = WrongBillSerializer(query, many=True)
@@ -1331,11 +1322,8 @@ class BranchSpecificBillAPIView(generics.ListAPIView):
             query = FreeBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
             serializer_data = FreeBillSerializer(query, many=True)
         elif id == 3:
-            query = ElectricBill.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = ElectricBillMeterSerializer(query, many=True)
-        elif id == 4:
-            query = FoodWastage.objects.filter(date__date=date, branch=branch, delete=False, status=True)
-            serializer_data = FoodWastageSerializer(query, many=True)
+            query = EBMeter.objects.filter(branch=branch, delete=False, status=True)
+            serializer_data = ElectricMeterElectricBillSerializer(query, many=True, context={'date': date})
         else:
             return Response({'message': 'No data found'})
         return Response(serializer_data.data, status=status.HTTP_200_OK)
@@ -1343,7 +1331,6 @@ class BranchSpecificBillAPIView(generics.ListAPIView):
 
 
 class UserProfileAPIView(generics.RetrieveAPIView):
-    # queryset = BaseUser.objects.all()
     serializer_class = UserProfileSerializer
     # permission_classes = (IsSuperOrAdminUser,)
 
