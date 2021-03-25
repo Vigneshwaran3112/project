@@ -1344,6 +1344,8 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 class ElectricBillCreate(generics.CreateAPIView):
     serializer_class = ElectricBillSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
 
     def create(self, request, date):
         for eb_data in request.data:
