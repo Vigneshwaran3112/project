@@ -1405,6 +1405,3 @@ class CashDetailsAPIView(generics.ListAPIView):
         else:
             return Response({'message': 'No data found'})
         return Response(serializer_data.data, status=status.HTTP_200_OK)
-
-
-
