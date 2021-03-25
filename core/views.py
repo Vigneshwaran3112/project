@@ -1374,39 +1374,42 @@ class CashDetailsAPIView(generics.ListAPIView):
         date = self.kwargs['date']
         branch = self.kwargs['branch']
 
-        if id == 1:
-            query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = PettyCashSerializer(query)
-        elif id == 2:
-            query = CreditSales.objects.filter(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = CreditSalesSerializer(query, many=True)
-        elif id == 3:
-            query = CreditSettlement.objects.filter(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = CreditSettlementSerializer(query, many=True)
-        elif id == 4:
-            query = Denomination.objects.filter(branch=branch, date__date=date, delete=False, status=True)
-            total = query.aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
-            return Response({
-                "data": DenominationSerializer(query, many=True).data,
-                "total": total['overall_amount']
-            })
-            # serializer_data = CreditSalesListAPIView(query, many=True)
-        elif id == 5:
-            query = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = BankCashReceivedDetailsSerializer(query, many=True)
-        elif id == 6:
-            query = CashHandover.objects.filter(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = CashHandoverDetailsSerializer(query, many=True)
-        elif id == 7:
-            try:
-                query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True)
-            except BranchCashManagement.DoesNotExist:
-                previous_day_data = BranchCashManagement.objects.filter(branch=branch, delete=False, status=True).aggregate( total_closing_cash=Coalesce(Sum('closing_cash'), V(0)))
-                credit_sales_data = CreditSales.objects.filter(branch=branch,date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
-                bank_cash_data = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
-                query = BranchCashManagement(branch=branch, date=date, opening_cash=previous_day_data['total_closing_cash'], credit_sales=credit_sales_data['total_amount'], bank_cash=bank_cash_data['total_amount'])
-            serializer_data = BranchCashManagementSerializer(query)
-        else:
+        try:
+            if id == 1:
+                query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = PettyCashSerializer(query)
+            elif id == 2:
+                query = CreditSales.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = CreditSalesSerializer(query, many=True)
+            elif id == 3:
+                query = CreditSettlement.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = CreditSettlementSerializer(query, many=True)
+            elif id == 4:
+                query = Denomination.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+                total = query.aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
+                return Response({
+                    "data": DenominationSerializer(query, many=True).data,
+                    "total": total['overall_amount']
+                })
+                # serializer_data = CreditSalesListAPIView(query, many=True)
+            elif id == 5:
+                query = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = BankCashReceivedDetailsSerializer(query, many=True)
+            elif id == 6:
+                query = CashHandover.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = CashHandoverDetailsSerializer(query, many=True)
+            elif id == 7:
+                try:
+                    query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True)
+                except BranchCashManagement.DoesNotExist:
+                    previous_day_data = BranchCashManagement.objects.filter(branch=branch, delete=False, status=True).aggregate( total_closing_cash=Coalesce(Sum('closing_cash'), V(0)))
+                    credit_sales_data = CreditSales.objects.filter(branch=branch,date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+                    bank_cash_data = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+                    query = BranchCashManagement(branch=branch, date=date, opening_cash=previous_day_data['total_closing_cash'], credit_sales=credit_sales_data['total_amount'], bank_cash=bank_cash_data['total_amount'])
+                serializer_data = BranchCashManagementSerializer(query)
+            else:
+                return Response({'message': 'No data found'})
+        except:
             return Response({'message': 'No data found'})
         return Response(serializer_data.data, status=status.HTTP_200_OK)
 
