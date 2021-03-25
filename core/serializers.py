@@ -1379,7 +1379,7 @@ class ProductInventoryControlSerializer(serializers.Serializer):
         except:
             pk = None
             try:
-                query = InventoryControl.objects.filter(branch__pk=branch, product__pk=instance.pk).latest('date')
+                query = InventoryControl.objects.filter(branch__pk=branch, date__date__lt=date, product__pk=instance.pk).latest('date')
                 opening_stock = query.closing_stock
                 closing_stock = ""
                 usage = 0
