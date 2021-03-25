@@ -1375,8 +1375,11 @@ class CashDetailsAPIView(generics.ListAPIView):
         branch = self.kwargs['branch']
 
         if id == 1:
-            query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
-            serializer_data = PettyCashSerializer(query)
+            try:
+                query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = PettyCashSerializer(query)
+            except PettyCash.DoesNotExist:
+                return Response([], status=status.HTTP_200_OK)
         elif id == 2:
             query = CreditSales.objects.filter(branch=branch, date__date=date, delete=False, status=True)
             serializer_data = CreditSalesSerializer(query, many=True)
