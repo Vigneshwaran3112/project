@@ -1188,8 +1188,7 @@ class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         destroy = BankCashReceivedDetails.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message': 'bank cash received details deleted successfully'},
-                        status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'bank cash received details deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
@@ -1197,8 +1196,7 @@ class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
-        return BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'],
-                                                      delete=False, status=True)
+        return BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
 
 
 class DenominationAPIView(viewsets.ModelViewSet):
@@ -1364,6 +1362,52 @@ def my_cron_job():
     abscent_users = user.exclude(pk__in=attendance_data)
     for user in abscent_users:
         data = UserAttendance.objects.create(user=user, abscent=True, date=date)
+
+
+class CashDetailsAPIView(generics.ListAPIView):
+    serializer_class = CashDetailsSerializer
+    # permission_classes = (IsSuperOrAdminUser,)
+
+    def list(self, request, *args, **kwargs):
+        id = self.kwargs['id']
+        date = self.kwargs['date']
+        branch = self.kwargs['branch']
+
+        if id == 1:
+            query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
+            serializer_data = PettyCashSerializer(query)
+        elif id == 2:
+            query = CreditSales.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+            serializer_data = CreditSalesSerializer(query, many=True)
+        elif id == 3:
+            query = CreditSettlement.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+            serializer_data = CreditSettlementSerializer(query, many=True)
+        elif id == 4:
+            query = Denomination.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+            total = query.aggregate(overall_amount=Coalesce(Sum('total'), V(0)))
+            return Response({
+                "data": DenominationSerializer(query, many=True).data,
+                "total": total['overall_amount']
+            })
+            # serializer_data = CreditSalesListAPIView(query, many=True)
+        elif id == 5:
+            query = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+            serializer_data = BankCashReceivedDetailsSerializer(query, many=True)
+        elif id == 6:
+            query = CashHandover.objects.filter(branch=branch, date__date=date, delete=False, status=True)
+            serializer_data = CashHandoverDetailsSerializer(query, many=True)
+        elif id == 7:
+            try:
+                query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True)
+            except BranchCashManagement.DoesNotExist:
+                previous_day_data = BranchCashManagement.objects.filter(branch=branch, delete=False, status=True).aggregate( total_closing_cash=Coalesce(Sum('closing_cash'), V(0)))
+                credit_sales_data = CreditSales.objects.filter(branch=branch,date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+                bank_cash_data = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True).aggregate(total_amount=Coalesce(Sum('amount'), V(0)))
+                query = BranchCashManagement(branch=branch, date=date, opening_cash=previous_day_data['total_closing_cash'], credit_sales=credit_sales_data['total_amount'], bank_cash=bank_cash_data['total_amount'])
+            serializer_data = BranchCashManagementSerializer(query)
+        else:
+            return Response({'message': 'No data found'})
+        return Response(serializer_data.data, status=status.HTTP_200_OK)
 
 
 

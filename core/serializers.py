@@ -1860,3 +1860,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 'email': instance.email if instance.email else None,
                 'phone': instance.phone
             }
+
+
+class CashDetailsSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        return {
+        }
