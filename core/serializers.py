@@ -1392,10 +1392,6 @@ class ProductInventoryControlSerializer(serializers.Serializer):
                 on_hand = 0
 
         received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=instance.pk, date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
-        # try:
-        #     on_hand = ProductInventory.objects.get(branch__pk=branch, product__pk=instance.pk).on_hand
-        # except:
-        #     on_hand = 0
         is_editable = ProductInventory.objects.filter(branch__pk=branch, product__pk=instance.pk).exists()
 
         branch = Branch.objects.get(pk=branch)
