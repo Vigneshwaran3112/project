@@ -26,6 +26,7 @@ from .permissions import *
 from .exceptions import CustomError
 import requests
 
+
 headers = {
     'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
 }
@@ -625,7 +626,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
-        return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch)
+        return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
 
 
 class AttendanceUserListAPIView(generics.ListAPIView):
@@ -1160,7 +1161,6 @@ class SalesCountListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs['branch_id']==0:
-            print("hai")
             query = SalesCount.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
         else:
             print(self.kwargs['branch_id'])
@@ -1348,3 +1348,12 @@ class ElectricBillCreate(generics.CreateAPIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response({'message': 'Data Saved!'})
+
+def my_cron_job():
+    today = datetime.date.today()
+    date = today - datetime.timedelta(days=1)
+
+    salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
+    user = BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
+
+    data = UserAttendance.objects.create(user=self.context['user'], abscent=validated_data['abscent'], date=validated_data['date'])
