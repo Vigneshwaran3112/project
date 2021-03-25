@@ -1364,6 +1364,3 @@ def my_cron_job():
     abscent_users = user.exclude(pk__in=attendance_data)
     for user in abscent_users:
         data = UserAttendance.objects.create(user=user, abscent=True, date=date)
-
-
-

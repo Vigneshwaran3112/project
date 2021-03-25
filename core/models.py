@@ -737,3 +737,4 @@ class CashHandover(BaseModel):
 
     def __str__(self):
         return f'{self.bill_no} - {self.name.get_full_name()}'
+

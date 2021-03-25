@@ -1860,3 +1860,5 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 'email': instance.email if instance.email else None,
                 'phone': instance.phone
             }
+
+
