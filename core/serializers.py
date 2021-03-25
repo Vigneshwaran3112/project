@@ -1570,7 +1570,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 class CreditSaleCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditSaleCustomer
-        exclude = ['delete', 'status']
+        exclude = ['delete', 'status', 'branch']
 
     def to_representation(self, instance):
         return {

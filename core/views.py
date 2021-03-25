@@ -1038,11 +1038,6 @@ class CustomerAPIView(viewsets.ModelViewSet):
 class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
     queryset = CreditSaleCustomer.objects.filter(delete=False, status=True)
     serializer_class = CreditSaleCustomerSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        destroy = CreditSaleCustomer.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
-        return Response({'message': 'credit sale customer deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-
     # permission_classes = (IsSuperOrAdminUser,)
 
     def get_queryset(self):
