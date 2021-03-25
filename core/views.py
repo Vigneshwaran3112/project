@@ -36,7 +36,7 @@ headers = {
 
 class StateListAPIView(generics.ListAPIView):
     serializer_class = StateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return State.objects.filter(country_id=101).order_by('-id')
@@ -44,7 +44,7 @@ class StateListAPIView(generics.ListAPIView):
 
 class CityListAPIView(generics.ListAPIView):
     serializer_class = CitySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return City.objects.filter(state_id=self.kwargs['state_id']).order_by('-id')
@@ -54,7 +54,7 @@ class CityListAPIView(generics.ListAPIView):
 
 class AuthLoginAPIView(generics.CreateAPIView):
     serializer_class = UserTokenSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -69,7 +69,7 @@ class AuthLoginAPIView(generics.CreateAPIView):
 class UserAPIView(viewsets.ModelViewSet):
     queryset = BaseUser.objects.filter(is_active=True)
     serializer_class = UserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BaseUser.objects.filter(pk=kwargs['pk']).update(is_active=False)
@@ -78,7 +78,8 @@ class UserAPIView(viewsets.ModelViewSet):
 
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
+
 
     def get_object(self):
         return self.request.user
@@ -87,13 +88,13 @@ class AuthVerifyAPIView(generics.RetrieveAPIView):
 class RoleListAPIView(generics.ListAPIView):
     queryset = EmployeeRole.objects.filter(status=True, delete=False)
     serializer_class = RoleSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BranchAPIViewset(viewsets.ModelViewSet):
     queryset = Branch.objects.filter(delete=False).order_by('-pk')
     serializer_class = BranchSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         instance = serializer.save()
@@ -111,7 +112,7 @@ class BranchAPIViewset(viewsets.ModelViewSet):
 class SubBranchCreate(generics.UpdateAPIView):
     queryset = SubBranch.objects.filter(delete=False)
     serializer_class = SubBranchSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def partial_update(self, request, pk):
         serializer = self.get_serializer(data=request.data)
@@ -125,13 +126,13 @@ class SubBranchCreate(generics.UpdateAPIView):
 class SubBranchUpdateApiView(generics.UpdateAPIView):
     queryset = SubBranch.objects.filter(delete=False)
     serializer_class = SubBranchUpdateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubBranch.objects.filter(delete=False)
     serializer_class = SubBranchSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, pk):
         return Response(SubBranchSerializer(Branch.objects.get(pk=pk).sub_branch.filter(delete=False), many=True).data)
@@ -149,12 +150,12 @@ class SubBranchRetUpdDelAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserSalaryAPIViewset(viewsets.ModelViewSet):
     queryset = UserSalary.objects.filter(status=True, delete=False)
     serializer_class = UserSalarySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UserSalaryList(generics.ListAPIView):
     serializer_class = UserSalarySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         data = UserSalary.objects.filter(user=self.kwargs['user_id']).latest('created').pk
@@ -163,7 +164,7 @@ class UserSalaryList(generics.ListAPIView):
 
 class UserSalaryReport(generics.RetrieveAPIView):
     serializer_class = UserSalaryReportSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, branch_id):
         try:
@@ -202,7 +203,7 @@ class UserSalaryReport(generics.RetrieveAPIView):
 
 class UserSalaryAttendanceReport(generics.RetrieveAPIView):
     serializer_class = UserSalaryAttendanceReportSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, user_id):
         try:
@@ -234,7 +235,7 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
 
 class UserSalaryAttendanceListAPIView(generics.ListAPIView):
     serializer_class = UserSalaryAttendanceListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
         try:
@@ -260,7 +261,7 @@ class UserSalaryAttendanceListAPIView(generics.ListAPIView):
 
 class PreviousDateAPIView(generics.RetrieveAPIView):
     serializer_class = UserSalaryAttendanceReportSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request):
         today = datetime.date.today()
@@ -272,19 +273,19 @@ class PreviousDateAPIView(generics.RetrieveAPIView):
 
 class UserInAttendanceCreateAPIView(generics.CreateAPIView):
     serializer_class = UserAttendanceInSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UserOutAttendanceUpdateAPIView(generics.UpdateAPIView):
     queryset = UserAttendance.objects.filter(delete=False)
     serializer_class = UserAttendanceOutSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UserPunchUpdateAPIView(generics.UpdateAPIView):
     queryset = UserAttendance.objects.filter(delete=False)
     serializer_class = UserPunchUpdateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def partial_update(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -300,7 +301,7 @@ class UserPunchUpdateAPIView(generics.UpdateAPIView):
 class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
     queryset = UserAttendanceBreak.objects.filter(delete=False)
     serializer_class = UserAttendanceBreakInSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -314,37 +315,38 @@ class UserInAttendanceBreakCreateAPIView(generics.CreateAPIView):
 class UserOutAttendanceBreakUpdateAPIView(generics.UpdateAPIView):
     queryset = UserAttendanceBreak.objects.filter(delete=False)
     serializer_class = UserAttendanceBreakOutSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class GSTListAPIView(generics.ListAPIView):
     queryset = GST.objects.filter(delete=False, status=True)
     serializer_class = GSTSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UnitListAPIView(generics.ListAPIView):
     queryset = Unit.objects.filter(delete=False, status=True)
     serializer_class = UnitSerializer
     # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UnitUpdateAPIView(generics.UpdateAPIView):
     queryset = Unit.objects.filter(delete=False, status=True)
     serializer_class = UnitSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class RoleUpdateAPIView(generics.UpdateAPIView):
     queryset = EmployeeRole.objects.filter(delete=False)
     serializer_class = RoleSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BranchProductClassificationViewset(viewsets.ModelViewSet):
     queryset = BranchProductClassification.objects.exclude(delete=True, status=False)
     serializer_class = BranchProductClassificationSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BranchProductClassification.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -354,13 +356,13 @@ class BranchProductClassificationViewset(viewsets.ModelViewSet):
 class ProductClassificationListAPIView(generics.ListAPIView):
     queryset = BranchProductClassification.objects.filter(status=True, delete=False)
     serializer_class = BranchProductClassificationSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BranchProductDepartmentViewset(viewsets.ModelViewSet):
     queryset = BranchProductDepartment.objects.exclude(delete=True, status=False)
     serializer_class = BranchProductDepartmentSerializer
-    # permission_classes = (IsAdminUser, )
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BranchProductDepartment.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -370,12 +372,12 @@ class BranchProductDepartmentViewset(viewsets.ModelViewSet):
 class ProductDepartmentListAPIView(generics.ListAPIView):
     queryset = BranchProductDepartment.objects.filter(status=True, delete=False)
     serializer_class = BranchProductDepartmentSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class UserRoleListAPIView(generics.ListAPIView):
     serializer_class = RoleSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return BaseUser.objects.get(pk=self.kwargs['pk']).employee_role.exclude(code=1)
@@ -384,7 +386,7 @@ class UserRoleListAPIView(generics.ListAPIView):
 class ProductRecipeItemViewset(viewsets.ModelViewSet):
     queryset = ProductRecipeItem.objects.filter(delete=False)
     serializer_class = ProductRecipeItemSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ProductRecipeItem.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -393,7 +395,7 @@ class ProductRecipeItemViewset(viewsets.ModelViewSet):
 
 class ProductListAPI(generics.ListAPIView):
     serializer_class = ProductSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if self.kwargs['classification'] == 0:
@@ -406,7 +408,7 @@ class ProductListAPI(generics.ListAPIView):
 
 class ProductCreate(generics.CreateAPIView):
     serializer_class = ProductSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(
@@ -416,7 +418,7 @@ class ProductCreate(generics.CreateAPIView):
 class ProductRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.exclude(delete=True, status=False).order_by('-id')
     serializer_class = ProductSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = Product.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -425,7 +427,7 @@ class ProductRetriveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 
 class WrongBillAPIView(viewsets.ModelViewSet):
     serializer_class = WrongBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return WrongBill.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -441,7 +443,7 @@ class WrongBillAPIView(viewsets.ModelViewSet):
 class BranchSpecificWrongBillAPIView(generics.ListAPIView):
     queryset = WrongBill.objects.filter(delete=False, status=True)
     serializer_class = WrongBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return WrongBill.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch,delete=False, status=True)
@@ -450,13 +452,13 @@ class BranchSpecificWrongBillAPIView(generics.ListAPIView):
 class FreeBillCustomerListAPIView(generics.ListAPIView):
     queryset = FreeBillCustomer.objects.exclude(delete=True, status=False)
     serializer_class = FreeBillCustomerSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class FreeBillAPIView(viewsets.ModelViewSet):
     queryset = FreeBill.objects.filter(delete=False, status=True)
     serializer_class = FreeBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return FreeBill.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -472,7 +474,7 @@ class FreeBillAPIView(viewsets.ModelViewSet):
 class BranchSpecificFreeBillAPIView(generics.ListAPIView):
     queryset = FreeBill.objects.filter(delete=False, status=True)
     serializer_class = FreeBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return FreeBill.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
@@ -482,6 +484,7 @@ class ComplaintListCreateAPIView(generics.ListCreateAPIView):
     queryset = Complaint.objects.exclude(delete=True, status=False)
     serializer_class = ComplaintSerializer
     # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(complainted_by=self.request.user, status=ComplaintStatus.objects.get(code=1))
@@ -490,13 +493,13 @@ class ComplaintListCreateAPIView(generics.ListCreateAPIView):
 class BulkOrderItemListAPIView(generics.ListAPIView):
     queryset = BulkOrderItem.objects.exclude(delete=True, status=False)
     serializer_class = BulkOrderItemSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
     queryset = BulkOrder.objects.exclude(delete=True, status=False)
     serializer_class = BulkOrderSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
         return {
@@ -512,7 +515,7 @@ class BulkOrderListCreateAPIView(generics.ListCreateAPIView):
 class OrderStatusListAPIView(generics.ListAPIView):
     queryset = OrderStatus.objects.exclude(delete=True, status=False)
     serializer_class = OrderStatusSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 # class CustomerListAPIView(generics.ListAPIView):
@@ -523,7 +526,7 @@ class OrderStatusListAPIView(generics.ListAPIView):
 
 class BranchProductMappingList(generics.ListAPIView):
     serializer_class = ProductBranchMappingSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, classification):
         try:
@@ -539,7 +542,7 @@ class BranchProductMappingList(generics.ListAPIView):
 
 class BranchProductMappingCreate(generics.CreateAPIView):
     serializer_class = ProductBranchMappingSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         product_mapping, created = ProductBranchMapping.objects.get_or_create(branch=self.request.user.branch)
@@ -553,7 +556,7 @@ class BranchProductMappingCreate(generics.CreateAPIView):
 
 class BranchProductMappingDelete(generics.DestroyAPIView):
     serializer_class = ProductBranchMappingSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, pk):
         product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch)
@@ -565,7 +568,7 @@ class BranchProductMappingDelete(generics.DestroyAPIView):
 class ComplaintStatusViewSet(viewsets.ModelViewSet):
     queryset = ComplaintStatus.objects.exclude(delete=True, status=False)
     serializer_class = ComplaintStatusSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ComplaintStatus.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -575,7 +578,7 @@ class ComplaintStatusViewSet(viewsets.ModelViewSet):
 class ComplaintTypeViewSet(viewsets.ModelViewSet):
     queryset = ComplaintType.objects.exclude(delete=True, status=False)
     serializer_class = ComplaintTypeSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ComplaintType.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -586,6 +589,7 @@ class BranchExpensesViewSet(viewsets.ModelViewSet):
     queryset = BranchExpenses.objects.exclude(delete=True)
     serializer_class = BranchExpensesSerializer
     # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = BranchExpenses.objects.filter(pk=kwargs['pk']).update(delete=True)
@@ -595,12 +599,12 @@ class BranchExpensesViewSet(viewsets.ModelViewSet):
 class PaymentModeListAPI(generics.ListAPIView):
     queryset = PaymentMode.objects.exclude(delete=True)
     serializer_class = PaymentModeSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductForMappingList(generics.ListAPIView):
     serializer_class = ProductSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         try:
@@ -614,7 +618,7 @@ class ProductForMappingList(generics.ListAPIView):
 class UserAttendanceListAPIView(generics.ListAPIView):
     queryset = BaseUser.objects.filter(is_active=True)
     serializer_class = UserAttendanceListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
         return {
@@ -631,7 +635,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
 
 class AttendanceUserListAPIView(generics.ListAPIView):
     serializer_class = UserListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
         return {
@@ -650,7 +654,7 @@ class AttendanceUserListAPIView(generics.ListAPIView):
 class BranchSpecificUserListAPIView(generics.ListAPIView):
     queryset = BaseUser.objects.filter(is_active=True)
     serializer_class = UserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return BaseUser.objects.filter(branch=self.kwargs["branch_id"])
@@ -659,7 +663,7 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
 class ElectricBillAPIView(viewsets.ModelViewSet):
     queryset = ElectricBill.objects.exclude(delete=True, status=False)
     serializer_class = ElectricBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = ElectricBill.objects.filter(pk=kwargs['pk']).update(delete=True, status=False)
@@ -668,7 +672,7 @@ class ElectricBillAPIView(viewsets.ModelViewSet):
 
 class ElectricBillMeterList(generics.ListAPIView):
     serializer_class = ElectricBillMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, date):
         query = EBMeter.objects.filter(branch=self.request.user.branch, delete=False, status=True).order_by('-id')
@@ -677,7 +681,7 @@ class ElectricBillMeterList(generics.ListAPIView):
 
 class BranchElectricBillMeterList(generics.ListAPIView):
     serializer_class = EbMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, branch):
         query = EBMeter.objects.filter(branch=branch, delete=False, status=True).order_by('-id')
@@ -687,7 +691,7 @@ class BranchElectricBillMeterList(generics.ListAPIView):
 class EbMeterCreateAPIView(generics.CreateAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=Branch.objects.get(pk=self.kwargs['branch']))
@@ -696,7 +700,7 @@ class EbMeterCreateAPIView(generics.CreateAPIView):
 class EbMeterListAPIView(generics.ListAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return EBMeter.objects.filter(branch=Branch.objects.get(pk=self.kwargs['branch']), delete=False, status=True)
@@ -705,13 +709,13 @@ class EbMeterListAPIView(generics.ListAPIView):
 class EbMeterUpdateAPIView(generics.UpdateAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class EbMeterDestroyAPIView(generics.DestroyAPIView):
     queryset = EBMeter.objects.filter(delete=False, status=True)
     serializer_class = EbMeterSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, pk):
         destroy = EBMeter.objects.filter(pk=pk).update(status=False, delete=True)
@@ -720,7 +724,7 @@ class EbMeterDestroyAPIView(generics.DestroyAPIView):
 
 class SubBranchlistAPIView(generics.ListAPIView):
     serializer_class = SubBranchListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, branch):
         sub_branch = Branch.objects.get(pk=branch, delete=False, status=True).sub_branch.order_by('-id')
@@ -730,7 +734,7 @@ class SubBranchlistAPIView(generics.ListAPIView):
 class ProductPricingBatchAPIView(viewsets.ModelViewSet):
     queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
     serializer_class = ProductPricingBatchSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return ProductPricingBatch.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -746,7 +750,7 @@ class ProductPricingBatchAPIView(viewsets.ModelViewSet):
 class ProductInventoryAPIView(viewsets.ModelViewSet):
     queryset = ProductInventory.objects.filter(delete=False, status=True)
     serializer_class = ProductInventorySerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return ProductInventory.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -764,7 +768,7 @@ class AttendanceBulkCreateAPIView(generics.CreateAPIView):
     serializer_class = BulkAttendanceSerializer
     attendance_serializer_class = BulkAttendanceSerializer
     break_serializer_class = BulkBreakTimeSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         for data in request.data:
@@ -782,7 +786,8 @@ class AttendanceBulkCreateAPIView(generics.CreateAPIView):
 
 class AttendanceReportListAPIView(generics.RetrieveAPIView):
     queryset = UserAttendance.objects.exclude(delete=True).order_by('pk')
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
+
 
     def retrieve(self, request, pk):
         start = datetime.datetime.strptime(request.query_params.get('start'), '%Y-%m-%d')
@@ -801,7 +806,7 @@ class AttendanceReportListAPIView(generics.RetrieveAPIView):
 
 class UserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if self.kwargs['branch_id'] == 0:
@@ -814,7 +819,7 @@ class UserListAPIView(generics.ListAPIView):
 
 class AdminUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return BaseUser.objects.filter(Q(is_superuser=True) | Q(is_staff=True)).filter(is_employee=False, is_active=True)
@@ -823,7 +828,7 @@ class AdminUserListAPIView(generics.ListAPIView):
 class BranchIncentiveListAPIView(generics.ListAPIView):
     queryset = BranchEmployeeIncentive.objects.filter(delete=False)
     serializer_class = BranchEmployeeIncentiveSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False)
@@ -831,7 +836,7 @@ class BranchIncentiveListAPIView(generics.ListAPIView):
 
 class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
     serializer_class = BranchDepartmentIncentiveUpdateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, many=True)
@@ -845,12 +850,16 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
 class VendorAPIView(viewsets.ModelViewSet):
     queryset = Vendor.objects.filter(delete=False, status=True).order_by('-id')
     serializer_class = VendorSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = Vendor.objects.filter(pk=kwargs['pk']).update(delete=True, status=False)
+        return Response({'message': 'vendor deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class BranchProductList(generics.ListAPIView):
     serializer_class = ProductSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, classification):
         try:
@@ -866,7 +875,7 @@ class BranchProductList(generics.ListAPIView):
 
 class InventoryRawProductList(generics.ListAPIView):
     serializer_class = DailySheetInventoryListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, date):
         user = Branch.objects.get(pk=self.request.user.branch.pk, delete=False, status=True)
@@ -875,7 +884,7 @@ class InventoryRawProductList(generics.ListAPIView):
 
 class ProductInstockCountList(generics.RetrieveAPIView):
     serializer_class = ProductInstockListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -887,7 +896,7 @@ class ProductInstockCountList(generics.RetrieveAPIView):
 
 class ProductInventoryControlList(generics.ListAPIView):
     serializer_class = ProductInventoryControlSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, date, classification):
         query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
@@ -897,7 +906,7 @@ class ProductInventoryControlList(generics.ListAPIView):
 
 class ProductInventoryControlListByBranch(generics.ListAPIView):
     serializer_class = ProductInventoryControlSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, date, classification, branch):
         try:
@@ -910,7 +919,7 @@ class ProductInventoryControlListByBranch(generics.ListAPIView):
 
 class ProductInventoryControlCreate(generics.CreateAPIView):
     serializer_class = ProductInventoryControlCreateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, date):
         for inventory_data in request.data:
@@ -928,7 +937,7 @@ class ProductInventoryControlCreate(generics.CreateAPIView):
 
 class BranchProductInventoryCreate(generics.CreateAPIView):
     serializer_class = BranchProductInventoryCreateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         for inventory_data in request.data:
@@ -940,7 +949,7 @@ class BranchProductInventoryCreate(generics.CreateAPIView):
 
 class BranchProductInventoryList(generics.ListAPIView):
     serializer_class = BranchProductInventoryListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         start = datetime.datetime.strptime(self.request.query_params.get('start'), '%Y-%m-%d')
@@ -954,7 +963,7 @@ class BranchProductInventoryList(generics.ListAPIView):
 
 class OilConsumptionList(generics.ListAPIView):
     serializer_class = OilConsumptionSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return OilConsumption.objects.filter(branch=self.request.user.branch.pk, date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
@@ -962,7 +971,7 @@ class OilConsumptionList(generics.ListAPIView):
 
 class OilConsumptionCreate(generics.CreateAPIView):
     serializer_class = OilConsumptionSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -971,13 +980,13 @@ class OilConsumptionCreate(generics.CreateAPIView):
 class OilConsumptionUpdate(generics.UpdateAPIView):
     queryset = OilConsumption.objects.exclude(delete=True, status=False)
     serializer_class = OilConsumptionSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
 class FoodWastageAPIView(viewsets.ModelViewSet):
     queryset = FoodWastage.objects.filter(delete=False, status=True)
     serializer_class = FoodWastageSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return FoodWastage.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -992,7 +1001,7 @@ class FoodWastageAPIView(viewsets.ModelViewSet):
 
 class FoodWastageList(generics.ListAPIView):
     serializer_class = FoodWastageSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.request.user.branch, delete=False, status=True)
@@ -1000,7 +1009,7 @@ class FoodWastageList(generics.ListAPIView):
 
 class RawOperationalProductList(generics.ListAPIView):
     serializer_class = RawOperationalProductListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return ProductBranchMapping.objects.get(branch=self.request.user.branch).product.filter(classification__code__in=[2, 3], status=True, delete=False)
@@ -1008,7 +1017,7 @@ class RawOperationalProductList(generics.ListAPIView):
 
 class BranchSpecificUserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
@@ -1018,8 +1027,7 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
 
 class AllProductListAPIView(generics.ListAPIView):
     serializer_class = ProductSerializer
-
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Product.objects.filter(classification__in=[1, 2, 3, 5], status=True, delete=False).order_by('-id')
@@ -1028,7 +1036,7 @@ class AllProductListAPIView(generics.ListAPIView):
 class CustomerAPIView(viewsets.ModelViewSet):
     queryset = Customer.objects.filter(delete=False, status=True)
     serializer_class = CustomerSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = Customer.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1038,7 +1046,7 @@ class CustomerAPIView(viewsets.ModelViewSet):
 class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
     queryset = CreditSaleCustomer.objects.filter(delete=False, status=True)
     serializer_class = CreditSaleCustomerSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return CreditSaleCustomer.objects.filter(branch=self.request.user.branch, delete=False, status=True)
@@ -1054,7 +1062,7 @@ class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
 class CreditSalesAPIView(viewsets.ModelViewSet):
     queryset = CreditSales.objects.filter(delete=False, status=True)
     serializer_class = CreditSalesSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1066,7 +1074,7 @@ class CreditSalesAPIView(viewsets.ModelViewSet):
 
 class CreditSalesListAPIView(generics.ListAPIView):
     serializer_class = CreditSalesSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return CreditSales.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1075,7 +1083,7 @@ class CreditSalesListAPIView(generics.ListAPIView):
 class CreditSettlementAPIView(viewsets.ModelViewSet):
     queryset = CreditSettlement.objects.filter(delete=False, status=True)
     serializer_class = CreditSettlementSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1087,7 +1095,7 @@ class CreditSettlementAPIView(viewsets.ModelViewSet):
 
 class CreditSettlementListAPIView(generics.ListAPIView):
     serializer_class = CreditSettlementSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return CreditSettlement.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1096,7 +1104,7 @@ class CreditSettlementListAPIView(generics.ListAPIView):
 class PettyCashAPIView(viewsets.ModelViewSet):
     queryset = PettyCash.objects.filter(delete=False, status=True)
     serializer_class = PettyCashSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1108,7 +1116,7 @@ class PettyCashAPIView(viewsets.ModelViewSet):
 
 class PettyCashListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return PettyCash.objects.get(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1116,7 +1124,7 @@ class PettyCashListAPIView(generics.RetrieveAPIView):
 
 class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
     serializer_class = PettyCashSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = PettyCashRemark.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1125,7 +1133,7 @@ class PettyCashRemarkDeleteAPIView(generics.DestroyAPIView):
 
 class PettyCashCreateAPIView(generics.CreateAPIView):
     serializer_class = PettyCashSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_context(self):
         return {
@@ -1137,7 +1145,7 @@ class PettyCashCreateAPIView(generics.CreateAPIView):
 
 class PettyCashPreviousListAPIView(generics.RetrieveAPIView):
     serializer_class = PettyCashListSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         today = datetime.datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
@@ -1148,7 +1156,7 @@ class PettyCashPreviousListAPIView(generics.RetrieveAPIView):
 
 class SalesCountCreateAPIView(generics.CreateAPIView):
     serializer_class = SalesCountCreateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         for salescount_data in request.data:
@@ -1160,7 +1168,7 @@ class SalesCountCreateAPIView(generics.CreateAPIView):
 
 class SalesCountListAPIView(generics.ListAPIView):
     serializer_class = SalesCountlistSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if self.kwargs['branch_id']==0:
@@ -1172,6 +1180,7 @@ class SalesCountListAPIView(generics.ListAPIView):
 
 
 class SalesCountDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         destroy = SalesCount.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
@@ -1181,7 +1190,7 @@ class SalesCountDeleteAPIView(generics.DestroyAPIView):
 class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
     queryset = BankCashReceivedDetails.objects.filter(delete=False, status=True)
     serializer_class = BankCashReceivedDetailsSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1193,7 +1202,7 @@ class BankCashReceivedDetailsAPIView(viewsets.ModelViewSet):
 
 class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
     serializer_class = BankCashReceivedDetailsSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return BankCashReceivedDetails.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1202,7 +1211,7 @@ class BankCashReceivedDetailsListAPIView(generics.ListAPIView):
 class DenominationAPIView(viewsets.ModelViewSet):
     queryset = Denomination.objects.filter(delete=False, status=True)
     serializer_class = DenominationSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request):
         for denomination_data in request.data:
@@ -1218,7 +1227,7 @@ class DenominationAPIView(viewsets.ModelViewSet):
 
 class DenominationListAPIView(generics.ListAPIView):
     serializer_class = DenominationSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, date):
         query = Denomination.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1232,7 +1241,7 @@ class DenominationListAPIView(generics.ListAPIView):
 class DenominationUpdateAPIView(generics.UpdateAPIView):
     queryset = Denomination.objects.filter(delete=False)
     serializer_class = DenominationUpdateSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def partial_update(self, request):
         for denomination_data in request.data:
@@ -1246,7 +1255,7 @@ class DenominationUpdateAPIView(generics.UpdateAPIView):
 class BranchCashManagementAPIView(viewsets.ModelViewSet):
     queryset = BranchCashManagement.objects.filter(delete=False, status=True)
     serializer_class = BranchCashManagementSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         today = datetime.date.today()
@@ -1264,7 +1273,7 @@ class BranchCashManagementAPIView(viewsets.ModelViewSet):
 
 class BranchCashManagementListAPIView(generics.RetrieveAPIView):
     serializer_class = BranchCashManagementSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -1280,7 +1289,7 @@ class BranchCashManagementListAPIView(generics.RetrieveAPIView):
 class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
     queryset = CashHandover.objects.filter(delete=False, status=True)
     serializer_class = CashHandoverDetailsSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(branch=self.request.user.branch)
@@ -1292,7 +1301,7 @@ class CashHandoverDetailsAPIView(viewsets.ModelViewSet):
 
 class CashHandoverDetailsListAPIView(generics.ListAPIView):
     serializer_class = CashHandoverDetailsSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return CashHandover.objects.filter(branch=self.request.user.branch, date__date=self.kwargs['date'], delete=False, status=True)
@@ -1300,7 +1309,7 @@ class CashHandoverDetailsListAPIView(generics.ListAPIView):
 
 class UserProfileAPIView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         user = BaseUser.objects.get(pk=self.request.user.pk)
@@ -1309,7 +1318,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 class BranchSpecificBillAPIView(generics.ListAPIView):
     serializer_class = BranchSpecificBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         id = self.kwargs['id']
@@ -1333,7 +1342,7 @@ class BranchSpecificBillAPIView(generics.ListAPIView):
 
 class UserProfileAPIView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         user = BaseUser.objects.get(pk=self.request.user.pk)
@@ -1342,7 +1351,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 class ElectricBillCreate(generics.CreateAPIView):
     serializer_class = ElectricBillSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
 
     def create(self, request, date):
@@ -1367,7 +1376,7 @@ def my_cron_job():
 
 class CashDetailsAPIView(generics.ListAPIView):
     serializer_class = CashDetailsSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         id = self.kwargs['id']
