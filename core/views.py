@@ -1357,6 +1357,11 @@ def my_cron_job():
     date = today - datetime.timedelta(days=1)
 
     salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
-    user = BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
+    attendance_data = UserAttendance.objects.filter(date=date, status=True, delete=False).values_list('user__pk', flat=True).distinct()
+    user = BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, is_active=True)
+    abscent_users = user.exclude(pk__in=attendance_data)
+    for user in abscent_users:
+        data = UserAttendance.objects.create(user=user, abscent=True, date=date)
 
-    data = UserAttendance.objects.create(user=self.context['user'], abscent=validated_data['abscent'], date=validated_data['date'])
+
+
