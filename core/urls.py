@@ -104,7 +104,7 @@ urlpatterns = [
     # path('customer/', views.CustomerListAPIView.as_view()),
     
     path('product_mapping_list/<int:classification>/', views.BranchProductMappingList.as_view()),
-    path('product_mapping_create/', views.BranchProductMappingCreate.as_view()),  #dvdsfdfdsfdsfdf
+    path('product_mapping_create/', views.BranchProductMappingCreate.as_view()),
     path('product_mapping_delete/<int:pk>/', views.BranchProductMappingDelete.as_view()),
 
     # path('product_mapping_update/<int:branch_id>', views.BranchProductMappingUpdate.as_view()),
@@ -139,9 +139,7 @@ urlpatterns = [
     path('store_product_instock_count/<int:product>/', views.ProductInstockCountList.as_view()),
 
     path('product_inventory_control/<str:date>/<int:classification>/', views.ProductInventoryControlList.as_view()),
-
     path('product_inventory_control_list/<str:date>/<int:classification>/<int:branch>/', views.ProductInventoryControlListByBranch.as_view()),
-
     path('product_inventory_control_create/<str:date>/', views.ProductInventoryControlCreate.as_view()),
 
     path('branch_product_inventory_create/', views.BranchProductInventoryCreate.as_view()),
@@ -196,7 +194,6 @@ urlpatterns = [
     path('sub_branch_list/<int:branch>/', views.SubBranchlistAPIView.as_view()),
 
     path('branch_specific_bill_list/<str:date>/<int:branch>/<int:id>/', views.BranchSpecificBillAPIView.as_view()),
-
 
     path('cash_details_list/<str:date>/<int:branch>/<int:id>/', views.CashDetailsAPIView.as_view())
 ]
