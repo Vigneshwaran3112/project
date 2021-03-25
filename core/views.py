@@ -1399,6 +1399,7 @@ class CashDetailsAPIView(generics.ListAPIView):
         elif id == 7:
             try:
                 query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True)
+                serializer_data = BranchCashManagementSerializer(query)
             except BranchCashManagement.DoesNotExist:
                 return Response([], status=status.HTTP_200_OK)
         else:
