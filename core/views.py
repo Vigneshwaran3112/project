@@ -1364,6 +1364,7 @@ def my_cron_job():
         data = UserAttendance.objects.create(user=user, abscent=True, date=date)
 
 
+
 class CashDetailsAPIView(generics.ListAPIView):
     serializer_class = CashDetailsSerializer
     # permission_classes = (IsSuperOrAdminUser,)
