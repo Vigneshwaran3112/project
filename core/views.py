@@ -1390,7 +1390,6 @@ class CashDetailsAPIView(generics.ListAPIView):
                 "data": DenominationSerializer(query, many=True).data,
                 "total": total['overall_amount']
             })
-            # serializer_data = CreditSalesListAPIView(query, many=True)
         elif id == 5:
             query = BankCashReceivedDetails.objects.filter(branch=branch, date__date=date, delete=False, status=True)
             serializer_data = BankCashReceivedDetailsSerializer(query, many=True)
