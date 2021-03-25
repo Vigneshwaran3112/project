@@ -101,7 +101,7 @@ urlpatterns = [
     path('bulk_order/', views.BulkOrderListCreateAPIView.as_view()),
     
     path('free_bill_customer/', views.FreeBillCustomerListAPIView.as_view()),
-    path('customer/', views.CustomerListAPIView.as_view()),
+    # path('customer/', views.CustomerListAPIView.as_view()),
     
     path('product_mapping_list/<int:classification>/', views.BranchProductMappingList.as_view()),
     path('product_mapping_create/', views.BranchProductMappingCreate.as_view()),  #dvdsfdfdsfdsfdf

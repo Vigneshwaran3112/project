@@ -515,10 +515,10 @@ class OrderStatusListAPIView(generics.ListAPIView):
     # permission_classes = (IsSuperOrAdminUser,)
 
 
-class CustomerListAPIView(generics.ListAPIView):
-    queryset = Customer.objects.exclude(delete=True, status=False)
-    serializer_class = CustomerSerializer
-    # permission_classes = (IsSuperOrAdminUser,)
+# class CustomerListAPIView(generics.ListAPIView):
+#     queryset = Customer.objects.exclude(delete=True, status=False)
+#     serializer_class = CustomerSerializer
+#     # permission_classes = (IsSuperOrAdminUser,)
 
 
 class BranchProductMappingList(generics.ListAPIView):
@@ -1029,6 +1029,10 @@ class CustomerAPIView(viewsets.ModelViewSet):
     queryset = Customer.objects.filter(delete=False, status=True)
     serializer_class = CustomerSerializer
     # permission_classes = (IsSuperOrAdminUser,)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = Customer.objects.filter(pk=kwargs['pk']).update(status=False, delete=True)
+        return Response({'message': 'customer deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CreditSaleCustomerAPIView(viewsets.ModelViewSet):
