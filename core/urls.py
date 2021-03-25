@@ -104,7 +104,7 @@ urlpatterns = [
     # path('customer/', views.CustomerListAPIView.as_view()),
     
     path('product_mapping_list/<int:classification>/', views.BranchProductMappingList.as_view()),
-    path('product_mapping_create/', views.BranchProductMappingCreate.as_view()),  #dvdsfdfdsfdsfdf
+    path('product_mapping_create/', views.BranchProductMappingCreate.as_view()),
     path('product_mapping_delete/<int:pk>/', views.BranchProductMappingDelete.as_view()),
 
     # path('product_mapping_update/<int:branch_id>', views.BranchProductMappingUpdate.as_view()),

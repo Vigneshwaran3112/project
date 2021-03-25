@@ -81,7 +81,6 @@ class EBMeterAdmin(admin.ModelAdmin):
     list_display = ('pk','branch', 'sub_branch', 'meter', 'description')
 
 
-
 @admin.register(ComplaintStatus)
 class ComplaintStatusAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'description', 'code')
