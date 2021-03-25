@@ -54,7 +54,6 @@ class CityListAPIView(generics.ListAPIView):
 
 class AuthLoginAPIView(generics.CreateAPIView):
     serializer_class = UserTokenSerializer
-    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -78,7 +77,6 @@ class UserAPIView(viewsets.ModelViewSet):
 
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
-    permission_classes = (IsAuthenticated,)
 
 
     def get_object(self):

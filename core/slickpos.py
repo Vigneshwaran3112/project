@@ -1,4 +1,3 @@
-from .models import SlickposProducts
 import requests
 
 
@@ -7,19 +6,15 @@ headers = {
 }
 
 
-# get_a_receipt = requests.get('https://api.slickpos.com/api/sales?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&createdAt=1607177955780&localReceiptNumber=GH-ZPR-2031-100628', headers=headers)
+get_a_receipt = requests.get('https://api.slickpos.com/api/sales?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&createdAt=1607177955780&localReceiptNumber=GH-ZPR-2031-100628', headers=headers)
 
-# get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210218', headers=headers)
+get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210325', headers=headers)
 
-# setup = requests.get('https://api.slickpos.com/api/setup?id=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
+setup = requests.get('https://api.slickpos.com/api/setup?id=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
-# customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
-
-print('hello')
+customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
 products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
-
-print('hai')
 
 # orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
 
@@ -27,17 +22,17 @@ print(products.text)
 
 # world_json = os.path.join(os.getcwd(), 'products.json')
 # with open(world_json) as f:
-import json, os
-pos_products = json.load(products)
-for product in pos_products:
-    country_data = SlickposProducts.objects.create(
-    slickpos_id = product['id'],
-    name = product['name'],
-    category_id = product['categoryId'],
-    taxgroup_id = product['taxGroupId'],
-    marked_price = product['markedPrice'],
-    register_id = product['registerId'],
-    variant_group_id = product['variantGroupIds'],
-    addon_group_id = product['addonGroupId'],
-    order_id = product['order']
-)
+# import json, os
+# pos_products = json.load(products)
+# for product in pos_products:
+#     country_data = SlickposProducts.objects.create(
+#     slickpos_id = product['id'],
+#     name = product['name'],
+#     category_id = product['categoryId'],
+#     taxgroup_id = product['taxGroupId'],
+#     marked_price = product['markedPrice'],
+#     register_id = product['registerId'],
+#     variant_group_id = product['variantGroupIds'],
+#     addon_group_id = product['addonGroupId'],
+#     order_id = product['order']
+# )
