@@ -1877,8 +1877,9 @@ class ProductStockInSerializer(serializers.Serializer):
         except:
             on_hand = 0
         return {
-            'id': instance.pk,
-            'branch': instance.name,
+            'product': instance.pk,
+            'product_name': instance.name,
+            'unit': instance.unit.name,
             'on_hand': on_hand
         }
 
