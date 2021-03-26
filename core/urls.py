@@ -200,4 +200,5 @@ urlpatterns = [
     path('product_stock_in_list/<str:date>/<int:classification>/', views.ProductStockInList.as_view()),
 
     path('branch_product_pricing_batch_create/', views.ProductPricingBatchCreateAPIView.as_view()),
+
 ]

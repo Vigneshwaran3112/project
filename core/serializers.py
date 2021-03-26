@@ -1892,3 +1892,4 @@ class ProductPricingBatchCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         data = ProductPricingBatch.objects.create(branch=Branch.objects.get(pk=self.context['branch']), product=validated_data['product'], mrp_price=validated_data['mrp_price'], quantity=validated_data['quantity'], date=validated_data['date'], buying_price=validated_data['buying_price'], vendor=validated_data['vendor'])
         return data
+
