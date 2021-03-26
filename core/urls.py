@@ -197,6 +197,6 @@ urlpatterns = [
 
     path('cash_details_list/<str:date>/<int:branch>/<int:id>/', views.CashDetailsAPIView.as_view()),
 
-    path('product_stock_in_list/<str:date>/<int:classification>/', views.ProductStockInList.as_view()),
+    path('product_stock_in_list/<int:classification>/', views.ProductStockInList.as_view()),
 
 ]

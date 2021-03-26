@@ -1424,10 +1424,10 @@ class ProductStockInList(generics.ListAPIView):
     serializer_class = ProductStockInSerializer
     permission_classes = (IsAuthenticated,)
 
-    def list(self, request, date, classification):
+    def list(self, request, classification):
         query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
         products = query.filter(classification__code=classification).order_by('-id')
-        return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+        return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk}, many=True).data)
 
 
 # import requests
