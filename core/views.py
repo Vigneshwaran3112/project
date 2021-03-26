@@ -1415,3 +1415,24 @@ class CashDetailsAPIView(generics.ListAPIView):
         else:
             return Response({'message': 'No data found'})
         return Response(serializer_data.data, status=status.HTTP_200_OK)
+
+
+class RawOperationalProductInHandList(generics.ListAPIView):
+    serializer_class = RawOperationalProductInHandListSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product.filter(classification__code__in=[2, 3], status=True, delete=False)
+
+
+class ProductPricingBatchCreateAPIView(generics.CreateAPIView):
+    queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
+    serializer_class = ProductPricingBatchCreateSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request):
+        for inventory_data in request.data:
+            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})

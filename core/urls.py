@@ -195,5 +195,7 @@ urlpatterns = [
 
     path('branch_specific_bill_list/<str:date>/<int:branch>/<int:id>/', views.BranchSpecificBillAPIView.as_view()),
 
-    path('cash_details_list/<str:date>/<int:branch>/<int:id>/', views.CashDetailsAPIView.as_view())
+    path('cash_details_list/<str:date>/<int:branch>/<int:id>/', views.CashDetailsAPIView.as_view()),
+
+    path('branch_product_pricing_batch_create/', views.ProductPricingBatchCreateAPIView.as_view()),
 ]
