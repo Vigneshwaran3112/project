@@ -1259,7 +1259,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
 
         inventory_data =  {
                     'operational_products': {'id':2, 'name':"operational_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=2).exists()},
-                    'raw_products':{'id':3, 'name':"raw_products", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
+                    'raw_materials':{'id':3, 'name':"raw_materials", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, product__classification__code=3).exists()},
                     'vegetable_purchase':{'id':4, 'name':"vegetable_purchase", 'completed_status':InventoryControl.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False, product__classification__code=4).exists()},
                     'food_wastage':{'id':5, 'name':"food_wastage", 'completed_status':FoodWastage.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
                     'oil_consumption':{'id':6, 'name':"oil_consumption", 'completed_status':OilConsumption.objects.filter(branch__pk=branch, date__date=date, status=True, delete=False).exists()},
@@ -1308,7 +1308,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'completed_count': inventory_count,
                     'sub_menu': [
                         inventory_data['operational_products'],
-                        inventory_data['raw_products'],
+                        inventory_data['raw_materials'],
                         inventory_data['vegetable_purchase'],
                         inventory_data['food_wastage'],
                         inventory_data['oil_consumption']
