@@ -1866,3 +1866,18 @@ class CashDetailsSerializer(serializers.Serializer):
     def to_representation(self, instance):
         return {
         }
+
+
+
+class ProductStockInSerializer(serializers.Serializer):
+
+    def to_representation(self, instance):
+        try:
+            on_hand = ProductInventory.objects.get(branch=self.context['branch'], product__pk=instance.pk, status=True, delete=False).on_hand
+        except:
+            on_hand = 0
+        return {
+            'id': instance.pk,
+            'branch': instance.name,
+            'on_hand': on_hand
+        }

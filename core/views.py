@@ -1420,6 +1420,16 @@ class CashDetailsAPIView(generics.ListAPIView):
         return Response(serializer_data.data, status=status.HTTP_200_OK)
 
 
+class ProductStockInList(generics.ListAPIView):
+    serializer_class = ProductStockInSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request, date, classification):
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        products = query.filter(classification__code=classification).order_by('-id')
+        return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+
+
 # import requests
 # import json, os
 #
