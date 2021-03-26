@@ -304,6 +304,7 @@ class ProductRecipeItem(BaseModel):
 
 
 class Product(BaseModel):
+    product_id = models.CharField(max_length=300, null=True, blank=True)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True, related_name='unit_product')
     department = models.ForeignKey(BranchProductDepartment, on_delete=models.CASCADE, null=True, blank=True, related_name='department_product')
     classification = models.ForeignKey(BranchProductClassification, on_delete=models.CASCADE, null=True, blank=True, related_name='classification_product')

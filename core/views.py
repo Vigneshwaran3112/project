@@ -1417,12 +1417,34 @@ class CashDetailsAPIView(generics.ListAPIView):
         return Response(serializer_data.data, status=status.HTTP_200_OK)
 
 
-class RawOperationalProductInHandList(generics.ListAPIView):
-    serializer_class = RawOperationalProductInHandListSerializer
+class ProductStockInList(generics.ListAPIView):
+    serializer_class = ProductStockInSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_queryset(self):
-        return ProductBranchMapping.objects.get(branch=self.request.user.branch).product.filter(classification__code__in=[2, 3], status=True, delete=False)
+    def list(self, request, date, classification):
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        products = query.filter(classification__code=classification).order_by('-id')
+        return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
+
+
+# import requests
+# import json, os
+#
+# headers = {
+#   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
+# }
+#
+# get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210325', headers=headers)
+#
+# a = get_receipt_by_date.json()
+# b = a['receipts']
+#
+# for data in b:
+#   k = data['details']['orderTickets']
+#   for items in k:
+#     z = items['addedItems']
+#     for f in z:
+#       query = Product.objects.filter(product__id=f['id'], status=False)
 
 
 class ProductPricingBatchCreateAPIView(generics.CreateAPIView):
