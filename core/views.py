@@ -1018,9 +1018,6 @@ class BranchSpecificUserListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-
-
-
         user = BaseUser.objects.filter(branch=self.request.user.branch, is_active=True, is_employee=True)
         data = user.exclude(Q(is_superuser=True) | Q(is_staff=True))
         return data
@@ -1448,3 +1445,17 @@ class ProductStockInList(generics.ListAPIView):
 #     z = items['addedItems']
 #     for f in z:
 #       query = Product.objects.filter(product__id=f['id'], status=False)
+
+
+class ProductPricingBatchCreateAPIView(generics.CreateAPIView):
+    queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
+    serializer_class = ProductPricingBatchCreateSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request):
+        for inventory_data in request.data:
+            serializer = self.serializer_class(data=inventory_data, context={'branch': self.request.user.branch.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response({'message': 'Data Saved!'})
+
