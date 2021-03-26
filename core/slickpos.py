@@ -1,4 +1,5 @@
 import requests
+import json, os
 
 
 headers = {
@@ -17,8 +18,19 @@ customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=73
 products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
 # orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
+# a = get_receipt_by_date.json()
+# b = a['receipts']
+#
+# for data in b:
+#   k = data['details']['orderTickets']
+#   for items in k:
+#     z = items['addedItems']
+#     for f in z:
+      # query = Product.objects.filter(product__id=f['id'], status=False)
 
-print(products.text)
+
+
+
 
 # world_json = os.path.join(os.getcwd(), 'products.json')
 # with open(world_json) as f:
