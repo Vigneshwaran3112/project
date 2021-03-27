@@ -74,7 +74,6 @@ class UserAPIView(viewsets.ModelViewSet):
 class AuthVerifyAPIView(generics.RetrieveAPIView):
     serializer_class = BaseUserSerializer
 
-
     def get_object(self):
         return self.request.user
 
