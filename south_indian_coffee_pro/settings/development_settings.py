@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'core',
 
-    # 'import_export',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -119,4 +119,4 @@ CORS_ORIGIN_WHITELIST = (
     'http://sich.vgts.tech'
 )
 
-# IMPORT_EXPORT_USE_TRANSACTIONS = True
+IMPORT_EXPORT_USE_TRANSACTIONS = True

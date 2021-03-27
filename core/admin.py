@@ -267,8 +267,8 @@ class CashHandoverAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'bill_no', 'name', 'amount', 'time', 'date')
 
 
-#
-# class FoodWastageResource(resources.ModelResource):
-#
-#     class Meta:
-#         model = FoodWastage
+
+class FoodWastageResource(resources.ModelResource):
+
+    class Meta:
+        model = FoodWastage
