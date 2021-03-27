@@ -1443,3 +1443,18 @@ class ProductPricingBatchCreateAPIView(generics.CreateAPIView):
             serializer.save()
         return Response({'message': 'Data Saved!'})
 
+
+class BranchSpecificFoodWastageListAPIView(generics.ListAPIView):
+    serializer_class = FoodWastageSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return FoodWastage.objects.filter(date__date=self.kwargs['date'], branch=self.kwargs['branch'], delete=False, status=True)
+
+
+class BranchSpecificOilConsumptionListAPIView(generics.ListAPIView):
+    serializer_class = OilConsumptionSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return OilConsumption.objects.filter(branch=self.kwargs['branch'], date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
