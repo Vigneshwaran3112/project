@@ -10,6 +10,7 @@ from django.http.request import RawPostDataException
 # from import_export import resources
 from django.http import HttpResponse
 # from tablib import Dataset
+# from .admin import FoodWastageResource
 
 
 from rest_framework import generics, viewsets, status
@@ -1463,18 +1464,22 @@ class BranchSpecificOilConsumptionListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return OilConsumption.objects.filter(branch=self.kwargs['branch'], date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
 
-
-
-    # def get_queryset(self):
-    #     queryset = OilConsumption.objects.filter(branch=self.kwargs['branch'], date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
-    #     # data = export(queryset)
-    #
-    #     response = HttpResponse(queryset.xls, content_type='application/vnd.ms-excel')
-    #     response['Content-Disposition'] = 'attachment; filename="exported_data.xls"'
-    #     # writer = xlsx.writer(response)
-    #     # writer.writerow(['','','',''])
-    #     #
-    #     #
-    #     # for i in queryset:
-    #     #     writer.writerow([i.,i.])
-    #     return response
+# def ExcelAPIView(request):
+#
+#         queryset = OilConsumption.objects.filter(branch=32, delete=False, status=True).order_by('-id')
+#         # data = export(queryset)
+#
+#         # response = HttpResponse(queryset.xls, content_type='application/vnd.ms-excel')
+#         # response['Content-Disposition'] = 'attachment; filename="exported_data.xls"'
+#
+#         # writer = xlsx.writer(response)
+#         # writer.writerow(['','','',''])
+#         #
+#         #
+#         # for i in queryset:
+#         #     writer.writerow([i.,i.])
+#         member_resource = FoodWastageResource()
+#         dataset = member_resource.export()
+#         response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+#         response['Content-Disposition'] = 'attachment; filename="persons.xls"'
+#         return response

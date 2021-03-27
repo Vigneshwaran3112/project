@@ -205,4 +205,6 @@ urlpatterns = [
     path('branch_specific_food_wastage_list/<str:date>/<int:branch>/', views.BranchSpecificFoodWastageListAPIView.as_view()),
 
     path('branch_specific_oil_consumption_list/<str:date>/<int:branch>/', views.BranchSpecificOilConsumptionListAPIView.as_view()),
+
+    # path('excel/', views.ExcelAPIView),
 ]

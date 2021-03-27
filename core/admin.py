@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export import resources
 
 from .models import *
 
@@ -264,3 +265,10 @@ class SalesCountAdmin(admin.ModelAdmin):
 @admin.register(CashHandover)
 class CashHandoverAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'bill_no', 'name', 'amount', 'time', 'date')
+
+
+#
+# class FoodWastageResource(resources.ModelResource):
+#
+#     class Meta:
+#         model = FoodWastage

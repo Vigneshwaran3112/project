@@ -1497,6 +1497,7 @@ class OilConsumptionSerializer(serializers.ModelSerializer):
             'used_oil': instance.used_oil,
             'wastage_oil': instance.wastage_oil,
             'unit': instance.unit.code if instance.unit else None,
+            'unit_name': instance.unit.name if instance.unit else None,
             'date': instance.date
         }
 
@@ -1516,7 +1517,7 @@ class FoodWastageSerializer(serializers.ModelSerializer):
             'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
             'product': instance.product.pk,
             'product_name': instance.product.name,
-            'unit': instance.product.unit.pk,
+            'unit': instance.product.unit.code,
             'unit_name': instance.product.unit.name,
             'wasted_by': instance.wasted_by.pk,
             'wasted_by_name': instance.wasted_by.first_name,
