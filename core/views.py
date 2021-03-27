@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied, RequestDataTooBig
 from django.db.models import QuerySet, Count, Q
 from django.http.request import RawPostDataException
 # from import_export import resources
-from django.http import HttpResponse
+# from django.http import HttpResponse
 # from tablib import Dataset
 # from .admin import FoodWastageResource
 
