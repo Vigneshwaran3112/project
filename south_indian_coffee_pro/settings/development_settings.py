@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'core',
 
-    'import_export',
+    # 'import_export',
 ]
 
 MIDDLEWARE = [
