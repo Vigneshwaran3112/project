@@ -1516,6 +1516,8 @@ class FoodWastageSerializer(serializers.ModelSerializer):
             'sub_branch_name': instance.sub_branch.name if instance.sub_branch else None,
             'product': instance.product.pk,
             'product_name': instance.product.name,
+            'unit': instance.product.unit.pk,
+            'unit_name': instance.product.unit.name,
             'wasted_by': instance.wasted_by.pk,
             'wasted_by_name': instance.wasted_by.first_name,
             'quantity': instance.quantity,
