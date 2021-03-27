@@ -1,10 +1,6 @@
-import datetime
-
-from datetime import date
-from datetime import datetime
 from re import error
-import json, os
-import re
+from datetime import date, datetime
+import datetime, requests, json, os, re
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -24,7 +20,7 @@ from .models import *
 from .serializers import *
 from .permissions import *
 from .exceptions import CustomError
-import requests
+
 
 
 headers = {
