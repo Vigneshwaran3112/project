@@ -1310,8 +1310,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        user = BaseUser.objects.get(pk=self.request.user.pk)
-        return user
+        return BaseUser.objects.get(pk=self.request.user.pk)
 
 
 class BranchSpecificBillAPIView(generics.ListAPIView):
@@ -1335,16 +1334,6 @@ class BranchSpecificBillAPIView(generics.ListAPIView):
         else:
             return Response({'message': 'No data found'})
         return Response(serializer_data.data, status=status.HTTP_200_OK)
-
-
-
-class UserProfileAPIView(generics.RetrieveAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        user = BaseUser.objects.get(pk=self.request.user.pk)
-        return user
 
 
 class ElectricBillCreate(generics.CreateAPIView):
