@@ -19,7 +19,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_crontab',
-    'core'
+    'core',
+
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -116,3 +118,5 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3002',
     'http://sich.vgts.tech'
 )
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
