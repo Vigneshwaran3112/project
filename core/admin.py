@@ -1,5 +1,6 @@
 from django.contrib import admin
 from import_export import resources
+from import_export.admin import ExportActionMixin
 
 from .models import *
 
@@ -272,3 +273,9 @@ class FoodWastageResource(resources.ModelResource):
 
     class Meta:
         model = FoodWastage
+        fields = ('branch', 'sub_branch', 'product', 'wasted_by', 'quantity', 'mrp_price', 'date')
+        export_order = ('date', 'branch', 'sub_branch', 'product', 'wasted_by', 'quantity', 'mrp_price')
+
+
+# class BookAdmin(ExportActionMixin, admin.ModelAdmin):
+#     pass
