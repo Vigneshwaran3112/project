@@ -273,8 +273,20 @@ class FoodWastageResource(resources.ModelResource):
 
     class Meta:
         model = FoodWastage
-        fields = ('branch', 'sub_branch', 'product', 'wasted_by', 'quantity', 'mrp_price', 'date')
-        export_order = ('date', 'branch', 'sub_branch', 'product', 'wasted_by', 'quantity', 'mrp_price')
+        fields = ('branch__name', 'sub_branch__name', 'product__name', 'wasted_by__first_name', 'quantity', 'mrp_price', 'date')
+        export_order = ('date', 'branch__name', 'sub_branch__name', 'product__name', 'wasted_by__first_name', 'quantity', 'mrp_price')
+
+    # def dehydrate_branch(self, obj):
+    #     return obj.branch.name
+    #
+    # def dehydrate_sub_branch(self, obj):
+    #     return obj.sub_branch.name
+    #
+    # def dehydrate_product(self, obj):
+    #     return obj.product.name
+    #
+    # def dehydrate_wasted_by(self, obj):
+    #     return obj.wasted_by.username
 
 
 # class BookAdmin(ExportActionMixin, admin.ModelAdmin):
