@@ -1,6 +1,10 @@
 from re import error
 from datetime import date, datetime
 import datetime, requests, json, os, re
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+from openpyxl.utils import get_column_letter
+
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -1483,3 +1487,61 @@ def ExcelAPIView(request, date, branch):
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="persons.xls"'
     return response
+
+
+def ProductInventoryControlListToExcel(request, branch, date):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "MyTestSheet"
+
+    row_num = 1
+    product_catagory = ['','Sales Product', 'Operational product', 'Raw materials', 'Vegetable']
+    for i in range(1,5):
+
+        querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
+        products = querys.filter(classification__code=i).order_by('-id')
+
+        queryset = InventoryControl.objects.filter(branch=branch, date__date=date, product__pk__in=products.values_list('pk'), delete=False, status=True).order_by('-id')
+        columns = ['Date', 'Branch', 'Product', 'Openning Stock', 'Received Stock', 'Closing Stock',]
+
+        catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[i])
+        catagory_title.font = Font(name='Calibri', bold=True)
+        row_num += 1
+        col_num = 0
+        for value in columns:
+            col_num = col_num+1
+            cell = ws.cell(row=row_num, column=col_num, value = value)
+            cell.font = Font(name='Chandas', bold=True)
+            cell.alignment = Alignment(horizontal='center')
+            column_letter = get_column_letter(col_num)
+            column_dimensions = ws.column_dimensions[column_letter]
+            column_dimensions.width = 16
+            ws.row_dimensions[row_num].height = 25
+
+        for query in queryset:
+            row_num += 1
+            col_num = 0
+
+            received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.product.pk,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+
+            row = [(query.date).strftime("%m/%d/%Y"), query.branch.name, query.product.name, query.opening_stock, received_stock['total_received_stock'], query.closing_stock,]
+
+            for value in row:
+                col_num = col_num + 1
+                value_cell = ws.cell(row=row_num, column=col_num, value = value)
+                value_cell.alignment = Alignment(horizontal='center')
+
+        row_num += 1
+        ws['A'+str(row_num)].value = ' '
+        row_num += 1
+        ws.cell(row=row_num, column=1, value=" ")
+        row_num += 1
+
+    file = wb.save('MyTestSheet.xlsx')
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
+    response['Content-Disposition'] = 'attachment; filename=project.xlsx'
+    file = wb.save(response)
+    return response
+
+
