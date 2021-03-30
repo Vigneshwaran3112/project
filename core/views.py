@@ -1519,18 +1519,33 @@ def ProductInventoryControlListToExcel(request, branch, date):
             column_dimensions.width = 16
             ws.row_dimensions[row_num].height = 25
 
-        for query in queryset:
-            row_num += 1
-            col_num = 0
+        if queryset:
+            for query in queryset:
+                row_num += 1
+                col_num = 0
 
-            received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.product.pk,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+                received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.product.pk,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
 
-            row = [(query.date).strftime("%m/%d/%Y"), query.branch.name, query.product.name, query.opening_stock, received_stock['total_received_stock'], query.closing_stock,]
+                row = [(query.date).strftime("%m/%d/%Y"), query.branch.name, query.product.name, query.opening_stock, received_stock['total_received_stock'], query.closing_stock,]
 
-            for value in row:
-                col_num = col_num + 1
-                value_cell = ws.cell(row=row_num, column=col_num, value = value)
-                value_cell.alignment = Alignment(horizontal='center')
+                for value in row:
+                    col_num = col_num + 1
+                    value_cell = ws.cell(row=row_num, column=col_num, value = value)
+                    value_cell.alignment = Alignment(horizontal='center')
+        else:
+            # queryset = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk__in=products.values_list('pk'),date__date=date)
+            # print(queryset)
+            for query in products:
+                received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.pk ,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+                if received_stock['total_received_stock']:
+                    row = [date, Branch.objects.get(pk=branch).name, query.name, 0, received_stock['total_received_stock'], 0, ]
+
+                    row_num += 1
+                    col_num = 0
+                    for value in row:
+                        col_num = col_num + 1
+                        value_cell = ws.cell(row=row_num, column=col_num, value=value)
+                        value_cell.alignment = Alignment(horizontal='center')
 
         row_num += 1
         ws['A'+str(row_num)].value = ' '
@@ -1538,7 +1553,6 @@ def ProductInventoryControlListToExcel(request, branch, date):
         ws.cell(row=row_num, column=1, value=" ")
         row_num += 1
 
-    # file = wb.save('MyTestSheet.xlsx')
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
     response['Content-Disposition'] = 'attachment; filename=product_list.xlsx'
     file = wb.save(response)
