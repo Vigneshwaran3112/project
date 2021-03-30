@@ -1540,7 +1540,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
 
     # file = wb.save('MyTestSheet.xlsx')
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
-    response['Content-Disposition'] = 'attachment; filename=project.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=product_list.xlsx'
     file = wb.save(response)
     return response
 
