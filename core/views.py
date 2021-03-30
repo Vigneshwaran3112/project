@@ -1538,7 +1538,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
         ws.cell(row=row_num, column=1, value=" ")
         row_num += 1
 
-    file = wb.save('MyTestSheet.xlsx')
+    # file = wb.save('MyTestSheet.xlsx')
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
     response['Content-Disposition'] = 'attachment; filename=project.xlsx'
     file = wb.save(response)
