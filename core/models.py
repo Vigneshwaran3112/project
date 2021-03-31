@@ -167,6 +167,7 @@ class UserAttendance(BaseModel):
             obj.time_spend = total_time_spend['overall_time_spend']
             obj.user = self.user
             obj.date = self.date
+            obj.food_allowance = 120
             obj.save()
 
 
@@ -184,6 +185,7 @@ class UserSalaryPerDay(BaseModel):
     ot_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     ot_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
     ut_time_spend = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
+    food_allowance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
 
     def save(self, *args, **kwargs):
         user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')

@@ -1360,7 +1360,6 @@ def my_cron_job():
         data = UserAttendance.objects.create(user=user, abscent=True, date=date)
 
 
-
 class CashDetailsAPIView(generics.ListAPIView):
     serializer_class = CashDetailsSerializer
     permission_classes = (IsAuthenticated,)
@@ -1416,26 +1415,6 @@ class ProductStockInList(generics.ListAPIView):
         return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk}, many=True).data)
 
 
-# import requests
-# import json, os
-#
-# headers = {
-#   'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI3MzcwZDc4Ni1lN2Y1LTQzNmYtYjYwOC0wYTc2NDRmZGI4ZTciLCJyb2wiOiJ1c2VyIiwiYXVkIjoidzRGNDV2cDVicGxldEFGZE5pWnhVRUV6cWFTemZ3SzAiLCJpYXQiOjE2MTI5NzQ5MDcsImlzcyI6InNsaWNrcG9zIn0.i7rTScUlAmZPK_jcoD-wQsP5OitUBFsEjjiRoQmcYaw'
-# }
-#
-# get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210325', headers=headers)
-#
-# a = get_receipt_by_date.json()
-# b = a['receipts']
-#
-# for data in b:
-#   k = data['details']['orderTickets']
-#   for items in k:
-#     z = items['addedItems']
-#     for f in z:
-#       query = Product.objects.filter(product__id=f['id'], status=False)
-
-
 class ProductPricingBatchCreateAPIView(generics.CreateAPIView):
     queryset = ProductPricingBatch.objects.filter(delete=False, status=True)
     serializer_class = ProductPricingBatchCreateSerializer
@@ -1467,17 +1446,7 @@ class BranchSpecificOilConsumptionListAPIView(generics.ListAPIView):
 def ExcelAPIView(request, date, branch):
 
     queryset = FoodWastage.objects.filter(branch=branch, date__date=date, delete=False, status=True).order_by('-id')
-    # data = export(queryset)
 
-    # response = HttpResponse(queryset.xls, content_type='application/vnd.ms-excel')
-    # response['Content-Disposition'] = 'attachment; filename="exported_data.xls"'
-
-    # writer = xlsx.writer(response)
-    # writer.writerow(['','','',''])
-    #
-    #
-    # for i in queryset:
-    #     writer.writerow([i.,i.])
     member_resource = FoodWastageResource()
     dataset = member_resource.export(queryset)
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')

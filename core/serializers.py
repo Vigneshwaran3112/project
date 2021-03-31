@@ -368,7 +368,8 @@ class UserSalaryAttendanceReportSerializer(serializers.Serializer):
             'time_spend': time_spend_hours,
             'salary':'Rs {}'.format(instance.salary),
             'ot_salary':'Rs {}'.format(instance.ot_salary),
-            'total_salary': 'Rs {}'.format(instance.salary + instance.ot_salary),
+            'food_allowance': 'Rs {}'.format(instance.food_allowance),
+            'total_salary': 'Rs {}'.format(instance.salary + instance.ot_salary + instance.food_allowance),
             'incentive': 0
         }
 
