@@ -1480,12 +1480,15 @@ def ProductInventoryControlListToExcel(request, branch, date):
         for value in columns:
             col_num = col_num+1
             cell = ws.cell(row=row_num, column=col_num, value = value)
-            cell.font = Font(name='Chandas', bold=True, color='00838F')
+            cell.font = Font(name='Chandas', bold=True, color='FFFFFF')
             cell.alignment = Alignment(horizontal='center')
             column_letter = get_column_letter(col_num)
             column_dimensions = ws.column_dimensions[column_letter]
             column_dimensions.width = 20
             ws.row_dimensions[row_num].height = 25
+            cell.fill = PatternFill(start_color='00838F',
+                   end_color='00838F',
+                   fill_type='solid')
 
         product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
 
@@ -1499,6 +1502,9 @@ def ProductInventoryControlListToExcel(request, branch, date):
                 col_num = col_num + 1
                 value_cell = ws.cell(row=row_num, column=col_num, value = value)
                 value_cell.alignment = Alignment(horizontal='center')
+                value_cell.fill = PatternFill(start_color='E3F2FD',
+                                    end_color='E3F2FD',
+                                    fill_type='solid')
                 if value == 0:
                     value_cell.font = Font(color='FF5252')
 
