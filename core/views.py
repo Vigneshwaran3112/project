@@ -1497,15 +1497,14 @@ def ProductInventoryControlListToExcel(request, branch, date):
 
     row_num = 1
     product_catagory = ['','Sales Product', 'Operational product', 'Raw materials', 'Vegetable']
-    for i in range(1,5):
+    for classification in range(1,5):
 
         querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
-        products = querys.filter(classification__code=i).order_by('-id')
+        products = querys.filter(classification__code=classification).order_by('-id')
 
-        queryset = InventoryControl.objects.filter(branch=branch, date__date=date, product__pk__in=products.values_list('pk'), delete=False, status=True).order_by('-id')
         columns = ['Date', 'Branch', 'Product', 'Openning Stock', 'Received Stock', 'Closing Stock',]
 
-        catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[i])
+        catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[classification])
         catagory_title.font = Font(name='Calibri', bold=True)
         row_num += 1
         col_num = 0
@@ -1519,33 +1518,18 @@ def ProductInventoryControlListToExcel(request, branch, date):
             column_dimensions.width = 16
             ws.row_dimensions[row_num].height = 25
 
-        if queryset:
-            for query in queryset:
-                row_num += 1
-                col_num = 0
+        product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
 
-                received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.product.pk,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
+        for query in product_data:
+            row_num += 1
+            col_num = 0
 
-                row = [(query.date).strftime("%m/%d/%Y"), query.branch.name, query.product.name, query.opening_stock, received_stock['total_received_stock'], query.closing_stock,]
+            row = [date, Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], ]
 
-                for value in row:
-                    col_num = col_num + 1
-                    value_cell = ws.cell(row=row_num, column=col_num, value = value)
-                    value_cell.alignment = Alignment(horizontal='center')
-        else:
-            # queryset = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk__in=products.values_list('pk'),date__date=date)
-            # print(queryset)
-            for query in products:
-                received_stock = ProductPricingBatch.objects.filter(branch__pk=branch, product__pk=query.pk ,date__date=date).aggregate(total_received_stock=Coalesce(Sum('quantity'), V(0)))
-                if received_stock['total_received_stock']:
-                    row = [date, Branch.objects.get(pk=branch).name, query.name, 0, received_stock['total_received_stock'], 0, ]
-
-                    row_num += 1
-                    col_num = 0
-                    for value in row:
-                        col_num = col_num + 1
-                        value_cell = ws.cell(row=row_num, column=col_num, value=value)
-                        value_cell.alignment = Alignment(horizontal='center')
+            for value in row:
+                col_num = col_num + 1
+                value_cell = ws.cell(row=row_num, column=col_num, value = value)
+                value_cell.alignment = Alignment(horizontal='center')
 
         row_num += 1
         ws['A'+str(row_num)].value = ' '
