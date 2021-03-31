@@ -1515,7 +1515,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
             cell.alignment = Alignment(horizontal='center')
             column_letter = get_column_letter(col_num)
             column_dimensions = ws.column_dimensions[column_letter]
-            column_dimensions.width = 16
+            column_dimensions.width = 20
             ws.row_dimensions[row_num].height = 25
 
         product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
@@ -1524,7 +1524,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
             row_num += 1
             col_num = 0
 
-            row = [date, Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], ]
+            row = [date, Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name+" - "+Unit.objects.get(pk=query['unit']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], ]
 
             for value in row:
                 col_num = col_num + 1
