@@ -1474,13 +1474,13 @@ def ProductInventoryControlListToExcel(request, branch, date):
         columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock',]
 
         catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[classification])
-        catagory_title.font = Font(name='Calibri', bold=True)
+        catagory_title.font = Font(name='Calibri', bold=True, color='00695C')
         row_num += 1
         col_num = 0
         for value in columns:
             col_num = col_num+1
             cell = ws.cell(row=row_num, column=col_num, value = value)
-            cell.font = Font(name='Chandas', bold=True)
+            cell.font = Font(name='Chandas', bold=True, color='00838F')
             cell.alignment = Alignment(horizontal='center')
             column_letter = get_column_letter(col_num)
             column_dimensions = ws.column_dimensions[column_letter]
@@ -1499,6 +1499,8 @@ def ProductInventoryControlListToExcel(request, branch, date):
                 col_num = col_num + 1
                 value_cell = ws.cell(row=row_num, column=col_num, value = value)
                 value_cell.alignment = Alignment(horizontal='center')
+                if value == 0:
+                    value_cell.font = Font(color='FF5252')
 
         row_num += 1
         ws['A'+str(row_num)].value = ' '
