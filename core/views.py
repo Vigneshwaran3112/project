@@ -1502,7 +1502,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
         querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
         products = querys.filter(classification__code=classification).order_by('-id')
 
-        columns = ['Date', 'Branch', 'Product', 'Openning Stock', 'Received Stock', 'Closing Stock',]
+        columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock',]
 
         catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[classification])
         catagory_title.font = Font(name='Calibri', bold=True)
