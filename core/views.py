@@ -1473,7 +1473,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
 
         columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock', 'Usage']
 
-        catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[classification])
+        catagory_title = ws.cell(row=row_num, column=4, value=product_catagory[classification])
         catagory_title.font = Font(name='Calibri', bold=True, color='00695C')
         row_num += 1
         col_num = 0
