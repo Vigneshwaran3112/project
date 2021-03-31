@@ -1,6 +1,10 @@
 from re import error
 from datetime import date, datetime
 import datetime, requests, json, os, re
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+from openpyxl.utils import get_column_letter
+
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -1452,3 +1456,59 @@ def ExcelAPIView(request, date, branch):
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="persons.xls"'
     return response
+
+
+def ProductInventoryControlListToExcel(request, branch, date):
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "MyTestSheet"
+
+    row_num = 1
+    product_catagory = ['','','Operational product', 'Raw materials', 'Vegetable']
+    for classification in range(2,5):
+
+        querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
+        products = querys.filter(classification__code=classification).order_by('-id')
+
+        columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock',]
+
+        catagory_title = ws.cell(row=row_num, column=3, value=product_catagory[classification])
+        catagory_title.font = Font(name='Calibri', bold=True)
+        row_num += 1
+        col_num = 0
+        for value in columns:
+            col_num = col_num+1
+            cell = ws.cell(row=row_num, column=col_num, value = value)
+            cell.font = Font(name='Chandas', bold=True)
+            cell.alignment = Alignment(horizontal='center')
+            column_letter = get_column_letter(col_num)
+            column_dimensions = ws.column_dimensions[column_letter]
+            column_dimensions.width = 20
+            ws.row_dimensions[row_num].height = 25
+
+        product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
+
+        for query in product_data:
+            row_num += 1
+            col_num = 0
+
+            row = [date, Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name+" - "+Unit.objects.get(pk=query['unit']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], ]
+
+            for value in row:
+                col_num = col_num + 1
+                value_cell = ws.cell(row=row_num, column=col_num, value = value)
+                value_cell.alignment = Alignment(horizontal='center')
+
+        row_num += 1
+        ws['A'+str(row_num)].value = ' '
+        row_num += 1
+        ws.cell(row=row_num, column=1, value=" ")
+        row_num += 1
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
+    response['Content-Disposition'] = 'attachment; filename=product_list.xlsx'
+    file = wb.save(response)
+    return response
+
+

@@ -207,4 +207,6 @@ urlpatterns = [
     path('branch_specific_oil_consumption_list/<str:date>/<int:branch>/', views.BranchSpecificOilConsumptionListAPIView.as_view()),
 
     path('food_wastage_excel/<str:date>/<int:branch>/', views.ExcelAPIView),
+
+    path('product_inventory_control_list_to_excel/<str:date>/<int:branch>/', views.ProductInventoryControlListToExcel),
 ]
