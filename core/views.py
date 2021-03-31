@@ -1496,8 +1496,8 @@ def ProductInventoryControlListToExcel(request, branch, date):
     ws.title = "MyTestSheet"
 
     row_num = 1
-    product_catagory = ['','Sales Product', 'Operational product', 'Raw materials', 'Vegetable']
-    for classification in range(1,5):
+    product_catagory = ['','','Operational product', 'Raw materials', 'Vegetable']
+    for classification in range(2,5):
 
         querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
         products = querys.filter(classification__code=classification).order_by('-id')
