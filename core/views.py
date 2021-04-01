@@ -1,6 +1,4 @@
-from re import error
-from datetime import date, datetime
-import datetime, requests, json, os, re
+from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
@@ -12,6 +10,8 @@ from django.core.exceptions import PermissionDenied, RequestDataTooBig
 from django.db.models import QuerySet, Count, Q
 from django.http.request import RawPostDataException
 from django.http import HttpResponse
+from tablib import Dataset
+from .admin import *
 
 
 from rest_framework import generics, viewsets, status
@@ -628,7 +628,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        salary_data = UserSalary.objects.filter(date__lte=self.kwargs['date'], status=True, delete=False).values_list('user__pk', flat=True).distinct()
+        salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
         return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
 
 
@@ -1443,6 +1443,16 @@ class BranchSpecificOilConsumptionListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return OilConsumption.objects.filter(branch=self.kwargs['branch'], date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
+
+def ExcelAPIView(request, date, branch):
+
+    queryset = FoodWastage.objects.filter(branch=branch, date__date=date, delete=False, status=True).order_by('-id')
+
+    member_resource = FoodWastageResource()
+    dataset = member_resource.export(queryset)
+    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="persons.xls"'
+    return response
 
 
 def ProductInventoryControlListToExcel(request, branch, date):
