@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Clone Repositorie
         uses: actions/checkout@v2
+        
+      - name: Restart NGINX Server
+        run: sudo service southindiancoffee restart
 
       - name: Restart NGINX Server
         run: sudo service nginx restart
