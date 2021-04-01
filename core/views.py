@@ -1,20 +1,9 @@
-from re import error
-from datetime import date, datetime
-import datetime, requests, json, os, re
+from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
 
-
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied, RequestDataTooBig
-from django.db.models import QuerySet, Count, Q
-from django.http.request import RawPostDataException
-from import_export import resources
 from django.http import HttpResponse
-from tablib import Dataset
-from .admin import *
 
 
 from rest_framework import generics, viewsets, status
@@ -1446,16 +1435,6 @@ class BranchSpecificOilConsumptionListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return OilConsumption.objects.filter(branch=self.kwargs['branch'], date__date=self.kwargs['date'], delete=False, status=True).order_by('-id')
-
-def ExcelAPIView(request, date, branch):
-
-    queryset = FoodWastage.objects.filter(branch=branch, date__date=date, delete=False, status=True).order_by('-id')
-
-    member_resource = FoodWastageResource()
-    dataset = member_resource.export(queryset)
-    response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="persons.xls"'
-    return response
 
 
 def ProductInventoryControlListToExcel(request, branch, date):
