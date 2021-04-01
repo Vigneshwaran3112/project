@@ -12,8 +12,14 @@ jobs:
     steps:
       - name: Clone Repositorie
         uses: actions/checkout@v2
-        
-      - name: Restart NGINX Server
+
+      - name: Activate Virtualenv
+        run: source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
+
+      - name: Check Django Errors
+        run: pwd
+
+      - name: Restart SouthIndianCoffee Service
         run: sudo service southindiancoffee restart
 
       - name: Restart NGINX Server
