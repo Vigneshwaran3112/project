@@ -189,7 +189,6 @@ class UserSalaryPerDay(BaseModel):
 
     def save(self, *args, **kwargs):
         user_salary = self.user.user_salaries.filter(date__lte=self.date).latest('date')
-
         working_minutes = user_salary.work_minutes
         a = (working_minutes*75) / 100   # 3/4 of working hours
         b = (working_minutes*50) / 100   # 1/2 of working hours
