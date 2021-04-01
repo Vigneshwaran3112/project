@@ -1,7 +1,4 @@
 from django.contrib import admin
-from import_export import resources
-from import_export.admin import ExportActionMixin
-
 from .models import *
 
 
@@ -266,11 +263,3 @@ class SalesCountAdmin(admin.ModelAdmin):
 @admin.register(CashHandover)
 class CashHandoverAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'bill_no', 'name', 'amount', 'time', 'date')
-
-
-class FoodWastageResource(resources.ModelResource):
-
-    class Meta:
-        model = FoodWastage
-        fields = ('branch__name', 'sub_branch__name', 'product__name', 'wasted_by__first_name', 'quantity', 'mrp_price', 'date')
-        export_order = ('date', 'branch__name', 'sub_branch__name', 'product__name', 'wasted_by__first_name', 'quantity', 'mrp_price')
