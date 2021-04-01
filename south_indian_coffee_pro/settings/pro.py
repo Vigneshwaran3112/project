@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tsich.api.vgts.tech']
 
 DATABASES = {
     'default': {
@@ -15,4 +15,4 @@ DATABASES = {
     }
 }
 
-CORS_ORIGIN_WHITELIST = ('http://sich.vgts.tech', )
+CORS_ORIGIN_WHITELIST = ('https://tsich.vgts.tech', )
