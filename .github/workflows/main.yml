@@ -25,6 +25,12 @@ jobs:
       - name: Check Django Security Errors
         run: python3 manage.py check --deploy --settings=south_indian_coffee_pro.settings.pro
 
+      - name: Generating Django Migrations Files
+        run: python3 manage.py makemigrations --settings=south_indian_coffee_pro.settings.pro
+
+      - name: Migratings Changes to Database
+        run: python3 manage.py migrate --settings=south_indian_coffee_pro.settings.pro
+
       - name: Restart SouthIndianCoffee Service
         run: sudo service southindiancoffee restart
 
