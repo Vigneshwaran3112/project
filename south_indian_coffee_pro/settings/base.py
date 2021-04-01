@@ -15,8 +15,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_crontab',
-    'core',
-    'import_export'
+    'core'
 ]
 
 MIDDLEWARE = [

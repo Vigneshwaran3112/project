@@ -16,7 +16,7 @@ jobs:
       - name: Activate Virtualenv
         run: source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
 
-      - name: Check Django Errors
+      - name: Installing Requirements
         run: pip3 install -r requirements.txt
 
       - name: Check Django Errors
