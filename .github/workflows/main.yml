@@ -17,6 +17,9 @@ jobs:
         run: source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
 
       - name: Check Django Errors
+        run: pip3 install -r requirements.txt
+
+      - name: Check Django Errors
         run: python3 manage.py check
 
       - name: Check Django Security Errors
