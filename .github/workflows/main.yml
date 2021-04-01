@@ -1,17 +1,17 @@
-name: SouthIndianCoffee Development
+name: SouthIndianCoffee Production
 on:
   push:
-    branches: [ development ]
+    branches: [ main ]
   pull_request:
-    branches: [ development ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: southindiancoffee-dev
+    runs-on: prod_server
     steps:
       - name: Clone Repositorie
         uses: actions/checkout@v2
 
-      - name: Restart Apache2 Server
-        run: sudo service apache2 restart
+      - name: Restart NGINX Server
+        run: sudo service nginx restart
