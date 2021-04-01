@@ -631,7 +631,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
+        salary_data = UserSalary.objects.filter(date__lte=self.kwargs['date'], status=True, delete=False).values_list('user__pk', flat=True).distinct()
         return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
 
 

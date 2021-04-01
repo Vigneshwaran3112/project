@@ -144,7 +144,7 @@ class UserAttendance(BaseModel):
             self.time_spend = 0
 
         elif self.stop:
-            user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
+            user_salary = self.user.user_salaries.filter(date__lte=self.date).latest('date')
             stop_start = (datetime.datetime.combine(datetime.date(1, 1, 1), self.stop) - datetime.datetime.combine(datetime.date(1, 1, 1), self.start))
             self.time_spend = decimal.Decimal((stop_start).seconds / 60)
             if self.time_spend > user_salary.work_minutes:
@@ -188,7 +188,7 @@ class UserSalaryPerDay(BaseModel):
     food_allowance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.0)
 
     def save(self, *args, **kwargs):
-        user_salary = self.user.user_salaries.filter(date__lte=date.today()).latest('date')
+        user_salary = self.user.user_salaries.filter(date__lte=self.date).latest('date')
 
         working_minutes = user_salary.work_minutes
         a = (working_minutes*75) / 100   # 3/4 of working hours
