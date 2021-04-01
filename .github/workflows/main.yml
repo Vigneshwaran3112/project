@@ -13,11 +13,11 @@ jobs:
       - name: Clone Repositorie
         uses: actions/checkout@v2
 
-      - name: Activate Virtualenv
-        run: source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
-
-      - name: Installing Requirements
-        run: pip3 install -r requirements.txt
+      - name: Activate Virtualenv & Installing Requirements
+        run: |
+          source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
+          pip3 install -r requirements.txt
+          deactivate
 
       - name: Check Django Errors
         run: python3 manage.py check --settings=south_indian_coffee_pro.settings.pro
