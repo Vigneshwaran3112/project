@@ -1,16 +1,8 @@
-from re import error
-from datetime import date, datetime
-import datetime, requests, json, os, re
+from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
 
-
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied, RequestDataTooBig
-from django.db.models import QuerySet, Count, Q
-from django.http.request import RawPostDataException
 from django.http import HttpResponse
 
 
@@ -628,7 +620,7 @@ class UserAttendanceListAPIView(generics.ListAPIView):
         }
 
     def get_queryset(self):
-        salary_data = UserSalary.objects.filter(date__lte=self.kwargs['date'], status=True, delete=False).values_list('user__pk', flat=True).distinct()
+        salary_data = UserSalary.objects.filter(status=True, delete=False).values_list('user__pk', flat=True).distinct()
         return BaseUser.objects.filter(pk__in=salary_data, is_superuser=False, branch=self.request.user.branch, is_active=True)
 
 
