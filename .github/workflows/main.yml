@@ -20,10 +20,10 @@ jobs:
         run: pip3 install -r requirements.txt
 
       - name: Check Django Errors
-        run: python3 manage.py check
+        run: python3 manage.py check --settings=south_indian_coffee_pro.settings.pro
 
       - name: Check Django Security Errors
-        run: python3 manage.py check --deploy
+        run: python3 manage.py check --deploy --settings=south_indian_coffee_pro.settings.pro
 
       - name: Restart SouthIndianCoffee Service
         run: sudo service southindiancoffee restart
