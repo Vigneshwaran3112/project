@@ -24,7 +24,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3001',
     'http://localhost:3002',
     'http://localhost:3002',
-    'http://sich.vgts.tech'
+    'http://sich.vgts.tech',
+    'http://test.tsich.vgts.tech'
 )
 
 import sentry_sdk
