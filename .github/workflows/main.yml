@@ -19,6 +19,7 @@ jobs:
 
       - name: Activate Virtualenv & Installing Requirements
         run: |
+          cd dev
           source /home/ubuntu/southindiancoffee/dev/southindiancoffee_venv/bin/activate
           pip3 install -r requirements.txt
           deactivate
@@ -35,7 +36,7 @@ jobs:
 
       - name: Migratings Changes to Database
         run: |
-          cd test
+          cd dev
           python3 manage.py migrate --settings=south_indian_coffee_pro.settings.dev
 
       - name: Restart SouthIndianCoffee Service
