@@ -2,7 +2,7 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
-
+import requests, os, json
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -1360,6 +1360,29 @@ def my_cron_job():
     for user in abscent_users:
         data = UserAttendance.objects.create(user=user, abscent=True, date=date)
 
+    products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7',
+                            headers=headers)
+    pos_products = products.json()
+    for product in pos_products:
+        if product['categoryId'] == '27033207-2484-42b4-9a90-808964af7230':
+            department = 2
+        elif product['categoryId'] == '11a0e6a3-ddaa-4648-b33e-fc0971464083':
+            department = 5
+        elif product['categoryId'] == '8ffaf637-e485-4328-ac30-c89a586622d9':
+            department = 3
+        elif product['categoryId'] == 'f3c6cb8e-30a2-41ba-8d7f-b3af611e5fe0':
+            department = 6
+        elif product['categoryId'] == '48feb8c8-2199-411d-82e3-20bf79908bfd':
+            department = 1
+        else:
+            department = None
+        data = Product.objects.get_or_create(
+            product_id = product['id'],
+            name = product['name'],
+            classification = BranchProductClassification.objects.get(code=1),
+            department=BranchProductDepartment.objects.get(code=department)
+        )
+
 
 class CashDetailsAPIView(generics.ListAPIView):
     serializer_class = CashDetailsSerializer
@@ -1521,7 +1544,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
 
 class SlickPosProducts(generics.ListAPIView):
     serializer_class = BranchSpecificBillSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
@@ -1562,7 +1585,6 @@ class SlickPosProducts(generics.ListAPIView):
         with open(world_json) as f:
             world_data = json.load(f)
         for country in world_data:
-            print(country)
             if country['id'] == 101:  # (for India) if you need all country dount use this
                 country_data = Country.objects.create(
                     id=country['id'],
@@ -1581,7 +1603,6 @@ class SlickPosProducts(generics.ListAPIView):
                         state_code=state['state_code']
                     )
                     for city in state['cities']:
-                        print(city['name'])
                         city_data = City.objects.create(
                             state=State.objects.get(pk=state['id']),
                             id=city['id'],
@@ -1591,5 +1612,3 @@ class SlickPosProducts(generics.ListAPIView):
                         )
 
         return Response({'message': 'Data Saved!'})
-
-
