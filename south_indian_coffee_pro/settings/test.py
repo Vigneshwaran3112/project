@@ -29,3 +29,13 @@ CORS_ORIGIN_WHITELIST = (
     'http://tsich.test.api.vgts.tech',
     'http://test.tsich.vgts.tech'
 )
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://3292be1e5391489bbdab0790fb7895b4@o562285.ingest.sentry.io/5703500",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.2,
+    send_default_pii=True,
+)

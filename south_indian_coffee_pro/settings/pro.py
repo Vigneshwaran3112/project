@@ -29,3 +29,13 @@ DATABASES = {
 
 CORS_ORIGIN_WHITELIST = ('https://tsich.vgts.tech',
                          'http://127.0.0.1')
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://a1eb474c173d404089eb5893b0d10b82@o562285.ingest.sentry.io/5703503",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.2,
+    send_default_pii=True,
+)
