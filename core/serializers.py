@@ -1310,7 +1310,7 @@ class DailySheetInventoryListSerializer(serializers.Serializer):
                     'sub_menu': [
                         inventory_data['operational_products'],
                         inventory_data['raw_materials'],
-                        inventory_data['vegetable_purchase'],
+                        inventory_data['vegetable_products'],
                         inventory_data['food_wastage'],
                         inventory_data['oil_consumption']
                     ]
