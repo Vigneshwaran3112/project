@@ -25,6 +25,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3002',
     'http://localhost:3002',
     'http://sich.vgts.tech',
+    'http://127.0.0.1',
+    'http://tsich.test.api.vgts.tech',
     'http://test.tsich.vgts.tech'
 )
 

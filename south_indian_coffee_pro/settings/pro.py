@@ -1,8 +1,8 @@
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['tsich.api.vgts.tech']
+ALLOWED_HOSTS = ['tsich.api.vgts.tech', '*' ]
 
 DATABASES = {
     'default': {
@@ -15,6 +15,8 @@ DATABASES = {
     }
 }
 
+CORS_ORIGIN_WHITELIST = ('https://tsich.vgts.tech',
+                         'http://127.0.0.1')
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
