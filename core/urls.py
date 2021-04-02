@@ -197,7 +197,6 @@ urlpatterns = [
 
     path('cash_details_list/<str:date>/<int:branch>/<int:id>/', views.CashDetailsAPIView.as_view()),
 
-
     path('product_stock_in_list/<int:classification>/', views.ProductStockInList.as_view()),
 
     path('branch_product_pricing_batch_create/', views.ProductPricingBatchCreateAPIView.as_view()),
@@ -207,4 +206,7 @@ urlpatterns = [
     path('branch_specific_oil_consumption_list/<str:date>/<int:branch>/', views.BranchSpecificOilConsumptionListAPIView.as_view()),
 
     path('product_inventory_control_list_to_excel/<str:date>/<int:branch>/', views.ProductInventoryControlListToExcel),
+
+    path('slickpos_product/', views.SlickPosProducts.as_view()),
+
 ]
