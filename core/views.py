@@ -876,6 +876,7 @@ class InventoryRawProductList(generics.ListAPIView):
 
     def list(self, request, date):
         user = Branch.objects.get(pk=self.request.user.branch.pk, delete=False, status=True)
+
         return Response(DailySheetInventoryListSerializer(Branch.objects.get(pk=self.request.user.branch.pk), context={'branch': self.request.user.branch.pk, 'date': date}).data)
 
 
