@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['tsich.test.api.vgts.tech', '*']
+ALLOWED_HOSTS = ['tsich.test.api.vgts.tech']
 
 DATABASES = {
     'default': {
@@ -28,6 +28,16 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1',
     'http://tsich.test.api.vgts.tech',
     'http://test.tsich.vgts.tech'
+)
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://3292be1e5391489bbdab0790fb7895b4@o562285.ingest.sentry.io/5703500",
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=0.2,
+    send_default_pii=True,
 )
 
 import sentry_sdk
