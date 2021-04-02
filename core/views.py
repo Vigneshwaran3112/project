@@ -217,7 +217,7 @@ class UserSalaryAttendanceReport(generics.RetrieveAPIView):
 
         context = {'user_id': user_id, 'month': month, 'year': year}
 
-        user = BaseUser.objects.get(pk=user_id).order_by('-pk')
+        user = BaseUser.objects.get(pk=user_id)
         queryset = UserSalaryPerDay.objects.filter(user=user_id, date__year=year, date__month=month, status=True, delete=False).order_by('date').distinct('date')
         attendance_data = UserSalaryAttendanceReportSerializer(queryset, context=context, many=True).data
 
@@ -860,9 +860,9 @@ class BranchProductList(generics.ListAPIView):
 
     def list(self, request, classification):
         try:
-            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+            product_mapping = ProductBranchMapping.objects.get(branch=self.request.user.branch).product
             if self.kwargs['classification'] == 0:
-                products = product_mapping.filter(classification__code__in=[2, 3, 4])
+                products = product_mapping.filter(classification__code__in=[2, 3, 4]).order_by('-id')
             else:
                 products = product_mapping.filter(classification__code=self.kwargs['classification']).order_by('-pk')
             return Response(ProductSerializer(products, many=True).data)
@@ -896,7 +896,7 @@ class ProductInventoryControlList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request, date, classification):
-        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product
         products = query.filter(classification__code=classification).order_by('-id')
         return Response(ProductInventoryControlSerializer(products, context={'branch': self.request.user.branch.pk, 'date': date}, many=True).data)
 
@@ -907,7 +907,7 @@ class ProductInventoryControlListByBranch(generics.ListAPIView):
 
     def list(self, request, date, classification, branch):
         try:
-            query = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
+            query = ProductBranchMapping.objects.get(branch=branch).product
             products = query.filter(classification__code=classification).order_by('-id')
             return Response(ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data)
         except ProductBranchMapping.DoesNotExist:
@@ -1393,7 +1393,7 @@ class CashDetailsAPIView(generics.ListAPIView):
 
         if id == 1:
             try:
-                query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True).order_by('-pk')
+                query = PettyCash.objects.get(branch=branch, date__date=date, delete=False, status=True)
                 serializer_data = PettyCashSerializer(query)
             except PettyCash.DoesNotExist:
                 return Response([], status=status.HTTP_200_OK)
@@ -1418,7 +1418,7 @@ class CashDetailsAPIView(generics.ListAPIView):
             serializer_data = CashHandoverDetailsSerializer(query, many=True)
         elif id == 7:
             try:
-                query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True).order_by('-pk')
+                query = BranchCashManagement.objects.get(branch=branch, date__date=date, delete=False, status=True)
                 serializer_data = BranchCashManagementSerializer(query)
             except BranchCashManagement.DoesNotExist:
                 return Response([], status=status.HTTP_200_OK)
@@ -1432,7 +1432,7 @@ class ProductStockInList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request, classification):
-        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product.order_by('-id')
+        query = ProductBranchMapping.objects.get(branch=self.request.user.branch).product
         products = query.filter(classification__code=classification).order_by('-id')
         return Response(ProductStockInSerializer(products, context={'branch': self.request.user.branch.pk}, many=True).data)
 
@@ -1486,7 +1486,7 @@ def ProductInventoryControlListToExcel(request, branch, date):
     product_catagory = ['','','Operational product', 'Raw materials', 'Vegetable']
     for classification in range(2,5):
 
-        querys = ProductBranchMapping.objects.get(branch=branch).product.order_by('-id')
+        querys = ProductBranchMapping.objects.get(branch=branch).product
         products = querys.filter(classification__code=classification).order_by('-id')
 
         columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock', 'Usage']
