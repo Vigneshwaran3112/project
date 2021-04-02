@@ -7,11 +7,11 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'OPTIONS': {'options': '-c search_path=development'},
-        'NAME': 'south_indian_coffee_test',
+        'OPTIONS': {'options': '-c search_path=dev'},
+        'NAME': 'southindiancoffee',
         'USER': 'dbmasteruser',
-        'PASSWORD': 'S0S-GfhoBlIrIm.#-L97.z-R7I9J-8I%',
-        'HOST': 'ls-db8b34df60a76c46c35bf55d1ffa56efbe9596b2.cjzymyxx2u8h.ap-south-1.rds.amazonaws.com',
+        'PASSWORD': '8^uwP1$78!&|%As.HqoS)cg]41DK}_rS',
+        'HOST': 'ls-f2640e88f8e1b2c149072172a99cfbe52167b5e8.cl4kxps5wa80.ap-south-1.rds.amazonaws.com',
         'PORT': '5432'
     }
 }
