@@ -19,7 +19,7 @@ jobs:
 
       - name: Activate Virtualenv & Installing Requirements
         run: |
-          source /home/ubuntu/southindiancoffee/test/southindiancoffee_venv/bin/activate
+          source /home/ubuntu/southindiancoffee/dev/southindiancoffee_venv/bin/activate
           pip3 install -r requirements.txt
           deactivate
 
@@ -39,7 +39,7 @@ jobs:
           python3 manage.py migrate --settings=south_indian_coffee_pro.settings.dev
 
       - name: Restart SouthIndianCoffee Service
-        run: sudo service southindiancoffee-test restart
+        run: sudo service southindiancoffee-dev restart
 
       - name: Restart NGINX Server
         run: sudo service nginx restart
