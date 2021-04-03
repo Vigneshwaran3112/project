@@ -4,7 +4,3 @@ __pycache__/
 *.py[cod]
 *.pyc
 .vscode/
-db.sqlite3
-*.png
-.gitlab-ci.yml
-/.github/

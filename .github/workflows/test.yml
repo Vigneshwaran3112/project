@@ -1,0 +1,52 @@
+name: Testing
+
+on:
+  push:
+    branches: [ test ]
+  pull_request:
+    branches: [ test ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: django-dev
+
+    steps:
+      - name: Clone Repositorie
+        uses: actions/checkout@v2
+        with:
+          path: 'test'
+
+      - name: Activate Virtualenv & Installing Requirements
+        run: |
+          cd test
+          source /home/ubuntu/southindiancoffee/test/southindiancoffee_venv/bin/activate
+          pip3 install -r requirements.txt
+          deactivate
+
+      - name: Check Django Errors
+        run: |
+          cd test
+          source /home/ubuntu/southindiancoffee/test/southindiancoffee_venv/bin/activate
+          python3 manage.py check --settings=south_indian_coffee_pro.settings.test
+          deactivate
+
+      - name: Generating Django Migrations Files
+        run: |
+          cd test
+          source /home/ubuntu/southindiancoffee/test/southindiancoffee_venv/bin/activate
+          python3 manage.py makemigrations --settings=south_indian_coffee_pro.settings.test
+          deactivate
+
+      - name: Migratings Changes to Database
+        run: |
+          cd test
+          source /home/ubuntu/southindiancoffee/test/southindiancoffee_venv/bin/activate
+          python3 manage.py migrate --settings=south_indian_coffee_pro.settings.test
+          deactivate
+
+      - name: Restart SouthIndianCoffee Service
+        run: sudo service southindiancoffee-test restart
+
+      - name: Restart NGINX Server
+        run: sudo service nginx restart

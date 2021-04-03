@@ -1,4 +1,4 @@
-name: SouthIndianCoffee Production
+name: Production
 
 on:
   push:
