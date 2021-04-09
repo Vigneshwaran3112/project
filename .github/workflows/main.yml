@@ -25,6 +25,7 @@ jobs:
         run: |
           source /home/ubuntu/southindiancoffee/southindiancoffee_venv/bin/activate
           python3 manage.py check --settings=south_indian_coffee_pro.settings.pro
+          deactivate
 
       - name: Check Django Security Errors
         run: |
