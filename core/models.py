@@ -368,7 +368,7 @@ class ProductPricingBatch(BaseModel):
         super(ProductPricingBatch, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.branch.name} - {self.product_unique_id}'
+        return f'{self.branch.name}'
 
 
 class ProductInventory(BaseModel):
