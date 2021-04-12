@@ -21,7 +21,7 @@ customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=73
 # orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
 
 
-customer =
+# customer =
 
 #
 #

@@ -531,7 +531,7 @@ class BranchProductMappingList(generics.ListAPIView):
         except:
             product_mapping = [0]
         if self.kwargs['classification'] == 0:
-            product = Product.objects.filter(classification__code__in=[2, 3, 4], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
+            product = Product.objects.filter(classification__code__in=[1, 2, 3, 4], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         else:
             product = Product.objects.filter(classification__code=self.kwargs['classification'], status=True, delete=False).exclude(pk__in=product_mapping).order_by('-id')
         return Response(ProductSerializer(product, many=True).data, status=status.HTTP_201_CREATED)
