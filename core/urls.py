@@ -25,6 +25,7 @@ router.register(r'complaint_category', views.ComplaintTypeViewSet, basename='com
 router.register(r'complaint_status', views.ComplaintStatusViewSet, basename='complaint_status')
 router.register(r'branch_expenses', views.BranchExpensesViewSet, basename='branch_expenses')
 router.register(r'vendor', views.VendorAPIView, basename='vendor')
+router.register(r'vendor_category', views.VendorCategoryAPIView, basename='vendor_category')
 router.register(r'customer', views.CustomerAPIView, basename='customer')
 router.register(r'credit_sale', views.CreditSalesAPIView, basename='creditsale')
 router.register(r'credit_settlement', views.CreditSettlementAPIView, basename='creditsettlement')
@@ -208,5 +209,7 @@ urlpatterns = [
     path('product_inventory_control_list_to_excel/<str:date>/<int:branch>/', views.ProductInventoryControlListToExcel),
 
     path('slickpos_product/', views.SlickPosProducts.as_view()),
+
+    path('slickpos_product_fetch/', views.SlickPosProductFetch.as_view())
 
 ]

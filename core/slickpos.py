@@ -14,39 +14,39 @@ headers = {
 
 # setup = requests.get('https://api.slickpos.com/api/setup?id=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
-# customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
+customer = requests.get('https://api.slickpos.com/api/customer/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
-products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
+# products = requests.get('https://api.slickpos.com/api/product/list?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7', headers=headers)
 
 # orders = requests.put('https://api.slickpos.com/api/setup/showIncomingTab', headers=headers)
 
 
+customer =
 
-
-
-
-list = []
-
-get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210329', headers=headers)
-a = get_receipt_by_date.json()
-for i in a['receipts']:
-  list.append(i)
-while(True):
-  try:
-    if a['lastEvalKey']:
-      qq = urllib.parse.quote_plus(a['lastEvalKey'])
-      get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210329&lastEvalKey={}'.format(qq), headers=headers)
-      a = get_receipt_by_date.json()
-      count = 0
-      for i in a['receipts']:
-        count = count+1
-        list.append(i)
-  except:
-    break
-
-result = json.dumps(list)
-print(result)
-
+#
+#
+# list = []
+#
+# get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210329', headers=headers)
+# a = get_receipt_by_date.json()
+# for i in a['receipts']:
+#   list.append(i)
+# while(True):
+#   try:
+#     if a['lastEvalKey']:
+#       qq = urllib.parse.quote_plus(a['lastEvalKey'])
+#       get_receipt_by_date = requests.get('https://api.slickpos.com/api/sales/daily?accountId=7370d786-e7f5-436f-b608-0a7644fdb8e7&registerId=489f4846-10a1-4b42-8d05-569221d8d227&receiptDate=20210329&lastEvalKey={}'.format(qq), headers=headers)
+#       a = get_receipt_by_date.json()
+#       count = 0
+#       for i in a['receipts']:
+#         count = count+1
+#         list.append(i)
+#   except:
+#     break
+#
+# result = json.dumps(list)
+# print(result)
+#
 
 
 
