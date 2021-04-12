@@ -344,10 +344,23 @@ class ProductBranchMapping(BaseModel):
         return f'{self.branch.name} - {self.product.name}'
 
 
+class VendorCategory(BaseModel):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    code = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Vendor(BaseModel):
+    category = models.ForeignKey(VendorCategory, on_delete=models.CASCADE, null=True, blank=True, related_name='category_vendor')
     name = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)
     address = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class ProductPricingBatch(BaseModel):

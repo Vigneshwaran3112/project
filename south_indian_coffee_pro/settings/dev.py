@@ -2,7 +2,8 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['tsich.dev.api.vgts.tech', '*']
+ALLOWED_HOSTS = ['tsich.dev.api.vgts.tech', '*', 'www.djangoproject.dev',
+    'docs.djangoproject.dev']
 
 DATABASES = {
     'default': {
