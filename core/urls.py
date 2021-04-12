@@ -209,6 +209,6 @@ urlpatterns = [
 
     path('slickpos_product/', views.SlickPosProducts.as_view()),
 
-    path('sale/', views.Sales)
+    path('slickpos_product_fetch/', views.SlickPosProductFetch.as_view())
 
 ]
