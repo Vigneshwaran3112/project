@@ -1241,13 +1241,13 @@ class VendorCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VendorCategory
-        exclude = ['delete']
+        exclude = ['delete', 'status']
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
             'name': instance.name,
-            'description': instance.category,
+            'description': instance.description,
         }
 
 
@@ -1255,13 +1255,13 @@ class VendorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vendor
-        exclude = ['delete']
+        exclude = ['delete', 'status']
 
     def to_representation(self, instance):
         return {
             'id': instance.pk,
             'name': instance.name,
-            'category': instance.category,
+            'category': instance.category.name if instance.category else None,
             'company_name': instance.company_name,
             'address': instance.address
         }

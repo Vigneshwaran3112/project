@@ -855,7 +855,7 @@ class VendorCategoryAPIView(viewsets.ModelViewSet):
 
 
 class VendorAPIView(viewsets.ModelViewSet):
-    queryset = Vendor.objects.filter(delete=False, status=True).order_by('-id')
+    queryset = Vendor.objects.filter(delete=False, status=True).order_by('-pk')
     serializer_class = VendorSerializer
     permission_classes = (IsAuthenticated,)
 
