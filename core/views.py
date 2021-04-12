@@ -1494,55 +1494,108 @@ def ProductInventoryControlListToExcel(request, branch, date):
     ws.title = "MyTestSheet"
 
     row_num = 1
-    product_catagory = ['','','Operational product', 'Raw materials', 'Vegetable']
+    product_catagory = ['','','	Maintenance materials', 'Raw materials', 'Vegetable']
     for classification in range(2,5):
 
-        querys = ProductBranchMapping.objects.get(branch=branch).product
-        products = querys.filter(classification__code=classification).order_by('-id')
+        try:
 
-        columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock', 'Usage']
+            querys = ProductBranchMapping.objects.get(branch=branch).product
+            products = querys.filter(classification__code=classification).order_by('-id')
 
-        catagory_title = ws.cell(row=row_num, column=4, value=product_catagory[classification])
-        ws.row_dimensions[row_num].height = 25
-        catagory_title.font = Font(name='Calibri', size=13, bold=True, color='00695C')
-        row_num += 1
-        col_num = 0
-        for value in columns:
-            col_num = col_num+1
-            cell = ws.cell(row=row_num, column=col_num, value = value)
-            cell.font = Font(name='Chandas', bold=True, color='FFFFFF')
-            cell.alignment = Alignment(horizontal='center')
-            column_letter = get_column_letter(col_num)
-            column_dimensions = ws.column_dimensions[column_letter]
-            column_dimensions.width = 20
+            columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock', 'Usage']
+
+            catagory_title = ws.cell(row=row_num, column=4, value=product_catagory[classification])
+            catagory_title.alignment = Alignment(horizontal='center')
             ws.row_dimensions[row_num].height = 25
-            cell.fill = PatternFill(start_color='00838F',
-                   end_color='00838F',
-                   fill_type='solid')
+            catagory_title.font = Font(name='Calibri', size=13, bold=True, color='00695C')
 
-        product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
-
-        for query in product_data:
             row_num += 1
             col_num = 0
+            for value in columns:
+                col_num = col_num+1
+                cell = ws.cell(row=row_num, column=col_num, value = value)
+                cell.font = Font(name='Chandas', bold=True, color='FFFFFF')
+                cell.alignment = Alignment(horizontal='center')
+                column_letter = get_column_letter(col_num)
+                column_dimensions = ws.column_dimensions[column_letter]
+                column_dimensions.width = 20
+                ws.row_dimensions[row_num].height = 25
+                cell.fill = PatternFill(start_color='00838F',
+                       end_color='00838F',
+                       fill_type='solid')
 
-            row = [date, Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name+" - "+Unit.objects.get(pk=query['unit']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], query['usage']]
+            product_data = ProductInventoryControlSerializer(products, context={'branch': branch, 'date': date}, many=True).data
 
-            for value in row:
-                col_num = col_num + 1
-                value_cell = ws.cell(row=row_num, column=col_num, value = value)
+            if product_data:
+
+                for query in product_data:
+                    row_num += 1
+                    col_num = 0
+                    Date = datetime.datetime.strptime(date, '%Y-%m-%d')
+                    # Date.strftime("%d-%m-%Y")
+
+                    row = [Date.strftime("%d-%m-%Y"), Branch.objects.get(pk=branch).name, Product.objects.get(pk=query['product']).name+" - "+Unit.objects.get(pk=query['unit']).name, query['opening_stock'], query['received_stock'], query['closing_stock'], query['usage']]
+
+                    for value in row:
+                        col_num = col_num + 1
+                        value_cell = ws.cell(row=row_num, column=col_num, value = value)
+                        value_cell.alignment = Alignment(horizontal='center')
+                        value_cell.fill = PatternFill(start_color='E3F2FD',
+                                            end_color='E3F2FD',
+                                            fill_type='solid')
+                        if value == 0:
+                            value_cell.font = Font(color='FF5252')
+
+                row_num += 1
+                ws['A'+str(row_num)].value = ' '
+                row_num += 1
+                ws.cell(row=row_num, column=1, value=" ")
+                row_num += 1
+            else:
+                row_num += 1
+                ws.cell(row=row_num, column=1, value=" ")
+                row_num += 1
+                value_cell = ws.cell(row=row_num, column=4, value='No data')
                 value_cell.alignment = Alignment(horizontal='center')
-                value_cell.fill = PatternFill(start_color='E3F2FD',
-                                    end_color='E3F2FD',
-                                    fill_type='solid')
-                if value == 0:
-                    value_cell.font = Font(color='FF5252')
 
-        row_num += 1
-        ws['A'+str(row_num)].value = ' '
-        row_num += 1
-        ws.cell(row=row_num, column=1, value=" ")
-        row_num += 1
+                row_num += 1
+                ws['A' + str(row_num)].value = ' '
+                row_num += 1
+                ws.cell(row=row_num, column=1, value=" ")
+                row_num += 1
+        except:
+            columns = ['Date', 'Branch', 'Product / Unit', 'Openning Stock', 'Received Stock', 'Closing Stock', 'Usage']
+
+            catagory_title = ws.cell(row=row_num, column=4, value=product_catagory[classification])
+            catagory_title.alignment = Alignment(horizontal='center')
+            ws.row_dimensions[row_num].height = 25
+            catagory_title.font = Font(name='Calibri', size=13, bold=True, color='00695C')
+            row_num += 1
+            col_num = 0
+            for value in columns:
+                col_num = col_num + 1
+                cell = ws.cell(row=row_num, column=col_num, value=value)
+                cell.font = Font(name='Chandas', bold=True, color='FFFFFF')
+                cell.alignment = Alignment(horizontal='center')
+                column_letter = get_column_letter(col_num)
+                column_dimensions = ws.column_dimensions[column_letter]
+                column_dimensions.width = 20
+                ws.row_dimensions[row_num].height = 25
+                cell.fill = PatternFill(start_color='00838F',
+                                        end_color='00838F',
+                                        fill_type='solid')
+
+            row_num += 1
+            ws.cell(row=row_num, column=1, value=" ")
+            row_num += 1
+            value_cell = ws.cell(row=row_num, column=4, value='No data')
+            value_cell.alignment = Alignment(horizontal='center')
+
+            row_num += 1
+            ws['A' + str(row_num)].value = ' '
+            row_num += 1
+            ws.cell(row=row_num, column=1, value=" ")
+            row_num += 1
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
     response['Content-Disposition'] = 'attachment; filename=product_list.xlsx'
