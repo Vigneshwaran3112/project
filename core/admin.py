@@ -264,3 +264,8 @@ class SalesCountAdmin(admin.ModelAdmin):
 @admin.register(CashHandover)
 class CashHandoverAdmin(admin.ModelAdmin):
     list_display = ('pk', 'branch', 'bill_no', 'name', 'amount', 'time', 'date')
+
+
+@admin.register(VendorCategory)
+class VendorCategoryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'description', 'code')
