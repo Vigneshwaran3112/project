@@ -1237,6 +1237,20 @@ class BranchDepartmentIncentiveUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'incentive']
 
 
+class VendorCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VendorCategory
+        exclude = ['delete']
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.pk,
+            'name': instance.name,
+            'description': instance.category,
+        }
+
+
 class VendorSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -1247,6 +1261,7 @@ class VendorSerializer(serializers.ModelSerializer):
         return {
             'id': instance.pk,
             'name': instance.name,
+            'category': instance.category,
             'company_name': instance.company_name,
             'address': instance.address
         }

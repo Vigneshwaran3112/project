@@ -844,6 +844,16 @@ class BranchIncentiveUpdateAPIView(generics.UpdateAPIView):
         return Response(BranchEmployeeIncentiveSerializer(BranchEmployeeIncentive.objects.filter(branch=self.kwargs['pk'], status=True, delete=False),many=True).data)
 
 
+class VendorCategoryAPIView(viewsets.ModelViewSet):
+    queryset = VendorCategory.objects.filter(delete=False, status=True).order_by('-id')
+    serializer_class = VendorCategorySerializer
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        destroy = VendorCategory.objects.filter(pk=kwargs['pk']).update(delete=True, status=False)
+        return Response({'message': 'VendorCategory deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
 class VendorAPIView(viewsets.ModelViewSet):
     queryset = Vendor.objects.filter(delete=False, status=True).order_by('-id')
     serializer_class = VendorSerializer
